@@ -1,15 +1,25 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Đăng ký dịch vụ cho Web MVC
 builder.Services.AddControllersWithViews();
+
+// Đăng ký HttpClient để gọi sang API (Đây mới là chỗ dùng chính xác)
+builder.Services.AddHttpClient();
+
+// Đăng ký Cookie Authentication để giữ trạng thái đăng nhập trên trình duyệt
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Account/Login";
+    });
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -18,6 +28,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication(); // Kích hoạt xác thực cookie
 app.UseAuthorization();
 
 app.MapControllerRoute(

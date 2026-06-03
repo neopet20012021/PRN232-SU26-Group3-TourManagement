@@ -1,15 +1,21 @@
+using Microsoft.EntityFrameworkCore;
+using TourManagement.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// 1. Đăng ký DbContext kết nối SQL Server
+builder.Services.AddDbContext<TourManagementDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// 2. Chỉ giữ lại AddControllers cho dự án API (Xóa dòng AddControllersWithViews và AddHttpClient bị thừa đi)
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Cấu hình HTTP request pipeline cho API
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

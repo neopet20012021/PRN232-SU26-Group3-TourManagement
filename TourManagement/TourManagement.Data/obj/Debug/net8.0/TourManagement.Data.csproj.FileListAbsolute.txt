@@ -1,0 +1,15 @@
+C:\Users\Admin\Desktop\Git\PRN232-SU26-Group3-TourManagement\TourManagement\TourManagement.Data\bin\Debug\net8.0\TourManagement.Data.deps.json
+C:\Users\Admin\Desktop\Git\PRN232-SU26-Group3-TourManagement\TourManagement\TourManagement.Data\bin\Debug\net8.0\TourManagement.Data.dll
+C:\Users\Admin\Desktop\Git\PRN232-SU26-Group3-TourManagement\TourManagement\TourManagement.Data\bin\Debug\net8.0\TourManagement.Data.pdb
+C:\Users\Admin\Desktop\Git\PRN232-SU26-Group3-TourManagement\TourManagement\TourManagement.Data\obj\Debug\net8.0\TourManagement.Data.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Admin\Desktop\Git\PRN232-SU26-Group3-TourManagement\TourManagement\TourManagement.Data\obj\Debug\net8.0\TourManagement.Data.AssemblyInfoInputs.cache
+C:\Users\Admin\Desktop\Git\PRN232-SU26-Group3-TourManagement\TourManagement\TourManagement.Data\obj\Debug\net8.0\TourManagement.Data.AssemblyInfo.cs
+C:\Users\Admin\Desktop\Git\PRN232-SU26-Group3-TourManagement\TourManagement\TourManagement.Data\obj\Debug\net8.0\TourManagement.Data.csproj.CoreCompileInputs.cache
+C:\Users\Admin\Desktop\Git\PRN232-SU26-Group3-TourManagement\TourManagement\TourManagement.Data\obj\Debug\net8.0\TourManagement.Data.sourcelink.json
+C:\Users\Admin\Desktop\Git\PRN232-SU26-Group3-TourManagement\TourManagement\TourManagement.Data\obj\Debug\net8.0\TourManagement.Data.dll
+C:\Users\Admin\Desktop\Git\PRN232-SU26-Group3-TourManagement\TourManagement\TourManagement.Data\obj\Debug\net8.0\refint\TourManagement.Data.dll
+C:\Users\Admin\Desktop\Git\PRN232-SU26-Group3-TourManagement\TourManagement\TourManagement.Data\obj\Debug\net8.0\TourManagement.Data.pdb
+C:\Users\Admin\Desktop\Git\PRN232-SU26-Group3-TourManagement\TourManagement\TourManagement.Data\obj\Debug\net8.0\ref\TourManagement.Data.dll
+C:\Users\Admin\Desktop\Git\PRN232-SU26-Group3-TourManagement\TourManagement\TourManagement.Data\bin\Debug\net8.0\TourManagement.Data.runtimeconfig.json
+C:\Users\Admin\Desktop\Git\PRN232-SU26-Group3-TourManagement\TourManagement\TourManagement.Data\obj\Debug\net8.0\TourManagement.Data.csproj.AssemblyReference.cache
+C:\Users\Admin\Desktop\Git\PRN232-SU26-Group3-TourManagement\TourManagement\TourManagement.Data\obj\Debug\net8.0\TourManagement.Data.genruntimeconfig.cache

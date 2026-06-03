@@ -1,0 +1,12 @@
+C:\Users\Admin\Desktop\Git\PRN232-SU26-Group3-TourManagement\TourManagement\TourManagement.Business\bin\Debug\net8.0\TourManagement.Business.deps.json
+C:\Users\Admin\Desktop\Git\PRN232-SU26-Group3-TourManagement\TourManagement\TourManagement.Business\bin\Debug\net8.0\TourManagement.Business.dll
+C:\Users\Admin\Desktop\Git\PRN232-SU26-Group3-TourManagement\TourManagement\TourManagement.Business\bin\Debug\net8.0\TourManagement.Business.pdb
+C:\Users\Admin\Desktop\Git\PRN232-SU26-Group3-TourManagement\TourManagement\TourManagement.Business\obj\Debug\net8.0\TourManagement.Business.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Admin\Desktop\Git\PRN232-SU26-Group3-TourManagement\TourManagement\TourManagement.Business\obj\Debug\net8.0\TourManagement.Business.AssemblyInfoInputs.cache
+C:\Users\Admin\Desktop\Git\PRN232-SU26-Group3-TourManagement\TourManagement\TourManagement.Business\obj\Debug\net8.0\TourManagement.Business.AssemblyInfo.cs
+C:\Users\Admin\Desktop\Git\PRN232-SU26-Group3-TourManagement\TourManagement\TourManagement.Business\obj\Debug\net8.0\TourManagement.Business.csproj.CoreCompileInputs.cache
+C:\Users\Admin\Desktop\Git\PRN232-SU26-Group3-TourManagement\TourManagement\TourManagement.Business\obj\Debug\net8.0\TourManagement.Business.sourcelink.json
+C:\Users\Admin\Desktop\Git\PRN232-SU26-Group3-TourManagement\TourManagement\TourManagement.Business\obj\Debug\net8.0\TourManagement.Business.dll
+C:\Users\Admin\Desktop\Git\PRN232-SU26-Group3-TourManagement\TourManagement\TourManagement.Business\obj\Debug\net8.0\refint\TourManagement.Business.dll
+C:\Users\Admin\Desktop\Git\PRN232-SU26-Group3-TourManagement\TourManagement\TourManagement.Business\obj\Debug\net8.0\TourManagement.Business.pdb
+C:\Users\Admin\Desktop\Git\PRN232-SU26-Group3-TourManagement\TourManagement\TourManagement.Business\obj\Debug\net8.0\ref\TourManagement.Business.dll

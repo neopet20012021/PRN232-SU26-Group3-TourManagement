@@ -1,8 +1,40 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model List<TourViewModel>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container">
+    <h2>Khám phá các Tour du lịch</h2>
+
+    <form asp-action="Index" method="get" class="row g-3 my-4 p-3 bg-light rounded">
+        <div class="col-md-6">
+            <input type="text" name="keyword" value="@ViewBag.Keyword" class="form-control" placeholder="Nhập tên tour, địa điểm...">
+        </div>
+        <div class="col-md-4">
+            <input type="number" name="maxPrice" value="@ViewBag.MaxPrice" class="form-control" placeholder="Giá tối đa (VNĐ)">
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Tìm kiếm</button>
+        </div>
+    </form>
+
+    <div class="row">
+        @if (Model != null && Model.Any())
+        {
+            @foreach (var tour in Model)
+            {
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">@tour.TourName</h5>
+                            <p class="card-text text-truncate">@tour.Description</p>
+                            <p class="text-danger fw-bold">Giá: @tour.Price.ToString("N0") VNĐ</p>
+                            <a href="/Tour/Details/@tour.Id" class="btn btn-outline-info w-100">Xem chi tiết</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12 text-center text-muted">Không tìm thấy tour nào khớp với lựa chọn của bạn.</div>
+        }
+    </div>
 </div>

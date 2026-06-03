@@ -1,0 +1,17 @@
+﻿@model TourManagement.Business.LoginModel
+
+<h2>Đăng nhập Hệ thống Booking Tour</h2>
+
+<form asp-action="Login" method="post">
+    <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+    <div>
+        <label>Tài khoản:</label>
+        <input asp-for="Username" class="form-control" required />
+    </div>
+    <div>
+        <label>Mật khẩu:</label>
+        <input asp-for="Password" type="password" class="form-control" required />
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary">Đăng nhập</button>
+</form>

@@ -1,0 +1,432 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{D49EEF32-4C17-40E7-81A4-148B4F239851}|TourManagement.Web\\TourManagement.Web.csproj|c:\\users\\admin\\desktop\\git\\prn232-su26-group3-tourmanagement\\tourmanagement\\tourmanagement.web\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{D49EEF32-4C17-40E7-81A4-148B4F239851}|TourManagement.Web\\TourManagement.Web.csproj|solutionrelative:tourmanagement.web\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D49EEF32-4C17-40E7-81A4-148B4F239851}|TourManagement.Web\\TourManagement.Web.csproj|c:\\users\\admin\\desktop\\git\\prn232-su26-group3-tourmanagement\\tourmanagement\\tourmanagement.web\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D49EEF32-4C17-40E7-81A4-148B4F239851}|TourManagement.Web\\TourManagement.Web.csproj|solutionrelative:tourmanagement.web\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D49EEF32-4C17-40E7-81A4-148B4F239851}|TourManagement.Web\\TourManagement.Web.csproj|c:\\users\\admin\\desktop\\git\\prn232-su26-group3-tourmanagement\\tourmanagement\\tourmanagement.web\\models\\tourviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D49EEF32-4C17-40E7-81A4-148B4F239851}|TourManagement.Web\\TourManagement.Web.csproj|solutionrelative:tourmanagement.web\\models\\tourviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{236DC901-E71A-4511-9B2C-DE1AB9F773FB}|TourManagement.API\\TourManagement.API.csproj|c:\\users\\admin\\desktop\\git\\prn232-su26-group3-tourmanagement\\tourmanagement\\tourmanagement.api\\controllers\\tourcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{236DC901-E71A-4511-9B2C-DE1AB9F773FB}|TourManagement.API\\TourManagement.API.csproj|solutionrelative:tourmanagement.api\\controllers\\tourcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{236DC901-E71A-4511-9B2C-DE1AB9F773FB}|TourManagement.API\\TourManagement.API.csproj|c:\\users\\admin\\desktop\\git\\prn232-su26-group3-tourmanagement\\tourmanagement\\tourmanagement.api\\tourmanagement.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{236DC901-E71A-4511-9B2C-DE1AB9F773FB}|TourManagement.API\\TourManagement.API.csproj|solutionrelative:tourmanagement.api\\tourmanagement.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D49EEF32-4C17-40E7-81A4-148B4F239851}|TourManagement.Web\\TourManagement.Web.csproj|c:\\users\\admin\\desktop\\git\\prn232-su26-group3-tourmanagement\\tourmanagement\\tourmanagement.web\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D49EEF32-4C17-40E7-81A4-148B4F239851}|TourManagement.Web\\TourManagement.Web.csproj|solutionrelative:tourmanagement.web\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D49EEF32-4C17-40E7-81A4-148B4F239851}|TourManagement.Web\\TourManagement.Web.csproj|c:\\users\\admin\\desktop\\git\\prn232-su26-group3-tourmanagement\\tourmanagement\\tourmanagement.web\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D49EEF32-4C17-40E7-81A4-148B4F239851}|TourManagement.Web\\TourManagement.Web.csproj|solutionrelative:tourmanagement.web\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{236DC901-E71A-4511-9B2C-DE1AB9F773FB}|TourManagement.API\\TourManagement.API.csproj|c:\\users\\admin\\desktop\\git\\prn232-su26-group3-tourmanagement\\tourmanagement\\tourmanagement.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{236DC901-E71A-4511-9B2C-DE1AB9F773FB}|TourManagement.API\\TourManagement.API.csproj|solutionrelative:tourmanagement.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Data\\Migrations\\20260603104809_InitialCreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:TourManagement.Data\\Migrations\\20260603104809_InitialCreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{221CD835-074C-47A0-BEC1-29F1540E4C13}|TourManagement.Data\\TourManagement.Data.csproj|c:\\users\\admin\\desktop\\git\\prn232-su26-group3-tourmanagement\\tourmanagement\\tourmanagement.data\\tourmanagemanetdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{221CD835-074C-47A0-BEC1-29F1540E4C13}|TourManagement.Data\\TourManagement.Data.csproj|solutionrelative:tourmanagement.data\\tourmanagemanetdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D49EEF32-4C17-40E7-81A4-148B4F239851}|TourManagement.Web\\TourManagement.Web.csproj|c:\\users\\admin\\desktop\\git\\prn232-su26-group3-tourmanagement\\tourmanagement\\tourmanagement.web\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D49EEF32-4C17-40E7-81A4-148B4F239851}|TourManagement.Web\\TourManagement.Web.csproj|solutionrelative:tourmanagement.web\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{236DC901-E71A-4511-9B2C-DE1AB9F773FB}|TourManagement.API\\TourManagement.API.csproj|c:\\users\\admin\\desktop\\git\\prn232-su26-group3-tourmanagement\\tourmanagement\\tourmanagement.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{236DC901-E71A-4511-9B2C-DE1AB9F773FB}|TourManagement.API\\TourManagement.API.csproj|solutionrelative:tourmanagement.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{236DC901-E71A-4511-9B2C-DE1AB9F773FB}|TourManagement.API\\TourManagement.API.csproj|c:\\users\\admin\\desktop\\git\\prn232-su26-group3-tourmanagement\\tourmanagement\\tourmanagement.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{236DC901-E71A-4511-9B2C-DE1AB9F773FB}|TourManagement.API\\TourManagement.API.csproj|solutionrelative:tourmanagement.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D49EEF32-4C17-40E7-81A4-148B4F239851}|TourManagement.Web\\TourManagement.Web.csproj|c:\\users\\admin\\desktop\\git\\prn232-su26-group3-tourmanagement\\tourmanagement\\tourmanagement.web\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{D49EEF32-4C17-40E7-81A4-148B4F239851}|TourManagement.Web\\TourManagement.Web.csproj|solutionrelative:tourmanagement.web\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{236DC901-E71A-4511-9B2C-DE1AB9F773FB}|TourManagement.API\\TourManagement.API.csproj|c:\\users\\admin\\desktop\\git\\prn232-su26-group3-tourmanagement\\tourmanagement\\tourmanagement.api\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{236DC901-E71A-4511-9B2C-DE1AB9F773FB}|TourManagement.API\\TourManagement.API.csproj|solutionrelative:tourmanagement.api\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{221CD835-074C-47A0-BEC1-29F1540E4C13}|TourManagement.Data\\TourManagement.Data.csproj|c:\\users\\admin\\desktop\\git\\prn232-su26-group3-tourmanagement\\tourmanagement\\tourmanagement.data\\tourmanagement.data.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{221CD835-074C-47A0-BEC1-29F1540E4C13}|TourManagement.Data\\TourManagement.Data.csproj|solutionrelative:tourmanagement.data\\tourmanagement.data.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{221CD835-074C-47A0-BEC1-29F1540E4C13}|TourManagement.Data\\TourManagement.Data.csproj|c:\\users\\admin\\desktop\\git\\prn232-su26-group3-tourmanagement\\tourmanagement\\tourmanagement.data\\tour.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{221CD835-074C-47A0-BEC1-29F1540E4C13}|TourManagement.Data\\TourManagement.Data.csproj|solutionrelative:tourmanagement.data\\tour.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{221CD835-074C-47A0-BEC1-29F1540E4C13}|TourManagement.Data\\TourManagement.Data.csproj|c:\\users\\admin\\desktop\\git\\prn232-su26-group3-tourmanagement\\tourmanagement\\tourmanagement.data\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{221CD835-074C-47A0-BEC1-29F1540E4C13}|TourManagement.Data\\TourManagement.Data.csproj|solutionrelative:tourmanagement.data\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D49EEF32-4C17-40E7-81A4-148B4F239851}|TourManagement.Web\\TourManagement.Web.csproj|c:\\users\\admin\\desktop\\git\\prn232-su26-group3-tourmanagement\\tourmanagement\\tourmanagement.web\\tourmanagement.web.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{D49EEF32-4C17-40E7-81A4-148B4F239851}|TourManagement.Web\\TourManagement.Web.csproj|solutionrelative:tourmanagement.web\\tourmanagement.web.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D49EEF32-4C17-40E7-81A4-148B4F239851}|TourManagement.Web\\TourManagement.Web.csproj|c:\\users\\admin\\desktop\\git\\prn232-su26-group3-tourmanagement\\tourmanagement\\tourmanagement.web\\views\\account\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{D49EEF32-4C17-40E7-81A4-148B4F239851}|TourManagement.Web\\TourManagement.Web.csproj|solutionrelative:tourmanagement.web\\views\\account\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BC4640D3-EE0F-40BC-9953-B9CE8FF0267A}|TourManagement.Business\\TourManagement.Business.csproj|c:\\users\\admin\\desktop\\git\\prn232-su26-group3-tourmanagement\\tourmanagement\\tourmanagement.business\\loginmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BC4640D3-EE0F-40BC-9953-B9CE8FF0267A}|TourManagement.Business\\TourManagement.Business.csproj|solutionrelative:tourmanagement.business\\loginmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BC4640D3-EE0F-40BC-9953-B9CE8FF0267A}|TourManagement.Business\\TourManagement.Business.csproj|c:\\users\\admin\\desktop\\git\\prn232-su26-group3-tourmanagement\\tourmanagement\\tourmanagement.business\\tourmanagement.business.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{BC4640D3-EE0F-40BC-9953-B9CE8FF0267A}|TourManagement.Business\\TourManagement.Business.csproj|solutionrelative:tourmanagement.business\\tourmanagement.business.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BC4640D3-EE0F-40BC-9953-B9CE8FF0267A}|TourManagement.Business\\TourManagement.Business.csproj|c:\\users\\admin\\desktop\\git\\prn232-su26-group3-tourmanagement\\tourmanagement\\tourmanagement.business\\class1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BC4640D3-EE0F-40BC-9953-B9CE8FF0267A}|TourManagement.Business\\TourManagement.Business.csproj|solutionrelative:tourmanagement.business\\class1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{221CD835-074C-47A0-BEC1-29F1540E4C13}|TourManagement.Data\\TourManagement.Data.csproj|c:\\users\\admin\\desktop\\git\\prn232-su26-group3-tourmanagement\\tourmanagement\\tourmanagement.data\\class1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{221CD835-074C-47A0-BEC1-29F1540E4C13}|TourManagement.Data\\TourManagement.Data.csproj|solutionrelative:tourmanagement.data\\class1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Web\\Views\\Home\\Index.cshtml",
+              "RelativeDocumentMoniker": "TourManagement.Web\\Views\\Home\\Index.cshtml",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Web\\Views\\Home\\Index.cshtml",
+              "RelativeToolTip": "TourManagement.Web\\Views\\Home\\Index.cshtml",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAqwCIAAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-03T11:02:51.383Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "TourViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Web\\Models\\TourViewModel.cs",
+              "RelativeDocumentMoniker": "TourManagement.Web\\Models\\TourViewModel.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Web\\Models\\TourViewModel.cs",
+              "RelativeToolTip": "TourManagement.Web\\Models\\TourViewModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAsAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-03T11:01:56.06Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "TourController.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.API\\Controllers\\TourController.cs",
+              "RelativeDocumentMoniker": "TourManagement.API\\Controllers\\TourController.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.API\\Controllers\\TourController.cs",
+              "RelativeToolTip": "TourManagement.API\\Controllers\\TourController.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAiwBcAAABbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-03T10:55:53.648Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "AdminController.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Web\\Controllers\\AdminController.cs",
+              "RelativeDocumentMoniker": "TourManagement.Web\\Controllers\\AdminController.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Web\\Controllers\\AdminController.cs",
+              "RelativeToolTip": "TourManagement.Web\\Controllers\\AdminController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-03T10:54:09.615Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "TourManagement.API",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.API\\TourManagement.API.csproj",
+              "RelativeDocumentMoniker": "TourManagement.API\\TourManagement.API.csproj",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.API\\TourManagement.API.csproj",
+              "RelativeToolTip": "TourManagement.API\\TourManagement.API.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-06-03T09:35:32.213Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "HomeController.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Web\\Controllers\\HomeController.cs",
+              "RelativeDocumentMoniker": "TourManagement.Web\\Controllers\\HomeController.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Web\\Controllers\\HomeController.cs",
+              "RelativeToolTip": "TourManagement.Web\\Controllers\\HomeController.cs",
+              "ViewState": "AgIAAAIAAAAAAAAAAAAiwBYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-03T09:06:38.394Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "20260603104809_InitialCreate.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Data\\Migrations\\20260603104809_InitialCreate.cs",
+              "RelativeDocumentMoniker": "TourManagement.Data\\Migrations\\20260603104809_InitialCreate.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Data\\Migrations\\20260603104809_InitialCreate.cs",
+              "RelativeToolTip": "TourManagement.Data\\Migrations\\20260603104809_InitialCreate.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAAQwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-03T10:48:10.214Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.API\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "TourManagement.API\\Controllers\\AuthController.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.API\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "TourManagement.API\\Controllers\\AuthController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-03T09:28:39.993Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "AccountController.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Web\\Controllers\\AccountController.cs",
+              "RelativeDocumentMoniker": "TourManagement.Web\\Controllers\\AccountController.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Web\\Controllers\\AccountController.cs",
+              "RelativeToolTip": "TourManagement.Web\\Controllers\\AccountController.cs",
+              "ViewState": "AgIAACwAAAAAAAAAAAAqwBoAAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-03T09:39:20.153Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Web\\Program.cs",
+              "RelativeDocumentMoniker": "TourManagement.Web\\Program.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Web\\Program.cs",
+              "RelativeToolTip": "TourManagement.Web\\Program.cs",
+              "ViewState": "AgIAABsAAAAAAAAAAAAAAB0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-03T09:15:56.494Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.API\\Program.cs",
+              "RelativeDocumentMoniker": "TourManagement.API\\Program.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.API\\Program.cs",
+              "RelativeToolTip": "TourManagement.API\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB4AAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-03T09:37:32.625Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "TourManagemanetDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Data\\TourManagemanetDbContext.cs",
+              "RelativeDocumentMoniker": "TourManagement.Data\\TourManagemanetDbContext.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Data\\TourManagemanetDbContext.cs",
+              "RelativeToolTip": "TourManagement.Data\\TourManagemanetDbContext.cs",
+              "ViewState": "AgIAABwAAAAAAAAAAAAwwCcAAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-03T10:25:40.399Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.API\\appsettings.json",
+              "RelativeDocumentMoniker": "TourManagement.API\\appsettings.json",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.API\\appsettings.json",
+              "RelativeToolTip": "TourManagement.API\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-06-03T10:28:18.813Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Web\\appsettings.json",
+              "RelativeDocumentMoniker": "TourManagement.Web\\appsettings.json",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Web\\appsettings.json",
+              "RelativeToolTip": "TourManagement.Web\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-06-03T10:27:05.389Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "Tour.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Data\\Tour.cs",
+              "RelativeDocumentMoniker": "TourManagement.Data\\Tour.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Data\\Tour.cs",
+              "RelativeToolTip": "TourManagement.Data\\Tour.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAxwA4AAAAsAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-03T10:24:56.448Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "User.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Data\\User.cs",
+              "RelativeDocumentMoniker": "TourManagement.Data\\User.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Data\\User.cs",
+              "RelativeToolTip": "TourManagement.Data\\User.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAA0AAAAsAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-03T09:13:35.008Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "launchSettings.json",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.API\\Properties\\launchSettings.json",
+              "RelativeDocumentMoniker": "TourManagement.API\\Properties\\launchSettings.json",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.API\\Properties\\launchSettings.json",
+              "RelativeToolTip": "TourManagement.API\\Properties\\launchSettings.json",
+              "ViewState": "AgIAACEAAAAAAAAAAAAAABoAAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-06-03T09:54:52.048Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "TourManagement.Web",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Web\\TourManagement.Web.csproj",
+              "RelativeDocumentMoniker": "TourManagement.Web\\TourManagement.Web.csproj",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Web\\TourManagement.Web.csproj",
+              "RelativeToolTip": "TourManagement.Web\\TourManagement.Web.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-06-03T09:18:32.04Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "TourManagement.Data",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Data\\TourManagement.Data.csproj",
+              "RelativeDocumentMoniker": "TourManagement.Data\\TourManagement.Data.csproj",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Data\\TourManagement.Data.csproj",
+              "RelativeToolTip": "TourManagement.Data\\TourManagement.Data.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-06-03T10:21:58.951Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "Login.cshtml",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Web\\Views\\Account\\Login.cshtml",
+              "RelativeDocumentMoniker": "TourManagement.Web\\Views\\Account\\Login.cshtml",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Web\\Views\\Account\\Login.cshtml",
+              "RelativeToolTip": "TourManagement.Web\\Views\\Account\\Login.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAABCAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-03T09:41:27.173Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "LoginModel.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Business\\LoginModel.cs",
+              "RelativeDocumentMoniker": "TourManagement.Business\\LoginModel.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Business\\LoginModel.cs",
+              "RelativeToolTip": "TourManagement.Business\\LoginModel.cs",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAgwAYAAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-03T09:15:20.837Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "TourManagement.Business",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Business\\TourManagement.Business.csproj",
+              "RelativeDocumentMoniker": "TourManagement.Business\\TourManagement.Business.csproj",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Business\\TourManagement.Business.csproj",
+              "RelativeToolTip": "TourManagement.Business\\TourManagement.Business.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-06-03T09:06:32.608Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "Class1.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Business\\Class1.cs",
+              "RelativeDocumentMoniker": "TourManagement.Business\\Class1.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Business\\Class1.cs",
+              "RelativeToolTip": "TourManagement.Business\\Class1.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-03T09:05:33.562Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "Class1.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Data\\Class1.cs",
+              "RelativeDocumentMoniker": "TourManagement.Data\\Class1.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Git\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Data\\Class1.cs",
+              "RelativeToolTip": "TourManagement.Data\\Class1.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-03T09:05:33.742Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
