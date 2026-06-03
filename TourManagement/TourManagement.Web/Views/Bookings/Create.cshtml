@@ -1,0 +1,99 @@
+@{
+    ViewData["Title"] = "Chọn Tour Khởi Hành - Bước 1";
+    Layout = "_Layout";
+    var tours = ViewBag.Tours as IEnumerable<TourManagement.Business.DTOs.TourSelectDTO> ?? new List<TourManagement.Business.DTOs.TourSelectDTO>();
+    var categories = ViewBag.Categories as IEnumerable<string> ?? new List<string>();
+}
+
+<!-- Stepper Container -->
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="d-flex justify-content-between position-relative wizard-stepper">
+            <div class="step-item text-center active">
+                <div class="step-circle mx-auto"><i class="bi bi-compass"></i></div>
+                <div class="step-label mt-2 small fw-bold">1. Chọn Tour</div>
+            </div>
+            <div class="step-item text-center">
+                <div class="step-circle mx-auto"><i class="bi bi-person-fill"></i></div>
+                <div class="step-label mt-2 small">2. Nhập thông tin</div>
+            </div>
+            <div class="step-item text-center">
+                <div class="step-circle mx-auto"><i class="bi bi-file-earmark-text-fill"></i></div>
+                <div class="step-label mt-2 small">3. Kiểm tra</div>
+            </div>
+            <div class="step-item text-center">
+                <div class="step-circle mx-auto"><i class="bi bi-check-circle-fill"></i></div>
+                <div class="step-label mt-2 small">4. Hoàn tất</div>
+            </div>
+
+        };
+    }
+}
+
+<style>
+    /* Wizard Stepper Styling */
+    .wizard-stepper {
+        max-width: 800px;
+        margin: 30px auto;
+    }
+    .step-item {
+        z-index: 2;
+        position: relative;
+        width: 25%;
+    }
+    .step-circle {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        background-color: #f8f9fa;
+        color: #6c757d;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        font-weight: bold;
+        border: 3px solid #e9ecef;
+        transition: all 0.3s ease;
+    }
+    .step-item.active .step-circle {
+        background-color: #0d6efd;
+        color: white;
+        border-color: #cce5ff;
+        box-shadow: 0 0 0 5px rgba(13, 110, 253, 0.15);
+    }
+    .step-item.completed .step-circle {
+        background-color: #198754;
+        color: white;
+        border-color: #d1e7dd;
+    }
+    .step-label {
+        color: #6c757d;
+        transition: all 0.3s ease;
+        font-weight: 500;
+    }
+    .step-item.active .step-label {
+        color: #0d6efd;
+        font-weight: 700;
+    }
+    .step-item.completed .step-label {
+        color: #198754;
+    }
+    .stepper-line {
+        position: absolute;
+        top: 22px;
+        left: 12.5%;
+        width: 75%;
+        height: 3px;
+        background-color: #e9ecef;
+        z-index: 1;
+    }
+
+    /* Tour Cards Custom styling */
+    .tour-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+    }
+    .object-fit-cover {
+        object-fit: cover;
+    }
+</style>

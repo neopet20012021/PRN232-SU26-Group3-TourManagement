@@ -1,0 +1,63 @@
+@model TourManagement.Web.Models.BookingDetailsViewModel
+@{
+    ViewData["Title"] = "Nhập thông tin Booking - Bước 2";
+    Layout = "_Layout";
+    var tour = ViewBag.SelectedTour as TourManagement.Business.DTOs.TourSelectDTO;
+    // In BookingsController: ViewBag.SelectedTour = tour (where tour is TourSelectDTO)
+}
+
+<!-- Stepper Container -->
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="d-flex justify-content-between position-relative wizard-stepper">
+            <div class="step-item text-center completed">
+                <div class="step-circle mx-auto"><i class="bi bi-check-lg"></i></div>
+                <div class="step-label mt-2 small fw-bold">1. Chọn Tour</div>
+            </div>
+            <div class="step-item text-center active">
+                <div class="step-circle mx-auto"><i class="bi bi-person-fill"></i></div>
+                <div class="step-label mt-2 small fw-bold">2. Nhập thông tin</div>
+            </div>
+            <div class="step-item text-center">
+                <div class="step-circle mx-auto"><i class="bi bi-file-earmark-text-fill"></i></div>
+                <div class="step-label mt-2 small">3. Kiểm tra</div>
+            </div>
+            <div class="step-item text-center">
+                <div class="step-circle mx-auto"><i class="bi bi-check-circle-fill"></i></div>
+                <div class="step-label mt-2 small">4. Hoàn tất</div>
+                        promoCode: promoCode
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    document.getElementById('summaryAdultPrice').innerText = formatCurrency(data.adultSubtotal);
+                    document.getElementById('summaryChildPrice').innerText = formatCurrency(data.childSubtotal);
+                    
+                    if (data.discountAmount > 0) {
+                        document.getElementById('discountRow').style.setProperty('display', 'flex', 'important');
+                        document.getElementById('summaryDiscount').innerText = '- ' + formatCurrency(data.discountAmount);
+                    } else {
+                        document.getElementById('discountRow').style.setProperty('display', 'none', 'important');
+                    }
+                    
+                    document.getElementById('summaryTotal').innerText = formatCurrency(data.finalPrice);
+
+                    const msgEl = document.getElementById('promoMessage');
+                    if (promoCode && data.promoCodeStatus) {
+                        msgEl.innerText = data.promoCodeStatus;
+                        msgEl.className = data.discountAmount > 0 ? "text-success mt-1 d-block small" : "text-danger mt-1 d-block small";
+                    } else {
+                        msgEl.innerText = "";
+                    }
+                }
+            } catch (error) {
+                console.error("Error calculating price:", error);
+            }
+        }
+
+        // Initialize price calculation on load
+        document.addEventListener('DOMContentLoaded', calculatePrice);
+    </script>
+}
