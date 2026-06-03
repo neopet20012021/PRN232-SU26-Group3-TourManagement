@@ -80,7 +80,7 @@ namespace TourManagement.Business.DTOs
 
     public class TourSelectDTO
     {
-        public int Id { get; set; }
+        public int TourId { get; set; }
         public string TourName { get; set; } = string.Empty;
         public string TourCode { get; set; } = string.Empty;
         public DateTime DepartureDate { get; set; }

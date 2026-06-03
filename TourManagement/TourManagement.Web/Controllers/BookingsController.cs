@@ -83,12 +83,12 @@ namespace TourManagement.Web.Controllers
                 return RedirectToAction("Create");
 
             var tours = await _bookingService.GetActiveToursAsync();
-            var tour = tours.FirstOrDefault(t => t.Id == session.SelectedTourId);
+            var tour = tours.FirstOrDefault(t => t.TourId == session.SelectedTourId);
             if (tour == null) return RedirectToAction("Create");
 
             var model = new BookingDetailsViewModel
             {
-                TourId = tour.Id,
+                TourId = tour.TourId,
                 TourName = tour.TourName,
                 DepartureDate = tour.DepartureDate,
                 PricePerAdult = tour.PricePerAdult,
@@ -122,7 +122,7 @@ namespace TourManagement.Web.Controllers
             ModelState.Remove("TourName");
 
             var tours = await _bookingService.GetActiveToursAsync();
-            var tour = tours.FirstOrDefault(t => t.Id == session.SelectedTourId);
+            var tour = tours.FirstOrDefault(t => t.TourId == session.SelectedTourId);
             if (tour != null && (model.AdultCount + model.ChildCount + model.InfantCount) > tour.AvailableSeats)
             {
                 ModelState.AddModelError("", $"Số lượng hành khách ({model.AdultCount + model.ChildCount + model.InfantCount}) vượt quá số chỗ còn trống ({tour.AvailableSeats}).");
@@ -158,7 +158,7 @@ namespace TourManagement.Web.Controllers
             if (string.IsNullOrEmpty(session.CustomerName) || string.IsNullOrEmpty(session.Phone)) return RedirectToAction("BookingDetails");
 
             var tours = await _bookingService.GetActiveToursAsync();
-            var tour = tours.FirstOrDefault(t => t.Id == session.SelectedTourId);
+            var tour = tours.FirstOrDefault(t => t.TourId == session.SelectedTourId);
             
             var priceCalc = await _bookingService.CalculatePriceAsync(session.SelectedTourId, session.AdultCount, session.ChildCount, session.PromoCode);
 
