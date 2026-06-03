@@ -147,3 +147,4 @@ D:\K8\PRN232\project\PRN232-SU26-Group3-TourManagement\TourManagement\TourManage
 D:\K8\PRN232\project\PRN232-SU26-Group3-TourManagement\TourManagement\TourManagement.Web\obj\Debug\net8.0\TourManagement.Web.pdb
 D:\K8\PRN232\project\PRN232-SU26-Group3-TourManagement\TourManagement\TourManagement.Web\obj\Debug\net8.0\TourManagement.Web.genruntimeconfig.cache
 D:\K8\PRN232\project\PRN232-SU26-Group3-TourManagement\TourManagement\TourManagement.Web\obj\Debug\net8.0\ref\TourManagement.Web.dll
+D:\K8\PRN232\project\PRN232-SU26-Group3-TourManagement\TourManagement\TourManagement.Web\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

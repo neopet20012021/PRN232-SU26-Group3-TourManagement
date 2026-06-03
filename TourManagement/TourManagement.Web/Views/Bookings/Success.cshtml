@@ -1,42 +1,75 @@
-@model TourManagement.Business.DTOs.BookingDTO
+@model TourManagement.Data.Models.Booking
 @{
     ViewData["Title"] = "Đặt Tour Thành Công - Bước 4";
     Layout = "_Layout";
 }
 
 <!-- Stepper Container -->
-<div class="row mb-4">
-    <div class="col-md-12">
-        <div class="d-flex justify-content-between position-relative wizard-stepper">
-            <div class="step-item text-center completed">
-                <div class="step-circle mx-auto"><i class="bi bi-check-lg"></i></div>
-                <div class="step-label mt-2 small fw-bold">1. Chọn Tour</div>
-            </div>
-            <div class="step-item text-center completed">
-                <div class="step-circle mx-auto"><i class="bi bi-check-lg"></i></div>
-                <div class="step-label mt-2 small fw-bold">2. Nhập thông tin</div>
-            </div>
-            <div class="step-item text-center completed">
-                <div class="step-circle mx-auto"><i class="bi bi-check-lg"></i></div>
-                <div class="step-label mt-2 small fw-bold">3. Kiểm tra</div>
-            </div>
-            <div class="step-item text-center completed">
-                <div class="step-circle mx-auto bg-success text-white border-success"><i class="bi bi-check-lg"></i></div>
-                <div class="step-label mt-2 small text-success fw-bold">4. Hoàn tất</div>
-            </div>
-            <div class="stepper-line"></div>
-        </div>
+<div class="booking-stepper-container mb-4 mt-3">
+    <div class="step completed">
+        <div class="step-icon"><i class="fas fa-check"></i></div>
+        <div class="step-label">1. Chọn Tour</div>
+    </div>
+    <div class="step-line completed"></div>
+    <div class="step completed">
+        <div class="step-icon"><i class="fas fa-check"></i></div>
+        <div class="step-label">2. Nhập thông tin</div>
+    </div>
+    <div class="step-line completed"></div>
+    <div class="step completed">
+        <div class="step-icon"><i class="fas fa-check"></i></div>
+        <div class="step-label">3. Kiểm tra</div>
+    </div>
+    <div class="step-line completed"></div>
+    <div class="step active">
+        <div class="step-icon"><i class="fas fa-flag-checkered"></i></div>
+        <div class="step-label text-success fw-bold">4. Hoàn tất</div>
     </div>
 </div>
 
-<div class
-                        <a href="/" class="btn btn-outline-secondary px-4 py-2" style="border-radius: 8px;">
-                            <i class="bi bi-house-door-fill me-1"></i> Về trang chủ
-                        </a>
-                        <a asp-action="Details" asp-route-code="@Model?.BookingCode" class="btn btn-primary px-4 py-2 fw-bold" style="border-radius: 8px;">
-                            Xem chi tiết <i class="bi bi-arrow-right-short ms-1"></i>
-                        </a>
+<div class="row justify-content-center">
+    <div class="col-lg-8 text-center">
+        <div class="card shadow-lg border-0 rounded-4 overflow-hidden mb-5">
+            <div class="bg-success text-white py-4">
+                <div class="mb-3">
+                    <i class="fas fa-check-circle" style="font-size: 5rem;"></i>
+                </div>
+                <h2 class="fw-bold mb-0">Đặt Tour Thành Công!</h2>
+            </div>
+            
+            <div class="card-body p-5 bg-white">
+                <h5 class="text-muted mb-4">Cảm ơn <strong class="text-dark">@Model?.CustomerName</strong> đã tin tưởng và sử dụng dịch vụ của chúng tôi.</h5>
+                
+                <div class="alert alert-light border border-success border-2 rounded-3 text-start p-4 mb-4 shadow-sm mx-auto" style="max-width: 500px;">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Mã Đặt Tour:</span>
+                        <strong class="fs-5 text-primary">@Model?.BookingCode</strong>
                     </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Tổng thanh toán:</span>
+                        <strong class="fs-5 text-danger">@Model?.FinalPrice.ToString("N0") ₫</strong>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="text-muted">Phương thức:</span>
+                        <strong class="text-dark">
+                            @(Model?.PaymentMethod == "cash" ? "Tiền mặt" :
+                              Model?.PaymentMethod == "transfer" ? "Chuyển khoản" :
+                              Model?.PaymentMethod == "momo" ? "Momo" : "Thẻ tín dụng")
+                        </strong>
+                    </div>
+                </div>
+
+                <p class="text-muted mb-4 px-md-5">
+                    Chúng tôi đã gửi email xác nhận chi tiết thông tin tour và hướng dẫn thanh toán đến email <strong>@Model?.Email</strong>. Vui lòng kiểm tra hộp thư của bạn.
+                </p>
+
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="/" class="btn btn-outline-secondary btn-lg rounded-pill px-4">
+                        <i class="fas fa-home me-2"></i> Về trang chủ
+                    </a>
+                    <button class="btn btn-success btn-lg rounded-pill px-4 shadow-sm" onclick="window.print()">
+                        <i class="fas fa-print me-2"></i> In hóa đơn
+                    </button>
                 </div>
             </div>
         </div>
@@ -44,18 +77,14 @@
 </div>
 
 <style>
-    /* Wizard Stepper Styling */
-    .wizard-stepper { max-width: 800px; margin: 30px auto; }
-    .step-item { z-index: 2; position: relative; width: 25%; }
-    .step-circle { width: 45px; height: 45px; border-radius: 50%; background-color: #f8f9fa; color: #6c757d; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: bold; border: 3px solid #e9ecef; transition: all 0.3s ease; }
-    .step-item.active .step-circle { background-color: #0d6efd; color: white; border-color: #cce5ff; box-shadow: 0 0 0 5px rgba(13, 110, 253, 0.15); }
-    .step-item.completed .step-circle { background-color: #198754; color: white; border-color: #d1e7dd; }
-    .step-label { color: #6c757d; transition: all 0.3s ease; font-weight: 500; }
-    .step-item.active .step-label { color: #0d6efd; font-weight: 700; }
-    .step-item.completed .step-label { color: #198754; }
-    .stepper-line { position: absolute; top: 22px; left: 12.5%; width: 75%; height: 3px; background-color: #e9ecef; z-index: 1; }
-    
-    .stepper-line::before {
-        content: ''; position: absolute; top: 0; left: 0; height: 100%; width: 100%; background-color: #198754; z-index: 2;
-    }
+/* Stepper CSS */
+.booking-stepper-container { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 1.5rem; border-radius: 1rem; box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075); }
+.step { display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; z-index: 1; }
+.step-icon { width: 40px; height: 40px; border-radius: 50%; background-color: #e9ecef; color: #6c757d; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2rem; margin-bottom: 0.5rem; transition: all 0.3s ease; }
+.step-label { font-size: 0.9rem; color: #6c757d; font-weight: 500; }
+.step.active .step-icon { background-color: #198754; color: #fff; box-shadow: 0 0 0 4px rgba(25, 135, 84, 0.2); }
+.step.completed .step-icon { background-color: #198754; color: #fff; }
+.step.completed .step-label { color: #198754; }
+.step-line { flex-grow: 1; height: 3px; background-color: #e9ecef; margin: 0 10px; position: relative; top: -12px; }
+.step-line.completed { background-color: #198754; }
 </style>

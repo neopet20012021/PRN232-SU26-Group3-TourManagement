@@ -19,7 +19,7 @@ namespace TourManagement.Business.Services
         Task<PriceCalculationDTO> CalculatePriceAsync(int tourId, int adultCount, int childCount, string promoCode = null);
         Task<bool> UpdateBookingStatusAsync(int bookingId, string newStatus);
         Task<bool> CancelBookingAsync(int bookingId);
-        Task<IEnumerable<TourSelectDTO>> GetActiveToursAsync();
+        Task<IEnumerable<TourSelectDTO>> GetActiveToursAsync(string? keyword = null, decimal? minPrice = null, decimal? maxPrice = null, DateTime? fromDate = null, DateTime? toDate = null);
         Task<bool> ValidatePromoCodeAsync(string promoCode);
     }
 
@@ -127,10 +127,25 @@ namespace TourManagement.Business.Services
             return await UpdateBookingStatusAsync(bookingId, "cancelled");
         }
 
-        public async Task<IEnumerable<TourSelectDTO>> GetActiveToursAsync()
+        public async Task<IEnumerable<TourSelectDTO>> GetActiveToursAsync(string? keyword = null, decimal? minPrice = null, decimal? maxPrice = null, DateTime? fromDate = null, DateTime? toDate = null)
         {
             var tours = await _tourRepository.GetAllAsync();
-            return _mapper.Map<IEnumerable<TourSelectDTO>>(tours);
+            var query = tours.Where(t => t.IsActive).AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(keyword))
+            {
+                var lowerKeyword = keyword.ToLower();
+                query = query.Where(t => t.TourName.ToLower().Contains(lowerKeyword) || 
+                                         t.TourCode.ToLower().Contains(lowerKeyword) || 
+                                         t.Destination.ToLower().Contains(lowerKeyword));
+            }
+
+            if (minPrice.HasValue) query = query.Where(t => t.PricePerAdult >= minPrice.Value);
+            if (maxPrice.HasValue) query = query.Where(t => t.PricePerAdult <= maxPrice.Value);
+            if (fromDate.HasValue) query = query.Where(t => t.DepartureDate.Date >= fromDate.Value.Date);
+            if (toDate.HasValue) query = query.Where(t => t.DepartureDate.Date <= toDate.Value.Date);
+
+            return _mapper.Map<IEnumerable<TourSelectDTO>>(query.ToList());
         }
 
         public async Task<bool> ValidatePromoCodeAsync(string promoCode)

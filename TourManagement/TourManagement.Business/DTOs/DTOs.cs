@@ -23,6 +23,9 @@ namespace TourManagement.Business.DTOs
         [StringLength(50)]
         public string? CCCD { get; set; }
 
+        [StringLength(200)]
+        public string? Address { get; set; }
+
         [Required]
         [Range(1, 100, ErrorMessage = "Số người lớn phải từ 1 đến 100")]
         public int AdultCount { get; set; } = 1;
@@ -52,6 +55,7 @@ namespace TourManagement.Business.DTOs
         public string PhoneNumber { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string? CCCD { get; set; }
+        public string? Address { get; set; }
         public int AdultCount { get; set; }
         public int ChildCount { get; set; }
         public int InfantCount { get; set; }
@@ -85,6 +89,7 @@ namespace TourManagement.Business.DTOs
         public decimal PricePerChild { get; set; }
         public string Category { get; set; } = string.Empty;
         public string Destination { get; set; } = string.Empty;
+        public string? Image { get; set; }
     }
 
     public class PriceCalculationDTO

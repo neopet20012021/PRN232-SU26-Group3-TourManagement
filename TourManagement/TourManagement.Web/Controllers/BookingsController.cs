@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -14,42 +15,75 @@ namespace TourManagement.Web.Controllers
     public class BookingsController : Controller
     {
         private readonly IBookingService _bookingService;
+        private const string WizardSessionKey = "BookingWizardSession";
 
         public BookingsController(IBookingService bookingService)
         {
             _bookingService = bookingService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Create(int? tourId)
+        // --- Helper Methods for Session ---
+        private BookingWizardSessionModel GetWizardSession()
         {
-            var tours = await _bookingService.GetActiveToursAsync();
-            if (tourId.HasValue)
+            var json = HttpContext.Session.GetString(WizardSessionKey);
+            return string.IsNullOrEmpty(json) ? new BookingWizardSessionModel() : JsonSerializer.Deserialize<BookingWizardSessionModel>(json) ?? new BookingWizardSessionModel();
+        }
+
+        private void SaveWizardSession(BookingWizardSessionModel model)
+        {
+            var json = JsonSerializer.Serialize(model);
+            HttpContext.Session.SetString(WizardSessionKey, json);
+        }
+
+        private void ClearWizardSession()
+        {
+            HttpContext.Session.Remove(WizardSessionKey);
+        }
+        // ----------------------------------
+
+        // STEP 1: Select Tour
+        [HttpGet]
+        public async Task<IActionResult> Create(string? keyword = null, decimal? minPrice = null, decimal? maxPrice = null, DateTime? fromDate = null, DateTime? toDate = null)
+        {
+            var tours = await _bookingService.GetActiveToursAsync(keyword, minPrice, maxPrice, fromDate, toDate);
+            var session = GetWizardSession();
+            if (session.SelectedTourId > 0)
             {
-                var selectedTour = tours.FirstOrDefault(t => t.Id == tourId.Value);
-                if (selectedTour != null)
-                {
-                    ViewBag.SelectedTourId = tourId.Value;
-                }
+                ViewBag.SelectedTourId = session.SelectedTourId;
             }
+            ViewBag.Keyword = keyword;
+            ViewBag.MinPrice = minPrice;
+            ViewBag.MaxPrice = maxPrice;
+            ViewBag.FromDate = fromDate?.ToString("yyyy-MM-dd");
+            ViewBag.ToDate = toDate?.ToString("yyyy-MM-dd");
+
             return View(tours);
         }
 
         [HttpPost]
-        public IActionResult NextStep(int tourId)
+        public IActionResult SelectTour(int tourId)
         {
-            HttpContext.Session.SetInt32("Booking_TourId", tourId);
+            if (tourId <= 0) return RedirectToAction("Create");
+
+            var session = GetWizardSession();
+            session.SelectedTourId = tourId;
+            SaveWizardSession(session);
+
             return RedirectToAction("BookingDetails");
         }
 
+        // STEP 2: Booking Details
         [HttpGet]
         public async Task<IActionResult> BookingDetails()
         {
-            var tourId = HttpContext.Session.GetInt32("Booking_TourId");
-            if (!tourId.HasValue) return RedirectToAction("Create");
+            var session = GetWizardSession();
+            
+            // Guard: Cannot access Step 2 without Step 1
+            if (session.SelectedTourId <= 0) 
+                return RedirectToAction("Create");
 
             var tours = await _bookingService.GetActiveToursAsync();
-            var tour = tours.FirstOrDefault(t => t.Id == tourId.Value);
+            var tour = tours.FirstOrDefault(t => t.Id == session.SelectedTourId);
             if (tour == null) return RedirectToAction("Create");
 
             var model = new BookingDetailsViewModel
@@ -58,63 +92,87 @@ namespace TourManagement.Web.Controllers
                 TourName = tour.TourName,
                 DepartureDate = tour.DepartureDate,
                 PricePerAdult = tour.PricePerAdult,
-                PricePerChild = tour.PricePerChild
+                PricePerChild = tour.PricePerChild,
+                
+                CustomerName = session.CustomerName ?? "",
+                Email = session.Email ?? "",
+                PhoneNumber = session.Phone ?? "",
+                Address = session.Address,
+                AdultCount = session.AdultCount > 0 ? session.AdultCount : 1,
+                ChildCount = session.ChildCount,
+                InfantCount = 0,
+                PromoCode = session.PromoCode,
+                SpecialRequest = session.SpecialRequest
             };
 
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult BookingDetails(BookingDetailsViewModel model)
+        public async Task<IActionResult> BookingDetails(BookingDetailsViewModel model)
         {
-            // Do not require PromoCode and SpecialRequest
+            var session = GetWizardSession();
+            
+            // Guard
+            if (session.SelectedTourId <= 0) 
+                return RedirectToAction("Create");
+
             ModelState.Remove("PromoCode");
             ModelState.Remove("SpecialRequest");
+            ModelState.Remove("TourName");
+
+            var tours = await _bookingService.GetActiveToursAsync();
+            var tour = tours.FirstOrDefault(t => t.Id == session.SelectedTourId);
+            if (tour != null && (model.AdultCount + model.ChildCount + model.InfantCount) > tour.AvailableSeats)
+            {
+                ModelState.AddModelError("", $"Số lượng hành khách ({model.AdultCount + model.ChildCount + model.InfantCount}) vượt quá số chỗ còn trống ({tour.AvailableSeats}).");
+            }
 
             if (ModelState.IsValid)
             {
-                // Store in session (in a real app, serialize to JSON)
-                HttpContext.Session.SetString("Booking_CustomerName", model.CustomerName);
-                HttpContext.Session.SetString("Booking_Email", model.Email);
-                HttpContext.Session.SetString("Booking_PhoneNumber", model.PhoneNumber);
-                HttpContext.Session.SetInt32("Booking_AdultCount", model.AdultCount);
-                HttpContext.Session.SetInt32("Booking_ChildCount", model.ChildCount);
-                HttpContext.Session.SetString("Booking_PromoCode", model.PromoCode ?? "");
-                HttpContext.Session.SetString("Booking_SpecialRequest", model.SpecialRequest ?? "");
-                
+                session.CustomerName = model.CustomerName;
+                session.Email = model.Email;
+                session.Phone = model.PhoneNumber;
+                session.Address = model.Address;
+                session.AdultCount = model.AdultCount;
+                session.ChildCount = model.ChildCount;
+                session.PromoCode = model.PromoCode;
+                session.SpecialRequest = model.SpecialRequest;
+                session.PaymentMethod = model.PaymentMethod;
+                session.BookingDate = DateTime.Now;
+
+                SaveWizardSession(session);
                 return RedirectToAction("Review");
             }
             return View(model);
         }
 
+        // STEP 3: Review
         [HttpGet]
         public async Task<IActionResult> Review()
         {
-            var tourId = HttpContext.Session.GetInt32("Booking_TourId");
-            if (!tourId.HasValue) return RedirectToAction("Create");
+            var session = GetWizardSession();
+            
+            // Guard: Cannot access Step 3 without Step 1 & 2
+            if (session.SelectedTourId <= 0) return RedirectToAction("Create");
+            if (string.IsNullOrEmpty(session.CustomerName) || string.IsNullOrEmpty(session.Phone)) return RedirectToAction("BookingDetails");
 
             var tours = await _bookingService.GetActiveToursAsync();
-            var tour = tours.FirstOrDefault(t => t.Id == tourId.Value);
+            var tour = tours.FirstOrDefault(t => t.Id == session.SelectedTourId);
             
-            var adultCount = HttpContext.Session.GetInt32("Booking_AdultCount") ?? 1;
-            var childCount = HttpContext.Session.GetInt32("Booking_ChildCount") ?? 0;
-            var promoCode = HttpContext.Session.GetString("Booking_PromoCode");
-            var customerName = HttpContext.Session.GetString("Booking_CustomerName");
-            var email = HttpContext.Session.GetString("Booking_Email");
-            var phone = HttpContext.Session.GetString("Booking_PhoneNumber");
-
-            var priceCalc = await _bookingService.CalculatePriceAsync(tourId.Value, adultCount, childCount, promoCode);
+            var priceCalc = await _bookingService.CalculatePriceAsync(session.SelectedTourId, session.AdultCount, session.ChildCount, session.PromoCode);
 
             var model = new BookingReviewViewModel
             {
                 TourName = tour?.TourName,
                 DepartureDate = tour?.DepartureDate ?? DateTime.Now,
-                CustomerName = customerName,
-                Email = email,
-                PhoneNumber = phone,
-                AdultCount = adultCount,
-                ChildCount = childCount,
-                PromoCode = promoCode,
+                CustomerName = session.CustomerName,
+                Email = session.Email,
+                PhoneNumber = session.Phone,
+                Address = session.Address,
+                AdultCount = session.AdultCount,
+                ChildCount = session.ChildCount,
+                PromoCode = session.PromoCode,
                 OriginalPrice = priceCalc.OriginalPrice,
                 DiscountAmount = priceCalc.DiscountAmount,
                 FinalPrice = priceCalc.FinalPrice
@@ -126,29 +184,32 @@ namespace TourManagement.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> ConfirmBooking(string paymentMethod)
         {
-            var tourId = HttpContext.Session.GetInt32("Booking_TourId");
-            if (!tourId.HasValue) return RedirectToAction("Create");
+            var session = GetWizardSession();
+            if (session.SelectedTourId <= 0) return RedirectToAction("Create");
+
+            // Allow paymentMethod override from form or fallback to session
+            var finalPaymentMethod = !string.IsNullOrEmpty(paymentMethod) ? paymentMethod : (session.PaymentMethod ?? "cash");
 
             var dto = new CreateBookingDTO
             {
-                TourId = tourId.Value,
-                CustomerName = HttpContext.Session.GetString("Booking_CustomerName") ?? "",
-                Email = HttpContext.Session.GetString("Booking_Email") ?? "",
-                PhoneNumber = HttpContext.Session.GetString("Booking_PhoneNumber") ?? "",
-                AdultCount = HttpContext.Session.GetInt32("Booking_AdultCount") ?? 1,
-                ChildCount = HttpContext.Session.GetInt32("Booking_ChildCount") ?? 0,
-                PromoCode = HttpContext.Session.GetString("Booking_PromoCode"),
-                SpecialRequest = HttpContext.Session.GetString("Booking_SpecialRequest"),
-                PaymentMethod = paymentMethod,
-                BookingDate = DateTime.Now
+                TourId = session.SelectedTourId,
+                CustomerName = session.CustomerName ?? "",
+                Email = session.Email ?? "",
+                PhoneNumber = session.Phone ?? "",
+                Address = session.Address,
+                AdultCount = session.AdultCount,
+                ChildCount = session.ChildCount,
+                PromoCode = session.PromoCode,
+                SpecialRequest = session.SpecialRequest,
+                PaymentMethod = finalPaymentMethod,
+                BookingDate = session.BookingDate != default ? session.BookingDate : DateTime.Now
             };
 
             var response = await _bookingService.CreateBookingAsync(dto);
 
             if (response.Success)
             {
-                // Clear session
-                HttpContext.Session.Clear();
+                ClearWizardSession();
                 return RedirectToAction("Success", new { bookingCode = response.Data?.BookingCode });
             }
 
@@ -156,11 +217,15 @@ namespace TourManagement.Web.Controllers
             return RedirectToAction("Review");
         }
 
+        // STEP 4: Success
         [HttpGet]
         public async Task<IActionResult> Success(string bookingCode)
         {
+            if (string.IsNullOrEmpty(bookingCode)) return RedirectToAction("Create");
+            
             var booking = await _bookingService.GetBookingByCodeAsync(bookingCode);
             if (booking == null) return NotFound();
+            
             return View(booking);
         }
     }

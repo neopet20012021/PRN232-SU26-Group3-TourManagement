@@ -2,60 +2,260 @@
 @{
     ViewData["Title"] = "Nhập thông tin Booking - Bước 2";
     Layout = "_Layout";
-    var tour = ViewBag.SelectedTour as TourManagement.Business.DTOs.TourSelectDTO;
-    // In BookingsController: ViewBag.SelectedTour = tour (where tour is TourSelectDTO)
 }
 
 <!-- Stepper Container -->
-<div class="row mb-4">
-    <div class="col-md-12">
-        <div class="d-flex justify-content-between position-relative wizard-stepper">
-            <div class="step-item text-center completed">
-                <div class="step-circle mx-auto"><i class="bi bi-check-lg"></i></div>
-                <div class="step-label mt-2 small fw-bold">1. Chọn Tour</div>
+<div class="booking-stepper-container mb-4 mt-3">
+    <div class="step completed">
+        <div class="step-icon"><i class="fas fa-check"></i></div>
+        <div class="step-label">1. Chọn Tour</div>
+    </div>
+    <div class="step-line completed"></div>
+    <div class="step active">
+        <div class="step-icon">2</div>
+        <div class="step-label">2. Nhập thông tin</div>
+    </div>
+    <div class="step-line"></div>
+    <div class="step">
+        <div class="step-icon">3</div>
+        <div class="step-label">3. Kiểm tra</div>
+    </div>
+    <div class="step-line"></div>
+    <div class="step">
+        <div class="step-icon">4</div>
+        <div class="step-label">4. Hoàn tất</div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card shadow-sm border-0 rounded-4 mb-4">
+            <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
+                <h4 class="mb-0 text-primary fw-bold"><i class="fas fa-user-edit me-2"></i> Thông tin khách hàng</h4>
             </div>
-            <div class="step-item text-center active">
-                <div class="step-circle mx-auto"><i class="bi bi-person-fill"></i></div>
-                <div class="step-label mt-2 small fw-bold">2. Nhập thông tin</div>
+            <div class="card-body">
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="alert alert-danger mb-4">
+                        <ul class="mb-0">
+                            @foreach (var modelState in ViewData.ModelState.Values)
+                            {
+                                foreach (var error in modelState.Errors)
+                                {
+                                    <li>@error.ErrorMessage</li>
+                                }
+                            }
+                        </ul>
+                    </div>
+                }
+
+                <form asp-action="BookingDetails" method="post" id="bookingForm">
+                    <input type="hidden" asp-for="TourId" />
+                    <input type="hidden" asp-for="TourName" />
+                    <input type="hidden" asp-for="DepartureDate" />
+                    <input type="hidden" asp-for="PricePerAdult" id="pricePerAdult" />
+                    <input type="hidden" asp-for="PricePerChild" id="pricePerChild" />
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-12">
+                            <label asp-for="CustomerName" class="form-label fw-bold">Họ và Tên <span class="text-danger">*</span></label>
+                            <input asp-for="CustomerName" class="form-control form-control-lg" placeholder="Nhập đầy đủ họ tên" />
+                            <span asp-validation-for="CustomerName" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="PhoneNumber" class="form-label fw-bold">Số điện thoại <span class="text-danger">*</span></label>
+                            <input asp-for="PhoneNumber" class="form-control form-control-lg" placeholder="Nhập số điện thoại liên lạc" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Email" class="form-label fw-bold">Email <span class="text-danger">*</span></label>
+                            <input asp-for="Email" type="email" class="form-control form-control-lg" placeholder="Nhập địa chỉ email" />
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-12">
+                            <label asp-for="Address" class="form-label fw-bold">Địa chỉ (Tuỳ chọn)</label>
+                            <input asp-for="Address" class="form-control form-control-lg" placeholder="Nhập địa chỉ hiện tại của bạn" />
+                            <span asp-validation-for="Address" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <h5 class="fw-bold text-dark mb-3 border-bottom pb-2">Số lượng hành khách</h5>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <label asp-for="AdultCount" class="form-label text-muted">Người lớn (từ 12 tuổi) <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <button class="btn btn-outline-secondary px-3" type="button" onclick="updateCount('AdultCount', -1)"><i class="fas fa-minus"></i></button>
+                                <input asp-for="AdultCount" class="form-control text-center fw-bold" readonly />
+                                <button class="btn btn-outline-secondary px-3" type="button" onclick="updateCount('AdultCount', 1)"><i class="fas fa-plus"></i></button>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="ChildCount" class="form-label text-muted">Trẻ em (5-11 tuổi)</label>
+                            <div class="input-group">
+                                <button class="btn btn-outline-secondary px-3" type="button" onclick="updateCount('ChildCount', -1)"><i class="fas fa-minus"></i></button>
+                                <input asp-for="ChildCount" class="form-control text-center fw-bold" readonly />
+                                <button class="btn btn-outline-secondary px-3" type="button" onclick="updateCount('ChildCount', 1)"><i class="fas fa-plus"></i></button>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="InfantCount" class="form-label text-muted">Trẻ sơ sinh (< 5 tuổi)</label>
+                            <div class="input-group">
+                                <button class="btn btn-outline-secondary px-3" type="button" onclick="updateCount('InfantCount', -1)"><i class="fas fa-minus"></i></button>
+                                <input asp-for="InfantCount" class="form-control text-center fw-bold" readonly />
+                                <button class="btn btn-outline-secondary px-3" type="button" onclick="updateCount('InfantCount', 1)"><i class="fas fa-plus"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h5 class="fw-bold text-dark mb-3 border-bottom pb-2">Thông tin bổ sung</h5>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-12">
+                            <label asp-for="PromoCode" class="form-label text-muted">Mã giảm giá (Nếu có)</label>
+                            <div class="input-group">
+                                <input asp-for="PromoCode" class="form-control" placeholder="Nhập mã giảm giá" />
+                                <button class="btn btn-outline-primary px-4" type="button" onclick="applyPromo()"><i class="fas fa-check me-1"></i> Áp dụng</button>
+                            </div>
+                            <div id="promoMessage" class="small mt-1"></div>
+                        </div>
+                        <div class="col-md-12">
+                            <label asp-for="SpecialRequest" class="form-label text-muted">Yêu cầu đặc biệt (Ăn chay, dị ứng...)</label>
+                            <textarea asp-for="SpecialRequest" class="form-control" rows="3" placeholder="Nhập yêu cầu đặc biệt của bạn (Tuỳ chọn)"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-5">
+                        <a href="@Url.Action("Create")" class="btn btn-outline-secondary btn-lg rounded-pill px-4">
+                            <i class="fas fa-arrow-left me-2"></i> Quay lại
+                        </a>
+                        <button type="submit" class="btn btn-primary btn-lg rounded-pill px-5 fw-bold shadow-sm">
+                            Tiếp tục <i class="fas fa-arrow-right ms-2"></i>
+                        </button>
+                    </div>
+                </form>
             </div>
-            <div class="step-item text-center">
-                <div class="step-circle mx-auto"><i class="bi bi-file-earmark-text-fill"></i></div>
-                <div class="step-label mt-2 small">3. Kiểm tra</div>
+        </div>
+    </div>
+
+    <!-- Right Column: Quick Summary -->
+    <div class="col-lg-4">
+        <div class="card shadow-sm border-0 rounded-4 sticky-top" style="top: 20px; z-index: 10;">
+            <img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=600&auto=format&fit=crop" class="card-img-top rounded-top-4" style="height: 150px; object-fit: cover;" alt="Tour Image">
+            <div class="card-body">
+                <h5 class="card-title fw-bold text-primary mb-3">@Model.TourName</h5>
+                
+                <ul class="list-unstyled mb-4">
+                    <li class="mb-2"><i class="fas fa-calendar-alt text-success me-2 width-20"></i> Ngày đi: <strong>@Model.DepartureDate.ToString("dd/MM/yyyy")</strong></li>
+                    <li class="mb-2"><i class="fas fa-ticket-alt text-info me-2 width-20"></i> Người lớn: <strong id="summaryAdultPrice"></strong></li>
+                    <li class="mb-2"><i class="fas fa-child text-warning me-2 width-20"></i> Trẻ em: <strong id="summaryChildPrice"></strong></li>
+                </ul>
+
+                <hr>
+                
+                <div class="d-flex justify-content-between align-items-center mb-2" id="discountRow" style="display: none !important;">
+                    <span class="text-success">Giảm giá:</span>
+                    <span class="fw-bold text-success" id="summaryDiscount"></span>
+                </div>
+                
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="fw-bold fs-5">Tổng tiền:</span>
+                    <span class="fw-bold fs-4 text-danger" id="summaryTotal"></span>
+                </div>
             </div>
-            <div class="step-item text-center">
-                <div class="step-circle mx-auto"><i class="bi bi-check-circle-fill"></i></div>
-                <div class="step-label mt-2 small">4. Hoàn tất</div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Stepper CSS */
+.booking-stepper-container { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 1.5rem; border-radius: 1rem; box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075); }
+.step { display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; z-index: 1; }
+.step-icon { width: 40px; height: 40px; border-radius: 50%; background-color: #e9ecef; color: #6c757d; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2rem; margin-bottom: 0.5rem; transition: all 0.3s ease; }
+.step-label { font-size: 0.9rem; color: #6c757d; font-weight: 500; }
+.step.active .step-icon { background-color: #0d6efd; color: #fff; box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.2); }
+.step.active .step-label { color: #0d6efd; font-weight: bold; }
+.step.completed .step-icon { background-color: #198754; color: #fff; }
+.step.completed .step-label { color: #198754; }
+.step-line { flex-grow: 1; height: 3px; background-color: #e9ecef; margin: 0 10px; position: relative; top: -12px; }
+.step-line.completed { background-color: #198754; }
+.width-20 { width: 20px; text-align: center; }
+</style>
+
+@section Scripts {
+    <script>
+        const formatCurrency = (value) => {
+            return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
+        };
+
+        const updateCount = (fieldId, change) => {
+            const input = document.getElementById(fieldId);
+            let val = parseInt(input.value) || 0;
+            val += change;
+            
+            if (fieldId === 'AdultCount' && val < 1) val = 1;
+            if (fieldId === 'ChildCount' && val < 0) val = 0;
+            if (fieldId === 'InfantCount' && val < 0) val = 0;
+            
+            input.value = val;
+            calculatePrice();
+        };
+
+        const applyPromo = () => {
+            calculatePrice();
+        };
+
+        const calculatePrice = async () => {
+            const tourId = document.getElementById('TourId').value;
+            const adultCount = document.getElementById('AdultCount').value;
+            const childCount = document.getElementById('ChildCount').value;
+            const promoCode = document.getElementById('PromoCode').value;
+
+            try {
+                const response = await fetch('/api/bookingsapi/calculate-price', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        tourId: parseInt(tourId),
+                        adultCount: parseInt(adultCount),
+                        childCount: parseInt(childCount),
                         promoCode: promoCode
                     })
                 });
 
                 if (response.ok) {
-                    const data = await response.json();
-                    
-                    document.getElementById('summaryAdultPrice').innerText = formatCurrency(data.adultSubtotal);
-                    document.getElementById('summaryChildPrice').innerText = formatCurrency(data.childSubtotal);
-                    
-                    if (data.discountAmount > 0) {
-                        document.getElementById('discountRow').style.setProperty('display', 'flex', 'important');
-                        document.getElementById('summaryDiscount').innerText = '- ' + formatCurrency(data.discountAmount);
-                    } else {
-                        document.getElementById('discountRow').style.setProperty('display', 'none', 'important');
-                    }
-                    
-                    document.getElementById('summaryTotal').innerText = formatCurrency(data.finalPrice);
+                    const result = await response.json();
+                    if (result.success) {
+                        const data = result.data;
+                        
+                        document.getElementById('summaryAdultPrice').innerText = formatCurrency(data.adultSubtotal || (document.getElementById('pricePerAdult').value * adultCount));
+                        document.getElementById('summaryChildPrice').innerText = formatCurrency(data.childSubtotal || (document.getElementById('pricePerChild').value * childCount));
+                        
+                        if (data.discountAmount > 0) {
+                            document.getElementById('discountRow').style.setProperty('display', 'flex', 'important');
+                            document.getElementById('summaryDiscount').innerText = '- ' + formatCurrency(data.discountAmount);
+                        } else {
+                            document.getElementById('discountRow').style.setProperty('display', 'none', 'important');
+                        }
+                        
+                        document.getElementById('summaryTotal').innerText = formatCurrency(data.finalPrice);
 
-                    const msgEl = document.getElementById('promoMessage');
-                    if (promoCode && data.promoCodeStatus) {
-                        msgEl.innerText = data.promoCodeStatus;
-                        msgEl.className = data.discountAmount > 0 ? "text-success mt-1 d-block small" : "text-danger mt-1 d-block small";
-                    } else {
-                        msgEl.innerText = "";
+                        const msgEl = document.getElementById('promoMessage');
+                        if (promoCode) {
+                            if (data.discountAmount > 0) {
+                                msgEl.innerText = "Áp dụng mã giảm giá thành công!";
+                                msgEl.className = "text-success mt-1 d-block small fw-bold";
+                            } else {
+                                msgEl.innerText = "Mã giảm giá không hợp lệ hoặc đã hết hạn.";
+                                msgEl.className = "text-danger mt-1 d-block small fw-bold";
+                            }
+                        } else {
+                            msgEl.innerText = "";
+                        }
                     }
                 }
             } catch (error) {
                 console.error("Error calculating price:", error);
             }
-        }
+        };
 
         // Initialize price calculation on load
         document.addEventListener('DOMContentLoaded', calculatePrice);

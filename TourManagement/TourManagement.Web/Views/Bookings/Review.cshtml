@@ -62,6 +62,13 @@
                     <div class="col-md-4 text-muted">Email:</div>
                     <div class="col-md-8 fw-bold">@Model.Email</div>
                 </div>
+                @if (!string.IsNullOrEmpty(Model.Address))
+                {
+                    <div class="row mb-3">
+                        <div class="col-md-4 text-muted">Địa chỉ:</div>
+                        <div class="col-md-8 fw-bold">@Model.Address</div>
+                    </div>
+                }
 
                 <h5 class="fw-bold text-dark mt-4 border-bottom pb-2">3. Chi tiết hành khách</h5>
                 <div class="row mb-3">

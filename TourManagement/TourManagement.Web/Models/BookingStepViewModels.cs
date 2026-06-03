@@ -3,6 +3,22 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TourManagement.Web.Models
 {
+    public class BookingWizardSessionModel
+    {
+        public int SelectedTourId { get; set; }
+        public string? CustomerName { get; set; }
+        public string? Email { get; set; }
+        public string? Phone { get; set; }
+        public string? Address { get; set; }
+        public int AdultCount { get; set; } = 1;
+        public int ChildCount { get; set; } = 0;
+        public string? RoomType { get; set; }
+        public string? PromoCode { get; set; }
+        public DateTime BookingDate { get; set; }
+        public string? SpecialRequest { get; set; }
+        public string? PaymentMethod { get; set; }
+    }
+
     public class BookingDetailsViewModel
     {
         [Required(ErrorMessage = "Vui lòng chọn tour.")]
@@ -27,6 +43,9 @@ namespace TourManagement.Web.Models
 
         [StringLength(50, ErrorMessage = "Số CCCD không được quá 50 ký tự.")]
         public string? CCCD { get; set; }
+
+        [StringLength(200, ErrorMessage = "Địa chỉ không được quá 200 ký tự.")]
+        public string? Address { get; set; }
 
         [Required(ErrorMessage = "Số người lớn là bắt buộc.")]
         [Range(1, 100, ErrorMessage = "Số người lớn phải từ 1 đến 100.")]
@@ -64,6 +83,7 @@ namespace TourManagement.Web.Models
         public string? CustomerName { get; set; }
         public string? Email { get; set; }
         public string? PhoneNumber { get; set; }
+        public string? Address { get; set; }
         public int AdultCount { get; set; }
         public int ChildCount { get; set; }
         public string? PromoCode { get; set; }
