@@ -1,0 +1,187 @@
+@model TourManagement.Web.Models.RegisterViewModel
+@{
+    ViewData["Title"] = "Đăng Ký";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đăng Ký - TourManagement</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        * { font-family: 'Inter', sans-serif; box-sizing: border-box; }
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            display: flex; align-items: center; justify-content: center;
+            padding: 20px;
+        }
+        .auth-card {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 24px;
+            padding: 48px 40px;
+            width: 100%; max-width: 480px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+        }
+        .brand-logo { text-align: center; margin-bottom: 28px; }
+        .brand-logo .icon-wrap {
+            width: 56px; height: 56px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border-radius: 14px;
+            display: inline-flex; align-items: center; justify-content: center;
+            font-size: 24px; color: white; margin-bottom: 12px;
+            box-shadow: 0 8px 24px rgba(99,102,241,0.4);
+        }
+        .brand-logo h1 { color: white; font-size: 1.4rem; font-weight: 700; margin: 0; }
+        .brand-logo p { color: rgba(255,255,255,0.5); font-size: 0.875rem; margin: 4px 0 0; }
+        .form-label { color: rgba(255,255,255,0.8); font-size: 0.875rem; font-weight: 500; margin-bottom: 6px; }
+        .form-control {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 12px; color: white;
+            padding: 11px 16px; font-size: 0.9375rem;
+            transition: all 0.2s;
+        }
+        .form-control:focus {
+            background: rgba(255,255,255,0.12);
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99,102,241,0.25);
+            color: white;
+        }
+        .form-control::placeholder { color: rgba(255,255,255,0.3); }
+        .input-group-text {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 12px 0 0 12px;
+            color: rgba(255,255,255,0.5);
+        }
+        .input-group .form-control { border-radius: 0 12px 12px 0; }
+        .form-control.is-invalid { border-color: rgba(239,68,68,0.6); }
+        .invalid-feedback { color: #fca5a5; font-size: 0.8rem; }
+        .btn-primary-custom {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border: none; border-radius: 12px;
+            color: white; font-weight: 600;
+            padding: 13px; font-size: 1rem;
+            width: 100%; cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(99,102,241,0.4);
+        }
+        .btn-primary-custom:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(99,102,241,0.5); }
+        .link-auth { color: #a5b4fc; text-decoration: none; font-weight: 500; }
+        .link-auth:hover { color: #c7d2fe; text-decoration: underline; }
+        .alert-danger-custom {
+            background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3);
+            border-radius: 12px; color: #fca5a5; padding: 12px 16px; font-size: 0.875rem;
+        }
+        .section-divider {
+            display: flex; align-items: center; gap: 10px; margin: 16px 0 12px;
+        }
+        .section-divider span { color: rgba(255,255,255,0.4); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
+        .section-divider::before, .section-divider::after {
+            content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.12);
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-card">
+        <div class="brand-logo">
+            <div class="icon-wrap"><i class="bi bi-person-plus"></i></div>
+            <h1>Tạo Tài Khoản</h1>
+            <p>Đăng ký để trải nghiệm dịch vụ tour tốt nhất</p>
+        </div>
+
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="alert-danger-custom mb-3">
+                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    <div><i class="bi bi-exclamation-circle me-1"></i>@error.ErrorMessage</div>
+                }
+            </div>
+        }
+
+        <form method="post" asp-action="Register" asp-controller="Account">
+            @Html.AntiForgeryToken()
+
+            <div class="section-divider"><span>Thông tin tài khoản</span></div>
+
+            <div class="mb-3">
+                <label asp-for="Username" class="form-label">Tên đăng nhập <span style="color:#f87171">*</span></label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-at"></i></span>
+                    <input asp-for="Username" class="form-control @(ViewData.ModelState["Username"]?.Errors.Any() == true ? "is-invalid" : "")"
+                           placeholder="Ví dụ: nguyen_van_a" autocomplete="username" />
+                </div>
+                <span asp-validation-for="Username" class="invalid-feedback d-block"></span>
+            </div>
+
+            <div class="row g-2 mb-3">
+                <div class="col-6">
+                    <label asp-for="Password" class="form-label">Mật khẩu <span style="color:#f87171">*</span></label>
+                    <input asp-for="Password" type="password" class="form-control @(ViewData.ModelState["Password"]?.Errors.Any() == true ? "is-invalid" : "")"
+                           placeholder="Tối thiểu 6 ký tự" autocomplete="new-password" />
+                    <span asp-validation-for="Password" class="invalid-feedback d-block"></span>
+                </div>
+                <div class="col-6">
+                    <label asp-for="ConfirmPassword" class="form-label">Xác nhận MK <span style="color:#f87171">*</span></label>
+                    <input asp-for="ConfirmPassword" type="password" class="form-control @(ViewData.ModelState["ConfirmPassword"]?.Errors.Any() == true ? "is-invalid" : "")"
+                           placeholder="Nhập lại mật khẩu" autocomplete="new-password" />
+                    <span asp-validation-for="ConfirmPassword" class="invalid-feedback d-block"></span>
+                </div>
+            </div>
+
+            <div class="section-divider"><span>Thông tin cá nhân</span></div>
+
+            <div class="mb-3">
+                <label asp-for="FullName" class="form-label">Họ và tên <span style="color:#f87171">*</span></label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-person"></i></span>
+                    <input asp-for="FullName" class="form-control @(ViewData.ModelState["FullName"]?.Errors.Any() == true ? "is-invalid" : "")"
+                           placeholder="Họ và tên đầy đủ" autocomplete="name" />
+                </div>
+                <span asp-validation-for="FullName" class="invalid-feedback d-block"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label">Email <span style="color:#f87171">*</span></label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                    <input asp-for="Email" type="email" class="form-control @(ViewData.ModelState["Email"]?.Errors.Any() == true ? "is-invalid" : "")"
+                           placeholder="example@email.com" autocomplete="email" />
+                </div>
+                <span asp-validation-for="Email" class="invalid-feedback d-block"></span>
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="PhoneNumber" class="form-label">Số điện thoại</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-phone"></i></span>
+                    <input asp-for="PhoneNumber" class="form-control @(ViewData.ModelState["PhoneNumber"]?.Errors.Any() == true ? "is-invalid" : "")"
+                           placeholder="0912345678 (không bắt buộc)" autocomplete="tel" />
+                </div>
+                <span asp-validation-for="PhoneNumber" class="invalid-feedback d-block"></span>
+            </div>
+
+            <button type="submit" class="btn-primary-custom">
+                <i class="bi bi-person-check me-2"></i>Tạo Tài Khoản
+            </button>
+        </form>
+
+        <div class="text-center mt-3">
+            <span style="color:rgba(255,255,255,0.5); font-size:0.875rem;">Đã có tài khoản? </span>
+            <a asp-controller="Account" asp-action="Login" class="link-auth">Đăng nhập</a>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

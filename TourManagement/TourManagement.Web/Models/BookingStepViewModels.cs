@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TourManagement.Web.Models
 {
+    // ─── BookingWizard session ─────────────────────────────────────────────────
     public class BookingWizardSessionModel
     {
         public int SelectedTourId { get; set; }
@@ -19,6 +20,7 @@ namespace TourManagement.Web.Models
         public string? PaymentMethod { get; set; }
     }
 
+    // ─── Booking wizard step view models ──────────────────────────────────────
     public class BookingDetailsViewModel
     {
         [Required(ErrorMessage = "Vui lòng chọn tour.")]
@@ -90,5 +92,58 @@ namespace TourManagement.Web.Models
         public decimal OriginalPrice { get; set; }
         public decimal DiscountAmount { get; set; }
         public decimal FinalPrice { get; set; }
+    }
+
+    // ─── Account view models ───────────────────────────────────────────────────
+    public class LoginViewModel
+    {
+        [Required(ErrorMessage = "Tên đăng nhập là bắt buộc.")]
+        public string Username { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Mật khẩu là bắt buộc.")]
+        [DataType(DataType.Password)]
+        public string Password { get; set; } = string.Empty;
+
+        public bool RememberMe { get; set; }
+    }
+
+    public class RegisterViewModel
+    {
+        [Required(ErrorMessage = "Tên đăng nhập là bắt buộc.")]
+        [StringLength(50, MinimumLength = 3, ErrorMessage = "Tên đăng nhập phải từ 3 đến 50 ký tự.")]
+        [RegularExpression(@"^[a-zA-Z0-9_]+$", ErrorMessage = "Tên đăng nhập chỉ gồm chữ, số và dấu gạch dưới.")]
+        public string Username { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Họ và tên là bắt buộc.")]
+        [StringLength(100, MinimumLength = 3, ErrorMessage = "Họ tên phải từ 3 đến 100 ký tự.")]
+        public string FullName { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Email là bắt buộc.")]
+        [EmailAddress(ErrorMessage = "Email không hợp lệ.")]
+        [StringLength(100)]
+        public string Email { get; set; } = string.Empty;
+
+        [StringLength(20)]
+        [RegularExpression(@"^0\d{9}$|^\+84\d{9}$|^$", ErrorMessage = "Số điện thoại không hợp lệ.")]
+        public string? PhoneNumber { get; set; }
+
+        [Required(ErrorMessage = "Mật khẩu là bắt buộc.")]
+        [StringLength(100, MinimumLength = 6, ErrorMessage = "Mật khẩu phải từ 6 ký tự trở lên.")]
+        [DataType(DataType.Password)]
+        public string Password { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Xác nhận mật khẩu là bắt buộc.")]
+        [DataType(DataType.Password)]
+        [Compare("Password", ErrorMessage = "Mật khẩu xác nhận không khớp.")]
+        public string ConfirmPassword { get; set; } = string.Empty;
+    }
+
+    // ─── Admin Booking management view models ─────────────────────────────────
+    public class AdminBookingListViewModel
+    {
+        public IEnumerable<TourManagement.Business.DTOs.BookingDTO> Bookings { get; set; } = new List<TourManagement.Business.DTOs.BookingDTO>();
+        public string? SearchKeyword { get; set; }
+        public string? StatusFilter { get; set; }
+        public int TotalCount { get; set; }
     }
 }

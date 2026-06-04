@@ -15,7 +15,13 @@ namespace TourManagement.Web.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            if (User.Identity?.IsAuthenticated == true)
+            {
+                if (User.IsInRole("Admin"))
+                    return RedirectToAction("Index", "Admin");
+                return RedirectToAction("Create", "Bookings");
+            }
+            return RedirectToAction("Login", "Account");
         }
 
         public IActionResult Privacy()

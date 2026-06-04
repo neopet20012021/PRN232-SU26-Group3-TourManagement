@@ -11,7 +11,7 @@ using TourManagement.Web.Models;
 
 namespace TourManagement.Web.Controllers
 {
-    [AllowAnonymous]
+    [Authorize(Roles = "Customer")]
     public class BookingsController : Controller
     {
         private readonly IBookingService _bookingService;

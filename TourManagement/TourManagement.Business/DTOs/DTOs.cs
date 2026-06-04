@@ -45,6 +45,35 @@ namespace TourManagement.Business.DTOs
         public DateTime BookingDate { get; set; } = DateTime.Now;
     }
 
+    public class UpdateBookingDTO
+    {
+        [Required(ErrorMessage = "Tên khách hàng là bắt buộc")]
+        [StringLength(100, MinimumLength = 3)]
+        public string CustomerName { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Số điện thoại là bắt buộc")]
+        [RegularExpression(@"^0\d{9}$|^\+84\d{9}$", ErrorMessage = "Số điện thoại không hợp lệ")]
+        public string PhoneNumber { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Email là bắt buộc")]
+        [EmailAddress(ErrorMessage = "Email không hợp lệ")]
+        public string Email { get; set; } = string.Empty;
+
+        [Range(1, 100)]
+        public int AdultCount { get; set; } = 1;
+
+        [Range(0, 100)]
+        public int ChildCount { get; set; } = 0;
+
+        [Range(0, 100)]
+        public int InfantCount { get; set; } = 0;
+
+        public string? SpecialRequest { get; set; }
+        public string? Notes { get; set; }
+        public string Status { get; set; } = "pending";
+        public string PaymentMethod { get; set; } = "cash";
+    }
+
     public class BookingDTO
     {
         public int BookingId { get; set; }
@@ -61,6 +90,7 @@ namespace TourManagement.Business.DTOs
         public int InfantCount { get; set; }
         public string? RoomType { get; set; }
         public string? SpecialRequest { get; set; }
+        public string? Notes { get; set; }
         public string? PromoCode { get; set; }
         public decimal TotalPrice { get; set; }
         public decimal DiscountAmount { get; set; }

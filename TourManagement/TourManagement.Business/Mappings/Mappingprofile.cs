@@ -11,9 +11,13 @@ namespace TourManagement.Business.Mappings
             // Booking mappings
             CreateMap<Booking, BookingDTO>()
                 .ForMember(dest => dest.TourName, opt => opt.MapFrom(src => src.Tour != null ? src.Tour.TourName : ""))
+                .ForMember(dest => dest.Notes, opt => opt.MapFrom(src => src.Notes))
                 .ReverseMap();
 
             CreateMap<CreateBookingDTO, Booking>()
+                .ReverseMap();
+
+            CreateMap<UpdateBookingDTO, Booking>()
                 .ReverseMap();
 
             // Tour mappings

@@ -1,0 +1,48 @@
+@{
+    ViewData["Title"] = "Truy Cập Bị Từ Chối";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>403 - Truy Cập Bị Từ Chối</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .card-err {
+            background: rgba(255,255,255,0.05); backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 24px;
+            padding: 60px 40px; text-align: center; max-width: 420px;
+        }
+        .err-icon { font-size: 64px; color: #f87171; margin-bottom: 20px; }
+        h1 { color: white; font-weight: 700; }
+        p { color: rgba(255,255,255,0.6); }
+        .btn-home {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border: none; border-radius: 12px; color: white;
+            font-weight: 600; padding: 12px 28px; text-decoration: none;
+            display: inline-block; margin-top: 16px; transition: transform 0.2s;
+        }
+        .btn-home:hover { transform: translateY(-2px); color: white; }
+    </style>
+</head>
+<body>
+    <div class="card-err">
+        <div class="err-icon"><i class="bi bi-shield-x"></i></div>
+        <h1>403</h1>
+        <h3 style="color:white;">Truy Cập Bị Từ Chối</h3>
+        <p>Bạn không có quyền truy cập trang này. Vui lòng đăng nhập bằng tài khoản có quyền phù hợp.</p>
+        <a href="/Account/Login" class="btn-home"><i class="bi bi-arrow-left me-2"></i>Về Trang Đăng Nhập</a>
+    </div>
+</body>
+</html>

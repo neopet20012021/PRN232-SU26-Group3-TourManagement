@@ -26,10 +26,12 @@ builder.Services.AddDbContext<TourManagementDbContext>(options =>
 // Register Repositories
 builder.Services.AddScoped<ITourRepository, TourRepository>();
 builder.Services.AddScoped<IBookingRepository, BookingRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 // Register Services
 builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<IPromoCodeService, PromoCodeService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 
 // Register AutoMapper
 builder.Services.AddAutoMapper(config => config.AddProfile<MappingProfile>());
@@ -67,7 +69,7 @@ app.UseRouting();
 
 app.UseSession();
 
-app.UseAuthentication(); // Crucial for [Authorize] attributes
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
