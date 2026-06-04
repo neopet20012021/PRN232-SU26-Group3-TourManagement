@@ -63,7 +63,23 @@ namespace TourManagement.Web.Controllers
                 new ClaimsPrincipal(claimsIdentity), authProperties);
 
             if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
-                return Redirect(returnUrl);
+            {
+                // Prevent redirection loop / access denied when a Customer is redirected to Admin pages or vice-versa
+                bool bypassReturnUrl = false;
+                if (user.Role == "Admin" && returnUrl.Contains("/Bookings", StringComparison.OrdinalIgnoreCase))
+                {
+                    bypassReturnUrl = true;
+                }
+                else if (user.Role != "Admin" && returnUrl.Contains("/Admin", StringComparison.OrdinalIgnoreCase))
+                {
+                    bypassReturnUrl = true;
+                }
+
+                if (!bypassReturnUrl)
+                {
+                    return Redirect(returnUrl);
+                }
+            }
 
             return user.Role == "Admin"
                 ? RedirectToAction("Index", "Admin")

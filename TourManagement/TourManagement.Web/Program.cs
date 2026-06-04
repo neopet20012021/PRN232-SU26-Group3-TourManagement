@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddSignalR();
 
 // Add session support
 builder.Services.AddDistributedMemoryCache();
@@ -71,6 +72,8 @@ app.UseSession();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapHub<TourManagement.Web.Hubs.BookingHub>("/bookingHub");
 
 app.MapControllerRoute(
     name: "default",

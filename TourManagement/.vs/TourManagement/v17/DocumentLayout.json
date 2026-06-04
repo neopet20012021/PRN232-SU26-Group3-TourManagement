@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "D:\\FPT\\PRN232\\PRN232-SU26-Group3-TourManagement\\TourManagement\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{D49EEF32-4C17-40E7-81A4-148B4F239851}|TourManagement.Web\\TourManagement.Web.csproj|d:\\fpt\\prn232\\prn232-su26-group3-tourmanagement\\tourmanagement\\tourmanagement.web\\controllers\\bookingscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D49EEF32-4C17-40E7-81A4-148B4F239851}|TourManagement.Web\\TourManagement.Web.csproj|solutionrelative:tourmanagement.web\\controllers\\bookingscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{BC4640D3-EE0F-40BC-9953-B9CE8FF0267A}|TourManagement.Business\\TourManagement.Business.csproj|d:\\fpt\\prn232\\prn232-su26-group3-tourmanagement\\tourmanagement\\tourmanagement.business\\mappings\\mappingprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{BC4640D3-EE0F-40BC-9953-B9CE8FF0267A}|TourManagement.Business\\TourManagement.Business.csproj|solutionrelative:tourmanagement.business\\mappings\\mappingprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -17,10 +21,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{D49EEF32-4C17-40E7-81A4-148B4F239851}|TourManagement.Web\\TourManagement.Web.csproj|d:\\fpt\\prn232\\prn232-su26-group3-tourmanagement\\tourmanagement\\tourmanagement.web\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D49EEF32-4C17-40E7-81A4-148B4F239851}|TourManagement.Web\\TourManagement.Web.csproj|solutionrelative:tourmanagement.web\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{D49EEF32-4C17-40E7-81A4-148B4F239851}|TourManagement.Web\\TourManagement.Web.csproj|d:\\fpt\\prn232\\prn232-su26-group3-tourmanagement\\tourmanagement\\tourmanagement.web\\controllers\\bookingscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D49EEF32-4C17-40E7-81A4-148B4F239851}|TourManagement.Web\\TourManagement.Web.csproj|solutionrelative:tourmanagement.web\\controllers\\bookingscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{D49EEF32-4C17-40E7-81A4-148B4F239851}|TourManagement.Web\\TourManagement.Web.csproj|d:\\fpt\\prn232\\prn232-su26-group3-tourmanagement\\tourmanagement\\tourmanagement.web\\controllers\\bookingsapicontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -85,7 +85,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 9,
+          "SelectedChildIndex": 10,
           "Children": [
             {
               "$type": "Bookmark",
@@ -102,29 +102,6 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "DTOs.cs",
-              "DocumentMoniker": "C:\\Users\\Hi\\AppData\\Local\\Temp\\3bfce5d2-865b-4eda-8682-a39fdfd3f08f_PRN232-SU26-Group3-TourManagement-ngoc.zip.08f\\PRN232-SU26-Group3-TourManagement-ngoc\\TourManagement\\TourManagement.Business\\DTOs\\DTOs.cs",
-              "ToolTip": "C:\\Users\\Hi\\AppData\\Local\\Temp\\3bfce5d2-865b-4eda-8682-a39fdfd3f08f_PRN232-SU26-Group3-TourManagement-ngoc.zip.08f\\PRN232-SU26-Group3-TourManagement-ngoc\\TourManagement\\TourManagement.Business\\DTOs\\DTOs.cs [Read Only]",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-03T14:45:08.43Z",
-              "EditorCaption": " [Read Only]"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "Privacy.cshtml",
-              "DocumentMoniker": "D:\\FPT\\PRN232\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Web\\Views\\Home\\Privacy.cshtml",
-              "RelativeDocumentMoniker": "TourManagement.Web\\Views\\Home\\Privacy.cshtml",
-              "ToolTip": "D:\\FPT\\PRN232\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Web\\Views\\Home\\Privacy.cshtml",
-              "RelativeToolTip": "TourManagement.Web\\Views\\Home\\Privacy.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-06-03T14:43:12.141Z"
             },
             {
               "$type": "Document",
@@ -164,7 +141,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "Mappingprofile.cs",
               "DocumentMoniker": "D:\\FPT\\PRN232\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Business\\Mappings\\Mappingprofile.cs",
               "RelativeDocumentMoniker": "TourManagement.Business\\Mappings\\Mappingprofile.cs",
@@ -177,7 +154,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "TourManagementDbContext.cs",
               "DocumentMoniker": "D:\\FPT\\PRN232\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Data\\Context\\TourManagementDbContext.cs",
               "RelativeDocumentMoniker": "TourManagement.Data\\Context\\TourManagementDbContext.cs",
@@ -185,12 +162,11 @@
               "RelativeToolTip": "TourManagement.Data\\Context\\TourManagementDbContext.cs",
               "ViewState": "AgIAADsAAAAAAAAAAAAIwAUAAAA0AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-03T12:56:46.725Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-06-03T12:56:46.725Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "DTOs.cs",
               "DocumentMoniker": "D:\\FPT\\PRN232\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Business\\DTOs\\DTOs.cs",
               "RelativeDocumentMoniker": "TourManagement.Business\\DTOs\\DTOs.cs",
@@ -198,8 +174,43 @@
               "RelativeToolTip": "TourManagement.Business\\DTOs\\DTOs.cs",
               "ViewState": "AgIAAC4AAAAAAAAAAAAswAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-03T14:41:08.041Z",
+              "WhenOpened": "2026-06-03T14:41:08.041Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "BookingsController.cs",
+              "DocumentMoniker": "D:\\FPT\\PRN232\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Web\\Controllers\\BookingsController.cs",
+              "RelativeDocumentMoniker": "TourManagement.Web\\Controllers\\BookingsController.cs",
+              "ToolTip": "D:\\FPT\\PRN232\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Web\\Controllers\\BookingsController.cs",
+              "RelativeToolTip": "TourManagement.Web\\Controllers\\BookingsController.cs",
+              "ViewState": "AgIAAIIAAAAAAAAAAADwvwkAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-03T15:16:19.372Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Privacy.cshtml",
+              "DocumentMoniker": "D:\\FPT\\PRN232\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Web\\Views\\Home\\Privacy.cshtml",
+              "RelativeDocumentMoniker": "TourManagement.Web\\Views\\Home\\Privacy.cshtml",
+              "ToolTip": "D:\\FPT\\PRN232\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Web\\Views\\Home\\Privacy.cshtml",
+              "RelativeToolTip": "TourManagement.Web\\Views\\Home\\Privacy.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-03T14:43:12.141Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "DTOs.cs",
+              "DocumentMoniker": "C:\\Users\\Hi\\AppData\\Local\\Temp\\3bfce5d2-865b-4eda-8682-a39fdfd3f08f_PRN232-SU26-Group3-TourManagement-ngoc.zip.08f\\PRN232-SU26-Group3-TourManagement-ngoc\\TourManagement\\TourManagement.Business\\DTOs\\DTOs.cs",
+              "ToolTip": "C:\\Users\\Hi\\AppData\\Local\\Temp\\3bfce5d2-865b-4eda-8682-a39fdfd3f08f_PRN232-SU26-Group3-TourManagement-ngoc.zip.08f\\PRN232-SU26-Group3-TourManagement-ngoc\\TourManagement\\TourManagement.Business\\DTOs\\DTOs.cs [Read Only]",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-03T14:45:08.43Z",
+              "EditorCaption": " [Read Only]"
             },
             {
               "$type": "Document",
@@ -216,18 +227,6 @@
             {
               "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "BookingsController.cs",
-              "DocumentMoniker": "D:\\FPT\\PRN232\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Web\\Controllers\\BookingsController.cs",
-              "RelativeDocumentMoniker": "TourManagement.Web\\Controllers\\BookingsController.cs",
-              "ToolTip": "D:\\FPT\\PRN232\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Web\\Controllers\\BookingsController.cs",
-              "RelativeToolTip": "TourManagement.Web\\Controllers\\BookingsController.cs",
-              "ViewState": "AgIAALUAAAAAAAAAAAAYwAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-03T15:16:19.372Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
               "Title": "HomeController.cs",
               "DocumentMoniker": "D:\\FPT\\PRN232\\PRN232-SU26-Group3-TourManagement\\TourManagement\\TourManagement.Web\\Controllers\\HomeController.cs",
               "RelativeDocumentMoniker": "TourManagement.Web\\Controllers\\HomeController.cs",

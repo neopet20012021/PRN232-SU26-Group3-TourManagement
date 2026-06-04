@@ -5,6 +5,17 @@
     var statuses = new[] { "pending", "confirmed", "cancelled", "completed" };
 }
 
+<style>
+    @@keyframes highlightRow {
+        0% { background-color: rgba(25, 135, 84, 0.25); }
+        50% { background-color: rgba(25, 135, 84, 0.15); }
+        100% { background-color: transparent; }
+    }
+    .highlight-new-row {
+        animation: highlightRow 3.5s ease-out;
+    }
+</style>
+
 <div class="admin-header d-flex align-items-center justify-content-between mb-4">
     <div>
         <h2 class="mb-1"><i class="bi bi-grid-3x3-gap me-2 text-primary"></i>Quản Lý Booking</h2>
@@ -71,7 +82,7 @@
                 <tbody>
                     @if (!Model.Bookings.Any())
                     {
-                        <tr>
+                        <tr id="no-bookings-placeholder">
                             <td colspan="8" class="text-center py-5 text-muted">
                                 <i class="bi bi-inbox fs-1 d-block mb-2"></i>
                                 Không có booking nào
@@ -383,5 +394,112 @@
             }
         });
     }
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.min.js"></script>
+<script>
+    // Web Audio Sound
+    function playNotificationSound() {
+        try {
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
+            oscillator.frequency.setValueAtTime(880, audioCtx.currentTime + 0.12); // A5
+            
+            gainNode.gain.setValueAtTime(0.12, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
+            
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + 0.35);
+        } catch (e) {
+            console.log("AudioContext blocked:", e);
+        }
+    }
+
+    // Connect to SignalR
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/bookingHub")
+        .withAutomaticReconnect()
+        .build();
+
+    connection.on("ReceiveNewBooking", function (booking) {
+        if (!booking) return;
+
+        // Play Sound
+        playNotificationSound();
+
+        // Show Toast Notification
+        showToast("🔔 Khách hàng " + booking.customerName + " vừa đặt tour: " + booking.tourName + "!", true);
+
+        // Remove placeholder if present
+        const placeholder = document.getElementById("no-bookings-placeholder");
+        if (placeholder) placeholder.remove();
+
+        // Format Date
+        const createdDate = new Date(booking.createdDate);
+        const formattedDate = String(createdDate.getDate()).padStart(2, '0') + '/' +
+                              String(createdDate.getMonth() + 1).padStart(2, '0') + '/' +
+                              createdDate.getFullYear();
+
+        // Format Price
+        const formattedPrice = new Intl.NumberFormat('vi-VN').format(booking.finalPrice) + " đ";
+
+        // Build status badge class
+        let badgeClass = "bg-warning-subtle text-warning";
+        if (booking.status === "confirmed") badgeClass = "bg-success-subtle text-success";
+        else if (booking.status === "cancelled") badgeClass = "bg-danger-subtle text-danger";
+        else if (booking.status === "completed") badgeClass = "bg-info-subtle text-info";
+
+        // Build Passenger text
+        let paxText = "";
+        if (booking.adultCount > 0) paxText += booking.adultCount + " NL";
+        if (booking.childCount > 0) paxText += (paxText ? " " : "") + booking.childCount + " TE";
+
+        // Build row HTML
+        const newRow = document.createElement("tr");
+        newRow.className = "highlight-new-row";
+        newRow.innerHTML = `
+            <td class="ps-4">
+                <span class="badge bg-primary-subtle text-primary fw-semibold">${booking.bookingCode}</span>
+                <div class="small text-muted">${formattedDate}</div>
+            </td>
+            <td><span class="text-truncate d-block" style="max-width:160px" title="${booking.tourName}">${booking.tourName}</span></td>
+            <td>
+                <strong>${booking.customerName}</strong>
+                ${booking.email ? `<div class="small text-muted">${booking.email}</div>` : ''}
+            </td>
+            <td><small>${booking.phoneNumber}</small></td>
+            <td><small>${paxText}</small></td>
+            <td><strong class="text-success">${formattedPrice}</strong></td>
+            <td>
+                <span class="badge ${badgeClass} fw-semibold text-uppercase">${booking.status}</span>
+            </td>
+            <td class="text-center pe-4">
+                <button class="btn btn-sm btn-outline-primary rounded-3 me-1" onclick="openEditModal(${booking.bookingId})" title="Sửa">
+                    <i class="bi bi-pencil"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-danger rounded-3" onclick="confirmDelete(${booking.bookingId}, '${booking.bookingCode}')" title="Xóa">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </td>
+        `;
+
+        // Prepend to tbody
+        const tbody = document.querySelector("#bookingTable tbody");
+        if (tbody) {
+            tbody.insertBefore(newRow, tbody.firstChild);
+        }
+    });
+
+    connection.start().then(function () {
+        console.log("SignalR Connected to BookingHub");
+    }).catch(function (err) {
+        return console.error(err.toString());
+    });
 </script>
 }
