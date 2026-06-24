@@ -1,0 +1,160 @@
+@page
+@model TourManagement.RazorWeb.Pages.Users.IndexModel
+@{
+    ViewData["Title"] = "User Management";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>User Management</h2>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#userModal" onclick="openCreateModal()">Add User</button>
+</div>
+
+<!-- Search Form (OData Example) -->
+<form method="get" class="mb-4">
+    <div class="row g-3">
+        <div class="col-md-4">
+            <input type="text" name="SearchName" value="@Model.SearchName" class="form-control" placeholder="Search by Username..." />
+        </div>
+        <div class="col-md-3">
+            <select name="RoleFilter" class="form-select">
+                <option value="">All Roles</option>
+                <option value="Admin" selected="@(Model.RoleFilter == "Admin")">Admin</option>
+                <option value="Staff" selected="@(Model.RoleFilter == "Staff")">Staff</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-secondary w-100">Search</button>
+        </div>
+    </div>
+</form>
+
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model.Users)
+        {
+            <tr>
+                <td>@user.UserId</td>
+                <td>@user.Username</td>
+                <td>@user.FullName</td>
+                <td>@user.Email</td>
+                <td>
+                    <span class="badge @(user.Role == "Admin" ? "bg-danger" : "bg-info")">@user.Role</span>
+                </td>
+                <td>
+                    <button class="btn btn-sm btn-warning" 
+                            onclick="openEditModal(@user.UserId, '@user.Username', '@user.FullName', '@user.Email', '@user.Role')">Edit</button>
+                    <button class="btn btn-sm btn-danger" onclick="confirmDelete(@user.UserId)">Delete</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Create/Edit Modal -->
+<div class="modal fade" id="userModal" tabindex="-1">
+    <div class="modal-dialog">
+        <form method="post" id="userForm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">Add User</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="UserId" name="User.UserId" value="0" />
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Username</label>
+                        <input type="text" id="Username" name="User.Username" class="form-control" required />
+                    </div>
+                    
+                    <div class="mb-3" id="passwordGroup">
+                        <label class="form-label">Password</label>
+                        <input type="password" id="Password" name="User.Password" class="form-control" />
+                        <small class="text-muted" id="passwordHelp">Leave blank to keep existing password.</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" id="FullName" name="User.FullName" class="form-control" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" id="Email" name="User.Email" class="form-control" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Role</label>
+                        <select id="Role" name="User.Role" class="form-select" required>
+                            <option value="Staff">Staff</option>
+                            <option value="Admin">Admin</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" id="saveBtn">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Delete Form -->
+<form method="post" asp-page-handler="Delete" id="deleteForm">
+    <input type="hidden" name="id" id="deleteId" />
+</form>
+
+@section Scripts {
+    <script>
+        function openCreateModal() {
+            document.getElementById('modalTitle').innerText = 'Add User';
+            document.getElementById('UserId').value = '0';
+            document.getElementById('Username').value = '';
+            document.getElementById('Username').readOnly = false;
+            document.getElementById('Password').required = true;
+            document.getElementById('passwordHelp').style.display = 'none';
+            document.getElementById('FullName').value = '';
+            document.getElementById('Email').value = '';
+            document.getElementById('Role').value = 'Staff';
+            
+            var form = document.getElementById('userForm');
+            form.action = "?handler=Create";
+        }
+
+        function openEditModal(id, username, fullname, email, role) {
+            document.getElementById('modalTitle').innerText = 'Edit User';
+            document.getElementById('UserId').value = id;
+            document.getElementById('Username').value = username;
+            document.getElementById('Username').readOnly = true; // Cannot edit username
+            document.getElementById('Password').required = false;
+            document.getElementById('passwordHelp').style.display = 'block';
+            document.getElementById('FullName').value = fullname;
+            document.getElementById('Email').value = email;
+            document.getElementById('Role').value = role;
+
+            var form = document.getElementById('userForm');
+            form.action = "?handler=Edit";
+
+            var modal = new bootstrap.Modal(document.getElementById('userModal'));
+            modal.show();
+        }
+
+        function confirmDelete(id) {
+            if (confirm('Are you sure you want to delete this user?')) {
+                document.getElementById('deleteId').value = id;
+                document.getElementById('deleteForm').submit();
+            }
+        }
+    </script>
+}

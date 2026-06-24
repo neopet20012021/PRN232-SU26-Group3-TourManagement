@@ -1,0 +1,64 @@
+@page
+@model TourManagement.RazorWeb.Pages.Admin.Bookings.IndexModel
+@{
+    ViewData["Title"] = "Manage Bookings";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Manage Bookings</h2>
+</div>
+
+<div class="card shadow-sm border-0 rounded-4">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Booking Code</th>
+                        <th>Customer</th>
+                        <th>Tour</th>
+                        <th>Pax</th>
+                        <th>Total Price</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var booking in Model.Bookings)
+                    {
+                        <tr>
+                            <td><strong>@booking.BookingCode</strong></td>
+                            <td>@booking.CustomerName<br/><small class="text-muted">@booking.PhoneNumber</small></td>
+                            <td>@booking.Tour?.TourName</td>
+                            <td>@(booking.AdultCount + booking.ChildCount + booking.InfantCount)</td>
+                            <td class="text-danger fw-bold">@booking.TotalPrice.ToString("N0")</td>
+                            <td>
+                                @if (booking.Status.ToLower() == "pending")
+                                {
+                                    <span class="badge bg-warning">Pending</span>
+                                }
+                                else if (booking.Status.ToLower() == "paid")
+                                {
+                                    <span class="badge bg-success">Paid</span>
+                                }
+                                else if (booking.Status.ToLower() == "cancelled")
+                                {
+                                    <span class="badge bg-danger">Cancelled</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">@booking.Status</span>
+                                }
+                            </td>
+                            <td>@booking.BookingDate.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>
+                                <a href="/Admin/Bookings/Details?id=@booking.BookingId" class="btn btn-sm btn-outline-primary">Process</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,70 @@
+@page
+@model TourManagement.RazorWeb.Pages.Admin.Tours.IndexModel
+@{
+    ViewData["Title"] = "Manage Tours";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Manage Tours</h2>
+    <a href="/Admin/Tours/Create" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Add New Tour</a>
+</div>
+
+<div class="card shadow-sm border-0 rounded-4">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Name</th>
+                        <th>Destination</th>
+                        <th>Duration</th>
+                        <th>Price (Adult)</th>
+                        <th>Available Seats</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var tour in Model.Tours)
+                    {
+                        <tr>
+                            <td><strong>@tour.TourCode</strong></td>
+                            <td style="max-width: 250px;" class="text-truncate" title="@tour.TourName">@tour.TourName</td>
+                            <td>@tour.Destination</td>
+                            <td>@tour.Days D / @tour.Nights N</td>
+                            <td class="text-danger fw-bold">@tour.PricePerAdult.ToString("N0")</td>
+                            <td>
+                                @if (tour.AvailableSeats < 5)
+                                {
+                                    <span class="text-danger fw-bold">@tour.AvailableSeats</span>
+                                }
+                                else
+                                {
+                                    @tour.AvailableSeats
+                                }
+                                / @tour.MaxCapacity
+                            </td>
+                            <td>
+                                @if (tour.IsActive)
+                                {
+                                    <span class="badge bg-success">Active</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">Inactive</span>
+                                }
+                            </td>
+                            <td>
+                                <a href="/Admin/Tours/Edit?id=@tour.TourId" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
+                                <form method="post" asp-page-handler="Delete" asp-route-id="@tour.TourId" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this tour?');">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,96 @@
+@page
+@model TourManagement.RazorWeb.Pages.Admin.Bookings.DetailsModel
+@{
+    ViewData["Title"] = "Booking Process";
+}
+
+<div class="mb-4">
+    <a href="/Admin/Bookings/Index" class="text-decoration-none"><i class="bi bi-arrow-left"></i> Back to Bookings</a>
+</div>
+
+@if (Model.Booking == null)
+{
+    <div class="alert alert-danger">Booking not found.</div>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">Customer Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-2"><strong>Full Name:</strong> @Model.Booking.CustomerName</div>
+                        <div class="col-md-6 mb-2"><strong>Phone:</strong> @Model.Booking.PhoneNumber</div>
+                        <div class="col-md-6 mb-2"><strong>Email:</strong> @Model.Booking.Email</div>
+                        <div class="col-md-6 mb-2"><strong>Booking Date:</strong> @Model.Booking.BookingDate.ToString("dd/MM/yyyy HH:mm")</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">Tour Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12 mb-2"><strong>Tour Name:</strong> @Model.Booking.Tour?.TourName</div>
+                        <div class="col-md-6 mb-2"><strong>Departure:</strong> @Model.Booking.Tour?.DepartureDate.ToString("dd/MM/yyyy")</div>
+                        <div class="col-md-6 mb-2"><strong>Passengers:</strong> @Model.Booking.AdultCount Adults, @Model.Booking.ChildCount Children, @Model.Booking.InfantCount Infants</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">Payment Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-2"><strong>Total Price:</strong> <span class="text-danger fw-bold">@Model.Booking.TotalPrice.ToString("N0") VND</span></div>
+                        <div class="col-md-6 mb-2"><strong>Payment Method:</strong> @Model.Booking.PaymentMethod</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 sticky-top" style="top: 20px;">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Process Booking</h5>
+                </div>
+                <div class="card-body">
+                    @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+                    {
+                        <div class="alert alert-success">@Model.SuccessMessage</div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                    {
+                        <div class="alert alert-danger">@Model.ErrorMessage</div>
+                    }
+
+                    <div class="mb-4">
+                        <label class="form-label text-muted">Current Status</label>
+                        <h4><span class="badge bg-secondary w-100">@Model.Booking.Status.ToUpper()</span></h4>
+                    </div>
+
+                    <form method="post">
+                        <input type="hidden" asp-for="BookingId" value="@Model.Booking.BookingId" />
+                        <div class="mb-3">
+                            <label asp-for="NewStatus" class="form-label">Update Status</label>
+                            <select asp-for="NewStatus" class="form-select">
+                                <option value="Pending">Pending (Chờ thanh toán)</option>
+                                <option value="Paid">Paid (Đã thanh toán)</option>
+                                <option value="Confirmed">Confirmed (Đã xác nhận)</option>
+                                <option value="Cancelled">Cancelled (Hủy bỏ)</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 fw-bold">Update Status</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}

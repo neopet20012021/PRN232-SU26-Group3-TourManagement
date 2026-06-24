@@ -1,0 +1,66 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Available Tours";
+}
+
+<div class="text-center mb-5">
+    <h1 class="display-4">Explore Our Tours</h1>
+    <p>Find your next adventure with us.</p>
+</div>
+
+<div class="row">
+    @if (Model.Tours.Any())
+    {
+        @foreach (var tour in Model.Tours)
+        {
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100 shadow-sm border-0 rounded-4 overflow-hidden tour-card">
+                    <div class="card-img-wrapper position-relative">
+                        <img src="@(string.IsNullOrEmpty(tour.Image) ? "https://via.placeholder.com/300x200?text=No+Image" : tour.Image)" class="card-img-top" alt="@tour.TourName" style="height: 220px; object-fit: cover;">
+                        <span class="position-absolute top-0 start-0 bg-danger text-white px-3 py-1 m-2 rounded-pill fw-bold text-uppercase" style="font-size: 0.8rem; z-index: 2;">
+                            Hot Deal
+                        </span>
+                    </div>
+                    <div class="card-body d-flex flex-column p-4">
+                        <div class="text-muted mb-2 d-flex align-items-center gap-2" style="font-size: 0.85rem;">
+                            <span class="text-primary fw-semibold"><i class="bi bi-geo-alt-fill"></i> @tour.Destination</span>
+                            <span>•</span>
+                            <span>@tour.Days Ngày @tour.Nights Đêm</span>
+                        </div>
+                        <h5 class="card-title fw-bold mb-3" style="font-size: 1.1rem; line-height: 1.4;">
+                            <a href="/Tours/Details?id=@tour.TourId" class="text-decoration-none text-dark stretched-link">@tour.TourName</a>
+                        </h5>
+                        
+                        <div class="mt-auto">
+                            <div class="d-flex justify-content-between align-items-end mb-3">
+                                <div>
+                                    <small class="text-muted d-block mb-1">Khởi hành:</small>
+                                    <span class="fw-semibold">@tour.DepartureDate.ToString("dd/MM/yyyy")</span>
+                                </div>
+                                <div class="text-end">
+                                    <small class="text-muted d-block mb-1">Số chỗ còn nhận:</small>
+                                    <span class="text-danger fw-bold">@tour.AvailableSeats</span>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center bg-light p-3 rounded-3">
+                                <div>
+                                    <h4 class="text-danger fw-bold mb-0">@tour.PricePerAdult.ToString("N0") <small class="fs-6 text-muted">VND</small></h4>
+                                </div>
+                                <div>
+                                    <a href="/Tours/Details?id=@tour.TourId" class="btn btn-primary rounded-pill px-4 position-relative z-3">Đặt Ngay</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="col-12 text-center py-5">
+            <h3 class="text-muted">No tours available at the moment.</h3>
+        </div>
+    }
+</div>
