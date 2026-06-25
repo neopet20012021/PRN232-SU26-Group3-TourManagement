@@ -23,25 +23,10 @@
                     <ul class="navbar-nav flex-grow-1">
                         @if (User.Identity.IsAuthenticated)
                         {
-                            @if (User.IsInRole("Admin") || User.IsInRole("Staff"))
+                            @if (User.IsInRole("Customer"))
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-page="/Admin/Tours/Index">Manage Tours</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-page="/Admin/Bookings/Index">Manage Bookings</a>
-                                </li>
-                                @if (User.IsInRole("Admin"))
-                                {
-                                    <li class="nav-item">
-                                        <a class="nav-link text-dark" asp-area="" asp-page="/Admin/Users/Index">Manage Users</a>
-                                    </li>
-                                }
-                            }
-                            else if (User.IsInRole("Customer"))
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-page="/MyBookings">My Bookings</a>
+                                    <a class="nav-link text-dark fw-semibold" asp-area="" asp-page="/MyBookings"><i class="bi bi-journal-text text-primary me-1"></i> Đặt Chỗ Của Tôi</a>
                                 </li>
                             }
                         }
@@ -54,14 +39,19 @@
                                     <i class="bi bi-person-circle text-primary"></i> Hello, @User.Identity.Name
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" aria-labelledby="userDropdown">
-                                    <li><a class="dropdown-item" href="/Profile"><i class="bi bi-person text-muted me-2"></i> My Profile</a></li>
+                                    @if (User.IsInRole("Admin") || User.IsInRole("Staff"))
+                                    {
+                                        <li><a class="dropdown-item fw-bold text-primary" href="/Admin/Tours/Index"><i class="bi bi-speedometer2 me-2"></i> Bảng Điều Khiển (Dashboard)</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                    }
+                                    <li><a class="dropdown-item" href="/Profile"><i class="bi bi-person text-muted me-2"></i> Hồ Sơ Cá Nhân</a></li>
                                     @if (User.IsInRole("Customer"))
                                     {
-                                        <li><a class="dropdown-item" href="/MyBookings"><i class="bi bi-journal-text text-muted me-2"></i> My Bookings</a></li>
+                                        <li><a class="dropdown-item" href="/MyBookings"><i class="bi bi-journal-text text-muted me-2"></i> Đặt Chỗ Của Tôi</a></li>
                                     }
                                     <li><hr class="dropdown-divider"></li>
                                     <li>
-                                        <a asp-area="" asp-page="/Logout" class="dropdown-item text-danger fw-bold"><i class="bi bi-box-arrow-right me-2"></i> Logout</a>
+                                        <a asp-area="" asp-page="/Logout" class="dropdown-item text-danger fw-bold"><i class="bi bi-box-arrow-right me-2"></i> Đăng Xuất</a>
                                     </li>
                                 </ul>
                             </li>

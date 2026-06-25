@@ -38,6 +38,11 @@ namespace TourManagement.RazorWeb.Pages.Admin.Tours
 
         public async Task<IActionResult> OnPostDeleteAsync(int id)
         {
+            if (!User.IsInRole("Admin"))
+            {
+                return Forbid();
+            }
+            
             var client = _clientFactory.CreateClient("API");
             var response = await client.DeleteAsync($"odata/Tours/{id}");
             

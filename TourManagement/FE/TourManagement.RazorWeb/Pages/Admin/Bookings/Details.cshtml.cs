@@ -52,6 +52,12 @@ namespace TourManagement.RazorWeb.Pages.Admin.Bookings
 
         public async Task<IActionResult> OnPostAsync()
         {
+            if (User.IsInRole("Admin"))
+            {
+                ErrorMessage = "Admin chỉ có quyền xem tổng quan đơn đặt chỗ. Việc xử lý sẽ do Staff phụ trách.";
+                return Page();
+            }
+            
             var client = _clientFactory.CreateClient("API");
             
             // Re-fetch booking first
