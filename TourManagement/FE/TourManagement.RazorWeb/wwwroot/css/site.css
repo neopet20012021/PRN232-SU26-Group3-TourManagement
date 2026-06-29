@@ -1,5 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
+:root {
+  --color-primary: #0284c7;
+  --color-primary-hover: #0369a1;
+  --color-accent: #f97316;
+  --color-accent-hover: #ea580c;
+  --color-bg-body: #f8fafc;
+  --color-bg-card: #ffffff;
+  --color-text-main: #1e293b;
+  --color-text-muted: #64748b;
+  --color-price: #ef4444;
+  --color-success: #10b981;
+}
+
 html {
   font-size: 14px;
   position: relative;
@@ -87,36 +100,36 @@ body {
 
 /* Beautiful Buttons */
 .btn-primary {
-  background: linear-gradient(135deg, #2563eb, #3b82f6);
+  background: var(--color-primary);
   border: none;
   border-radius: 8px;
   font-weight: 600;
   padding: 0.6rem 1.5rem;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3);
+  box-shadow: 0 4px 6px -1px rgba(2, 132, 199, 0.3);
   color: white;
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 12px -1px rgba(37, 99, 235, 0.4);
-  background: linear-gradient(135deg, #1d4ed8, #2563eb);
+  box-shadow: 0 8px 12px -1px rgba(2, 132, 199, 0.4);
+  background: var(--color-primary-hover);
   color: white;
 }
 
 .btn-outline-primary {
-  border: 2px solid #3b82f6;
-  color: #3b82f6;
+  border: 2px solid var(--color-primary);
+  color: var(--color-primary);
   border-radius: 8px;
   font-weight: 600;
   transition: all 0.3s ease;
 }
 
 .btn-outline-primary:hover {
-  background: #3b82f6;
+  background: var(--color-primary);
   color: #ffffff;
   transform: translateY(-2px);
-  box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 4px 6px -1px rgba(2, 132, 199, 0.3);
 }
 
 /* Typography Enhancements */

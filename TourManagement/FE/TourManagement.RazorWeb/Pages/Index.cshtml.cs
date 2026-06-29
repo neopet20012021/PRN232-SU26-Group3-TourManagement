@@ -15,10 +15,49 @@ public class IndexModel : PageModel
 
     public List<TourScheduleViewModel> Schedules { get; set; } = new List<TourScheduleViewModel>();
 
+    [BindProperty(SupportsGet = true)]
+    public string? Keyword { get; set; }
+
+    [BindProperty(SupportsGet = true)]
+    public decimal? MinPrice { get; set; }
+
+    [BindProperty(SupportsGet = true)]
+    public decimal? MaxPrice { get; set; }
+
+    [BindProperty(SupportsGet = true)]
+    public string? Duration { get; set; }
+
     public async Task OnGetAsync()
     {
         var client = _clientFactory.CreateClient("API");
-        var response = await client.GetAsync("odata/TourSchedules?$expand=Tour&$filter=Status eq 'Active'&$orderby=StartDate asc");
+        
+        var filter = "Status eq 'Active'";
+
+        if (!string.IsNullOrWhiteSpace(Keyword))
+        {
+            var kw = Keyword.ToLower().Replace("'", "''");
+            filter += $" and (contains(tolower(Tour/TourName), '{kw}') or contains(tolower(Tour/Destination), '{kw}'))";
+        }
+
+        if (MinPrice.HasValue)
+        {
+            filter += $" and ActualAdultPrice ge {MinPrice.Value}";
+        }
+
+        if (MaxPrice.HasValue)
+        {
+            filter += $" and ActualAdultPrice le {MaxPrice.Value}";
+        }
+
+        if (!string.IsNullOrWhiteSpace(Duration))
+        {
+            if (Duration == "1-3") filter += " and Tour/Days le 3";
+            else if (Duration == "4-5") filter += " and Tour/Days ge 4 and Tour/Days le 5";
+            else if (Duration == "6+") filter += " and Tour/Days ge 6";
+        }
+
+        var requestUri = $"odata/TourSchedules?$expand=Tour&$filter={filter}&$orderby=StartDate asc";
+        var response = await client.GetAsync(requestUri);
         if (response.IsSuccessStatusCode)
         {
             var result = await response.Content.ReadFromJsonAsync<ODataResponse<TourScheduleViewModel>>();

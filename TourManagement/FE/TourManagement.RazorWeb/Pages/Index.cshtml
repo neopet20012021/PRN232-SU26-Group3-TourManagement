@@ -4,20 +4,8 @@
     ViewData["Title"] = "Khám phá Tour du lịch";
 }
 
-<!-- Google Fonts & Custom CSS for High-End Design -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@0,500;0,700;1,400&display=swap" rel="stylesheet">
-
 <style>
-    body {
-        font-family: 'Outfit', sans-serif;
-        background-color: #f7f9fc;
-    }
-    
-    h1, h2, h3, .font-serif {
-        font-family: 'Playfair Display', serif;
-    }
+    /* Hero Banner Styling */
 
     /* Hero Banner Styling */
     .hero-banner {
@@ -59,13 +47,14 @@
     /* Search Bar in Hero */
     .search-container {
         background: #ffffff;
-        border-radius: 50px;
+        border-radius: 24px;
         padding: 6px;
-        max-width: 700px;
+        max-width: 950px;
         margin: 0 auto;
         box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         transition: all 0.3s ease;
         border: 1px solid #e2e8f0;
+        overflow: hidden;
     }
     
     .search-container:focus-within {
@@ -93,21 +82,21 @@
     }
 
     .search-btn {
-        background: linear-gradient(135deg, #ff9900 0%, #ff5500 100%);
+        background: var(--color-accent);
         border: none;
         color: white;
         border-radius: 50px;
         padding: 12px 30px;
         font-weight: 600;
         font-size: 1rem;
-        box-shadow: 0 5px 15px rgba(255, 85, 0, 0.4);
+        box-shadow: 0 5px 15px rgba(249, 115, 22, 0.4);
         transition: all 0.3s ease;
     }
     
     .search-btn:hover {
         transform: translateY(-1px);
-        box-shadow: 0 8px 20px rgba(255, 85, 0, 0.6);
-        background: linear-gradient(135deg, #ffa826 0%, #ff661a 100%);
+        box-shadow: 0 8px 20px rgba(234, 88, 12, 0.6);
+        background: var(--color-accent-hover);
         color: white;
     }
 
@@ -176,7 +165,6 @@
     }
     
     .price-tag {
-        font-family: 'Outfit', sans-serif;
         color: #ef4444;
         font-size: 1.6rem;
         font-weight: 800;
@@ -190,15 +178,15 @@
     }
     
     .btn-details {
-        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        background: var(--color-primary);
         border: none;
         color: white;
         transition: all 0.3s ease;
     }
     
     .btn-details:hover {
-        background: linear-gradient(135deg, #60a5fa 0%, #2563eb 100%);
-        box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+        background: var(--color-primary-hover);
+        box-shadow: 0 4px 15px rgba(2, 132, 199, 0.3);
         color: white;
     }
 </style>
@@ -209,11 +197,38 @@
         <h1 class="hero-title mb-2">Tìm Kiếm Hành Trình Trong Mơ</h1>
         <p class="hero-subtitle font-serif">Khám phá thế giới, trải nghiệm văn hóa và lưu giữ những kỷ niệm vô giá cùng chúng tôi.</p>
         
-        <!-- Search Bar -->
-        <form method="get" class="search-container d-flex align-items-center">
-            <i class="bi bi-search text-muted ms-3 fs-5"></i>
-            <input type="text" name="keyword" class="form-control search-input flex-grow-1" placeholder="Bạn muốn đi đâu chơi? Điểm đến, tên tour..." />
-            <button type="submit" class="btn search-btn">Tìm Kiếm</button>
+        <!-- Search Form -->
+        <form method="get" class="search-container text-start p-2 shadow">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-search text-muted ms-3 fs-5"></i>
+                <input type="text" name="keyword" value="@Model.Keyword" class="form-control search-input flex-grow-1 border-0 fw-medium" placeholder="Bạn muốn đi đâu chơi? Điểm đến, tên tour..." />
+                <button type="submit" class="btn search-btn d-none d-md-block ms-2 fw-bold px-4">Tìm Kiếm</button>
+            </div>
+            
+            <div class="px-3 pt-3 pb-2 border-top mt-2 d-flex align-items-center flex-wrap gap-4 bg-white rounded-bottom">
+                <!-- Mức giá -->
+                <div class="d-flex align-items-center gap-2 flex-grow-1 flex-md-grow-0">
+                    <label class="text-muted small fw-bold mb-0 text-nowrap"><i class="bi bi-cash-stack text-success"></i> Khoảng giá:</label>
+                    <div class="d-flex align-items-center">
+                        <input type="number" name="minPrice" value="@Model.MinPrice" class="form-control form-control-sm bg-light border-0 fw-medium text-center" placeholder="Từ (VND)" style="width: 110px;">
+                        <span class="text-muted mx-1">-</span>
+                        <input type="number" name="maxPrice" value="@Model.MaxPrice" class="form-control form-control-sm bg-light border-0 fw-medium text-center" placeholder="Đến (VND)" style="width: 110px;">
+                    </div>
+                </div>
+
+                <!-- Thời lượng -->
+                <div class="d-flex align-items-center gap-2 flex-grow-1 flex-md-grow-0">
+                    <label class="text-muted small fw-bold mb-0 text-nowrap"><i class="bi bi-clock-history text-primary"></i> Thời lượng:</label>
+                    <select name="duration" class="form-select form-select-sm bg-light border-0 fw-medium" style="width: 140px; cursor: pointer;">
+                        <option value="">Tất cả</option>
+                        @if (Model.Duration == "1-3") { <option value="1-3" selected>1 - 3 ngày</option> } else { <option value="1-3">1 - 3 ngày</option> }
+                        @if (Model.Duration == "4-5") { <option value="4-5" selected>4 - 5 ngày</option> } else { <option value="4-5">4 - 5 ngày</option> }
+                        @if (Model.Duration == "6+") { <option value="6+" selected>Trên 5 ngày</option> } else { <option value="6+">Trên 5 ngày</option> }
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn search-btn btn-sm d-md-none ms-auto mt-2 w-100 fw-bold">Tìm Kiếm</button>
+            </div>
         </form>
     </div>
 </div>

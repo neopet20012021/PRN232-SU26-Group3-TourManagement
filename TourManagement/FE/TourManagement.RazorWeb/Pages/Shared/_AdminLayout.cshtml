@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - TourManagement Admin</title>
+    <title>@ViewData["Title"] - Quản Trị Hệ Thống</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -127,7 +127,7 @@
         </div>
 
         <ul class="sidebar-nav flex-grow-1">
-            <li class="sidebar-section-title">MENU</li>
+            <li class="sidebar-section-title">DANH MỤC</li>
             
             @if (isAdmin)
             {
@@ -159,7 +159,7 @@
 
             @if (isAdmin)
             {
-                <li class="sidebar-section-title">SYSTEM</li>
+                <li class="sidebar-section-title">HỆ THỐNG</li>
                 <li>
                     <a href="/Admin/Users/Index" class="sidebar-link @(currentPath.Contains("/users") ? "active" : "")">
                         <i class="bi bi-people"></i> Quản Lý User
@@ -182,7 +182,7 @@
                     <div class="bg-primary text-white rounded-circle d-flex justify-content-center align-items-center me-2" style="width: 35px; height: 35px;">
                         <i class="bi bi-person-fill"></i>
                     </div>
-                    Hello, @User.Identity?.Name
+                    Xin chào, @User.Identity?.Name
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2" aria-labelledby="adminUserDropdown">
                     <li><a class="dropdown-item" href="/Profile"><i class="bi bi-person text-muted me-2"></i> Hồ Sơ Cá Nhân</a></li>
