@@ -4,7 +4,7 @@
     ViewData["Title"] = "Book Tour";
 }
 
-@if (Model.Tour == null)
+@if (Model.Schedule == null || Model.Schedule.Tour == null)
 {
     <div class="alert alert-danger">Tour not found.</div>
 }
@@ -14,10 +14,10 @@ else
         <div class="col-md-6">
             <div class="card shadow-sm border-0 mb-4">
                 <div class="card-body d-flex align-items-center gap-3">
-                    <img src="@(string.IsNullOrEmpty(Model.Tour.Image) ? "https://via.placeholder.com/150" : Model.Tour.Image)" class="rounded" style="width: 100px; height: 100px; object-fit: cover;">
+                    <img src="@(string.IsNullOrEmpty(Model.Schedule.Tour.Image) ? "https://via.placeholder.com/150" : Model.Schedule.Tour.Image)" class="rounded" style="width: 100px; height: 100px; object-fit: cover;">
                     <div>
-                        <h5 class="mb-1 fw-bold">@Model.Tour.TourName</h5>
-                        <p class="mb-0 text-muted"><i class="bi bi-calendar-event"></i> Departure: @Model.Tour.DepartureDate.ToString("dd/MM/yyyy")</p>
+                        <h5 class="mb-1 fw-bold">@Model.Schedule.Tour.TourName</h5>
+                        <p class="mb-0 text-muted"><i class="bi bi-calendar-event"></i> Departure: @Model.Schedule.StartDate.ToString("dd/MM/yyyy")</p>
                     </div>
                 </div>
             </div>
@@ -39,7 +39,7 @@ else
                             <a href="/MyBookings" class="btn btn-primary">View My Bookings</a>
                         </div>
                     }
-                    else if (Model.Tour.AvailableSeats > 0)
+                    else if (Model.Schedule.AvailableSeats > 0)
                     {
                         <!-- Wizard Progress -->
                         <div class="d-flex justify-content-between mb-5 position-relative">
@@ -52,24 +52,27 @@ else
                         </div>
 
                         <form method="post" id="bookingForm">
-                            <input type="hidden" asp-for="BookingInput.TourId" value="@Model.Tour.TourId" id="tourId" />
+                            <input type="hidden" asp-for="BookingInput.ScheduleId" value="@Model.Schedule.ScheduleId" id="scheduleId" />
                             
                             <!-- Step 1: Pax Selection -->
                             <div class="wizard-step" id="step1">
                                 <h4 class="mb-4 fw-bold">1. Select Passengers</h4>
                                 <div class="row">
                                     <div class="col-sm-4 mb-3">
-                                        <label asp-for="BookingInput.AdultCount" class="form-label text-muted">Adults</label>
+                                        <label asp-for="BookingInput.AdultCount" class="form-label fw-bold">Người lớn</label>
+                                        <div class="text-muted small mb-2">Từ 12 tuổi trở lên</div>
                                         <input asp-for="BookingInput.AdultCount" type="number" min="1" class="form-control form-control-lg pax-input" id="adultCount" required />
-                                        <small class="text-danger">@Model.Tour.PricePerAdult.ToString("N0") VND</small>
+                                        <small class="text-danger">@Model.Schedule.ActualAdultPrice.ToString("N0") VND</small>
                                     </div>
                                     <div class="col-sm-4 mb-3">
-                                        <label asp-for="BookingInput.ChildCount" class="form-label text-muted">Children</label>
+                                        <label asp-for="BookingInput.ChildCount" class="form-label fw-bold">Trẻ em</label>
+                                        <div class="text-muted small mb-2">Từ 2 - 11 tuổi</div>
                                         <input asp-for="BookingInput.ChildCount" type="number" min="0" class="form-control form-control-lg pax-input" id="childCount" required />
-                                        <small class="text-danger">@Model.Tour.ChildPrice.ToString("N0") VND</small>
+                                        <small class="text-danger">@Model.Schedule.ActualChildPrice.ToString("N0") VND</small>
                                     </div>
                                     <div class="col-sm-4 mb-3">
-                                        <label asp-for="BookingInput.InfantCount" class="form-label text-muted">Infants</label>
+                                        <label asp-for="BookingInput.InfantCount" class="form-label fw-bold">Em bé</label>
+                                        <div class="text-muted small mb-2">Dưới 2 tuổi</div>
                                         <input asp-for="BookingInput.InfantCount" type="number" min="0" class="form-control form-control-lg pax-input" id="infantCount" />
                                         <small class="text-success">Free</small>
                                     </div>
@@ -84,7 +87,7 @@ else
 
                                 <div class="bg-light p-4 rounded-4 mb-4 text-center border">
                                     <span class="text-muted d-block mb-1">Total Price</span>
-                                    <span class="fw-bold display-6 text-danger" id="totalPriceDisplay">@Model.Tour.PricePerAdult.ToString("N0") VND</span>
+                                    <span class="fw-bold display-6 text-danger" id="totalPriceDisplay">@Model.Schedule.ActualAdultPrice.ToString("N0") VND</span>
                                 </div>
 
                                 <button type="button" class="btn btn-primary w-100 btn-lg rounded-pill shadow" onclick="nextStep(2)">Next: Contact Information <i class="bi bi-arrow-right"></i></button>
@@ -200,8 +203,8 @@ else
             });
         }
 
-        const priceAdult = @(Model.Tour?.PricePerAdult ?? 0);
-        const priceChild = @(Model.Tour?.ChildPrice ?? 0);
+        const priceAdult = @(Model.Schedule?.ActualAdultPrice ?? 0);
+        const priceChild = @(Model.Schedule?.ActualChildPrice ?? 0);
 
         function updatePrice() {
             let adult = parseInt(document.getElementById('adultCount').value) || 0;

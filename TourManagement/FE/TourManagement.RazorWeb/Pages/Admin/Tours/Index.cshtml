@@ -28,7 +28,7 @@
                         <th>Điểm Đến</th>
                         <th>Thời Gian</th>
                         <th>Giá (Người Lớn)</th>
-                        <th>Số Chỗ</th>
+                        <th>Tổng Số Chỗ</th>
                         <th>Trạng Thái</th>
                         <th class="text-center pe-4">Thao Tác</th>
                     </tr>
@@ -43,15 +43,7 @@
                             <td>@tour.Days N / @tour.Nights Đ</td>
                             <td class="text-danger fw-bold">@tour.PricePerAdult.ToString("N0") <small>đ</small></td>
                             <td>
-                                @if (tour.AvailableSeats < 5)
-                                {
-                                    <span class="text-danger fw-bold">@tour.AvailableSeats</span>
-                                }
-                                else
-                                {
-                                    @tour.AvailableSeats
-                                }
-                                <span class="text-muted">/ @tour.MaxCapacity</span>
+                                @tour.MaxCapacity
                             </td>
                             <td>
                                 @if (tour.IsActive)

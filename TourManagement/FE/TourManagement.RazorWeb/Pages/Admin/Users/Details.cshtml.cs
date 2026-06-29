@@ -1,15 +1,14 @@
-using System;
-using System.ComponentModel.DataAnnotations;
 using System.Net.Http;
 using System.Net.Http.Json;
-using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using static TourManagement.RazorWeb.Pages.Admin.Users.IndexModel;
 
-namespace TourManagement.RazorWeb.Pages.Tours
+namespace TourManagement.RazorWeb.Pages.Admin.Users
 {
+    [Authorize(Roles = "Admin")]
     public class DetailsModel : PageModel
     {
         private readonly IHttpClientFactory _clientFactory;
@@ -19,17 +18,22 @@ namespace TourManagement.RazorWeb.Pages.Tours
             _clientFactory = clientFactory;
         }
 
-        public ScheduleDetailViewModel? Schedule { get; set; }
+        public UserViewModel? UserDetail { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int scheduleId)
+        public async Task<IActionResult> OnGetAsync(int id)
         {
             var client = _clientFactory.CreateClient("API");
-            var response = await client.GetAsync($"odata/TourSchedules/{scheduleId}?$expand=Tour");
+            var response = await client.GetAsync($"api/Users/{id}");
+
             if (response.IsSuccessStatusCode)
             {
-                Schedule = await response.Content.ReadFromJsonAsync<ScheduleDetailViewModel>();
-                return Page();
+                UserDetail = await response.Content.ReadFromJsonAsync<UserViewModel>();
+                if (UserDetail != null)
+                {
+                    return Page();
+                }
             }
+
             return NotFound();
         }
     }

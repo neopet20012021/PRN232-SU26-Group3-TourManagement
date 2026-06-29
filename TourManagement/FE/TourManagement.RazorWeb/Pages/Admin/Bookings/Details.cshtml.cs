@@ -36,7 +36,7 @@ namespace TourManagement.RazorWeb.Pages.Admin.Bookings
         public async Task<IActionResult> OnGetAsync(int id)
         {
             var client = _clientFactory.CreateClient("API");
-            var response = await client.GetAsync($"odata/Bookings/{id}?$expand=Tour");
+            var response = await client.GetAsync($"odata/Bookings/{id}?$expand=Schedule($expand=Tour)");
             
             if (response.IsSuccessStatusCode)
             {
@@ -61,7 +61,7 @@ namespace TourManagement.RazorWeb.Pages.Admin.Bookings
             var client = _clientFactory.CreateClient("API");
             
             // Re-fetch booking first
-            var response = await client.GetAsync($"odata/Bookings/{BookingId}?$expand=Tour");
+            var response = await client.GetAsync($"odata/Bookings/{BookingId}?$expand=Schedule($expand=Tour)");
             if (response.IsSuccessStatusCode)
             {
                 Booking = await response.Content.ReadFromJsonAsync<BookingAdminDetailViewModel>();
@@ -101,8 +101,8 @@ namespace TourManagement.RazorWeb.Pages.Admin.Bookings
         {
             public int BookingId { get; set; }
             public string BookingCode { get; set; } = string.Empty;
-            public int TourId { get; set; }
-            public TourDetailViewModel? Tour { get; set; }
+            public int ScheduleId { get; set; }
+            public TourScheduleViewModel? Schedule { get; set; }
             public string CustomerName { get; set; } = string.Empty;
             public string PhoneNumber { get; set; } = string.Empty;
             public string Email { get; set; } = string.Empty;
@@ -116,6 +116,13 @@ namespace TourManagement.RazorWeb.Pages.Admin.Bookings
             public System.DateTime CreatedDate { get; set; }
             public int? UserId { get; set; }
             public string? CreatedBy { get; set; }
+        }
+
+        public class TourScheduleViewModel
+        {
+            public int ScheduleId { get; set; }
+            public System.DateTime StartDate { get; set; }
+            public TourDetailViewModel? Tour { get; set; }
         }
     }
 }

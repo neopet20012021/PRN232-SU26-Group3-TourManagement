@@ -3,241 +3,202 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Admin Dashboard</title>
+    <title>@ViewData["Title"] - TourManagement Admin</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <style>
         body {
-            font-family: 'Outfit', sans-serif;
-            background-color: #f4f6f9;
-            overflow-x: hidden;
+            background-color: #f8f9fa;
         }
-
-        /* Layout Structure */
-        #wrapper {
-            display: flex;
-            width: 100%;
-            height: 100vh;
-        }
-
-        /* Sidebar Styling */
-        #sidebar {
+        .sidebar {
             width: 260px;
-            min-width: 260px;
-            background: #1e293b;
-            color: #fff;
-            transition: all 0.3s;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #21252f;
+            color: #cbd5e1;
             z-index: 1000;
+            overflow-y: auto;
+            transition: all 0.3s;
         }
-
-        #sidebar .sidebar-header {
-            padding: 20px;
-            background: #0f172a;
-            text-align: center;
-        }
-
-        #sidebar .sidebar-header h3 {
-            margin: 0;
-            font-weight: 700;
-            color: #38bdf8;
-            font-size: 1.5rem;
-            letter-spacing: 1px;
-        }
-
-        #sidebar ul.components {
-            padding: 20px 0;
-            flex-grow: 1;
-        }
-
-        #sidebar ul li a {
-            padding: 12px 20px;
-            font-size: 1.05rem;
+        .sidebar-brand {
+            height: 70px;
             display: flex;
             align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #38bdf8;
+            background-color: #1a1d24;
+        }
+        .sidebar-section-title {
+            padding: 25px 20px 10px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #64748b;
+            letter-spacing: 0.05em;
+        }
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
             color: #cbd5e1;
             text-decoration: none;
             transition: all 0.2s;
-            border-left: 4px solid transparent;
+            font-weight: 500;
+            font-size: 1.05rem;
         }
-
-        #sidebar ul li a i {
-            margin-right: 12px;
-            font-size: 1.2rem;
-            width: 20px;
+        .sidebar-link:hover, .sidebar-link.active {
+            color: #fff;
+            background-color: rgba(255, 255, 255, 0.05);
+            text-decoration: none;
+        }
+        .sidebar-link i {
+            margin-right: 15px;
+            font-size: 1.25rem;
+            width: 24px;
             text-align: center;
         }
-
-        #sidebar ul li a:hover, #sidebar ul li.active > a {
-            color: #fff;
-            background: #334155;
-            border-left-color: #38bdf8;
-        }
-
-        /* Main Content */
-        #content-wrapper {
-            flex-grow: 1;
+        .main-content {
+            margin-left: 260px;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow-y: auto;
+            transition: all 0.3s;
         }
-
-        /* Top Navbar */
-        .top-navbar {
-            background: #fff;
-            padding: 10px 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        .top-header {
+            height: 70px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            z-index: 10;
+            justify-content: flex-end;
+            padding: 0 30px;
+            z-index: 999;
         }
-
-        .navbar-brand-mobile {
-            display: none;
-            font-weight: 700;
-            color: #1e293b;
+        .content-area {
+            flex: 1;
+            padding: 30px;
         }
-
-        /* Page Content */
-        .page-content {
-            padding: 25px;
-            flex-grow: 1;
-        }
-
-        /* Custom Card Styling for Admin */
-        .admin-card {
-            background: #fff;
-            border-radius: 12px;
-            border: none;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-            margin-bottom: 20px;
-        }
-
-        .admin-card .card-header {
+        .back-home-btn {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            border: 1px solid #cbd5e1;
             background: transparent;
-            border-bottom: 1px solid #f1f5f9;
-            padding: 15px 20px;
-            font-weight: 600;
-            color: #1e293b;
-            font-size: 1.1rem;
+            color: #cbd5e1;
         }
-
-        /* Responsive */
-        @@media (max-width: 768px) {
-            #sidebar {
-                margin-left: -260px;
-                position: fixed;
-                height: 100%;
-            }
-            #sidebar.active {
-                margin-left: 0;
-            }
-            .navbar-brand-mobile {
-                display: block;
-            }
+        .back-home-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #fff;
         }
-        
-        .sidebar-toggler {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: #64748b;
-            cursor: pointer;
+        .admin-card {
+            border-radius: 12px;
+            border: none !important;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03) !important;
         }
     </style>
 </head>
 <body>
+    
+    @{
+        var isStaff = User.IsInRole("Staff");
+        var isAdmin = User.IsInRole("Admin");
+        var currentPath = ViewContext.HttpContext.Request.Path.ToString().ToLower();
+    }
 
-<div id="wrapper">
     <!-- Sidebar -->
-    <nav id="sidebar">
-        <div class="sidebar-header">
-            <h3><i class="bi bi-compass"></i> ADMIN</h3>
+    <div class="sidebar d-flex flex-column">
+        <div class="sidebar-brand">
+            <i class="bi bi-compass text-info me-2"></i> 
+            @(isAdmin ? "ADMIN" : "STAFF")
         </div>
 
-        <ul class="list-unstyled components">
-            <li class="px-3 mb-2 text-uppercase fw-bold text-secondary" style="font-size: 0.75rem;">Menu</li>
+        <ul class="sidebar-nav flex-grow-1">
+            <li class="sidebar-section-title">MENU</li>
             
-            <li class="@(Context.Request.Path.StartsWithSegments("/Admin/Tours") ? "active" : "")">
-                <a href="/Admin/Tours/Index">
-                    <i class="bi bi-map"></i> Quản Lý Tour
-                </a>
-            </li>
-            <li class="@(Context.Request.Path.StartsWithSegments("/Admin/Bookings") ? "active" : "")">
-                <a href="/Admin/Bookings/Index">
-                    <i class="bi bi-calendar-check"></i> Đặt Chỗ (Bookings)
-                </a>
-            </li>
-            
-            @if (User.IsInRole("Admin"))
+            @if (isAdmin)
             {
-                <li class="px-3 mt-4 mb-2 text-uppercase fw-bold text-secondary" style="font-size: 0.75rem;">System</li>
-                <li class="@(Context.Request.Path.StartsWithSegments("/Admin/Users") ? "active" : "")">
-                    <a href="/Admin/Users/Index">
+                <li>
+                    <a href="/Admin/Dashboard/Index" class="sidebar-link @(currentPath.Contains("dashboard") ? "active" : "")">
+                        <i class="bi bi-speedometer2"></i> Tổng Quan
+                    </a>
+                </li>
+                <li>
+                    <a href="/Admin/Tours/Index" class="sidebar-link @(currentPath.Contains("/tours") ? "active" : "")">
+                        <i class="bi bi-map"></i> Quản Lý Tour
+                    </a>
+                </li>
+            }
+
+            @if (isAdmin || isStaff)
+            {
+                <li>
+                    <a href="/Staff/Schedules/Index" class="sidebar-link @(currentPath.Contains("/schedules") ? "active" : "")">
+                        <i class="bi bi-calendar-event"></i> Lịch Khởi Hành
+                    </a>
+                </li>
+                <li>
+                    <a href="/Admin/Bookings/Index" class="sidebar-link @(currentPath.Contains("/bookings") ? "active" : "")">
+                        <i class="bi bi-check-square"></i> Đặt Chỗ (Bookings)
+                    </a>
+                </li>
+            }
+
+            @if (isAdmin)
+            {
+                <li class="sidebar-section-title">SYSTEM</li>
+                <li>
+                    <a href="/Admin/Users/Index" class="sidebar-link @(currentPath.Contains("/users") ? "active" : "")">
                         <i class="bi bi-people"></i> Quản Lý User
                     </a>
                 </li>
             }
         </ul>
-        
-        <div class="p-3">
-            <a href="/Index" class="btn btn-outline-light w-100"><i class="bi bi-house me-2"></i> Trở Về Trang Chủ</a>
-        </div>
-    </nav>
 
-    <!-- Page Content Wrapper -->
-    <div id="content-wrapper">
-        
-        <!-- Top Navbar -->
-        <nav class="top-navbar">
-            <div class="d-flex align-items-center">
-                <button type="button" id="sidebarCollapse" class="sidebar-toggler d-md-none me-3">
-                    <i class="bi bi-list"></i>
-                </button>
-                <span class="navbar-brand-mobile">Dashboard</span>
-            </div>
+        <a href="/Index" class="btn back-home-btn fw-bold py-2">
+            <i class="bi bi-house-door me-2"></i> Trở Về Trang Chủ
+        </a>
+    </div>
 
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Header -->
+        <header class="top-header">
             <div class="dropdown">
-                <a class="nav-link dropdown-toggle d-flex align-items-center text-dark" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 35px; height: 35px;">
+                <a class="nav-link dropdown-toggle text-dark fw-bold d-flex align-items-center" href="#" id="adminUserDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <div class="bg-primary text-white rounded-circle d-flex justify-content-center align-items-center me-2" style="width: 35px; height: 35px;">
                         <i class="bi bi-person-fill"></i>
                     </div>
-                    <span class="fw-semibold d-none d-md-inline">@User.Identity?.Name</span>
+                    Hello, @User.Identity?.Name
                 </a>
-                <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="/Profile"><i class="bi bi-person me-2 text-muted"></i> Hồ Sơ Cá Nhân</a></li>
+                <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2" aria-labelledby="adminUserDropdown">
+                    <li><a class="dropdown-item" href="/Profile"><i class="bi bi-person text-muted me-2"></i> Hồ Sơ Cá Nhân</a></li>
                     <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item text-danger fw-bold" href="/Logout"><i class="bi bi-box-arrow-right me-2"></i> Đăng Xuất</a></li>
+                    <li>
+                        <a href="/Logout" class="dropdown-item text-danger fw-bold"><i class="bi bi-box-arrow-right me-2"></i> Đăng Xuất</a>
+                    </li>
                 </ul>
             </div>
-        </nav>
+        </header>
 
-        <!-- Main Content -->
-        <div class="page-content">
+        <!-- Dynamic Content -->
+        <main class="content-area">
             @RenderBody()
-        </div>
-        
+        </main>
     </div>
-</div>
 
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    $(document).ready(function () {
-        $('#sidebarCollapse').on('click', function () {
-            $('#sidebar').toggleClass('active');
-        });
-    });
-</script>
-@await RenderSectionAsync("Scripts", required: false)
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -1,0 +1,85 @@
+@page
+@model TourManagement.RazorWeb.Pages.Staff.Schedules.IndexModel
+@{
+    ViewData["Title"] = "Quản Lý Lịch Khởi Hành";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold text-dark m-0">Quản Lý Lịch Khởi Hành (Schedules)</h3>
+    <a href="/Staff/Schedules/Create" class="btn btn-success px-4 rounded-pill fw-semibold shadow-sm">
+        <i class="bi bi-plus-circle me-1"></i> Thêm Lịch Mới
+    </a>
+</div>
+
+<div class="card admin-card border-0 shadow-sm">
+    <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
+        <span class="text-primary fw-bold"><i class="bi bi-calendar3 me-2"></i> Danh sách các Lịch Khởi Hành</span>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Tour Gốc</th>
+                        <th>Ngày Khởi Hành</th>
+                        <th>Ngày Kết Thúc</th>
+                        <th>Giá Thực Tế</th>
+                        <th>Ghế Trống</th>
+                        <th>Trạng Thái</th>
+                        <th class="text-center pe-4">Thao Tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var schedule in Model.Schedules)
+                    {
+                        <tr>
+                            <td class="ps-4">
+                                <span class="badge bg-light text-dark border d-block mb-1">@schedule.Tour?.TourCode</span>
+                                <span class="fw-semibold text-primary">@schedule.Tour?.TourName</span>
+                            </td>
+                            <td>
+                                <div class="text-success fw-bold"><i class="bi bi-calendar-check me-1"></i> @schedule.StartDate.ToString("dd/MM/yyyy")</div>
+                                <small class="text-muted">@schedule.StartDate.ToString("HH:mm")</small>
+                            </td>
+                            <td>
+                                <div class="text-secondary"><i class="bi bi-calendar me-1"></i> @schedule.EndDate.ToString("dd/MM/yyyy")</div>
+                            </td>
+                            <td class="text-danger fw-bold">@schedule.ActualAdultPrice.ToString("N0") <small>đ</small></td>
+                            <td>
+                                @if (schedule.AvailableSeats < 5)
+                                {
+                                    <span class="text-danger fw-bold">@schedule.AvailableSeats</span>
+                                }
+                                else
+                                {
+                                    @schedule.AvailableSeats
+                                }
+                                <span class="text-muted">/ @schedule.MaxParticipants</span>
+                            </td>
+                            <td>
+                                @if (schedule.Status == "Active")
+                                {
+                                    <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-2 py-1">Hoạt động</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25 px-2 py-1">@schedule.Status</span>
+                                }
+                            </td>
+                            <td class="text-center pe-4">
+                                <form method="post" asp-page-handler="Delete" asp-route-id="@schedule.ScheduleId" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa lịch này không?');">
+                                    <button type="submit" class="btn btn-sm btn-light text-danger shadow-sm border" title="Xóa"><i class="bi bi-trash"></i></button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                    @if(!Model.Schedules.Any()) {
+                        <tr>
+                            <td colspan="7" class="text-center py-4 text-muted">Chưa có dữ liệu lịch khởi hành nào.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

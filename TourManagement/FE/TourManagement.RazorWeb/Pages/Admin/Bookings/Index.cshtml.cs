@@ -23,7 +23,7 @@ namespace TourManagement.RazorWeb.Pages.Admin.Bookings
         public async Task OnGetAsync()
         {
             var client = _clientFactory.CreateClient("API");
-            var response = await client.GetAsync("odata/Bookings?$expand=Tour&$orderby=BookingDate desc");
+            var response = await client.GetAsync("odata/Bookings?$expand=Schedule($expand=Tour)&$orderby=BookingDate desc");
             
             if (response.IsSuccessStatusCode)
             {
@@ -44,8 +44,8 @@ namespace TourManagement.RazorWeb.Pages.Admin.Bookings
         {
             public int BookingId { get; set; }
             public string BookingCode { get; set; } = string.Empty;
-            public int TourId { get; set; }
-            public TourDetailViewModel? Tour { get; set; }
+            public int ScheduleId { get; set; }
+            public TourScheduleViewModel? Schedule { get; set; }
             public string CustomerName { get; set; } = string.Empty;
             public string PhoneNumber { get; set; } = string.Empty;
             public int AdultCount { get; set; }
@@ -54,6 +54,13 @@ namespace TourManagement.RazorWeb.Pages.Admin.Bookings
             public decimal TotalPrice { get; set; }
             public string Status { get; set; } = string.Empty;
             public System.DateTime BookingDate { get; set; }
+        }
+
+        public class TourScheduleViewModel
+        {
+            public int ScheduleId { get; set; }
+            public System.DateTime StartDate { get; set; }
+            public TourDetailViewModel? Tour { get; set; }
         }
     }
 }

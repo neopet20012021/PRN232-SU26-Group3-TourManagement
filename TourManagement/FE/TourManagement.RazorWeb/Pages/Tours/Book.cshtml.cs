@@ -19,7 +19,7 @@ namespace TourManagement.RazorWeb.Pages.Tours
             _clientFactory = clientFactory;
         }
 
-        public TourDetailViewModel? Tour { get; set; }
+        public ScheduleDetailViewModel? Schedule { get; set; }
 
         [BindProperty]
         public BookingInputModel BookingInput { get; set; } = new BookingInputModel();
@@ -27,14 +27,14 @@ namespace TourManagement.RazorWeb.Pages.Tours
         public string ErrorMessage { get; set; } = string.Empty;
         public string SuccessMessage { get; set; } = string.Empty;
 
-        public async Task<IActionResult> OnGetAsync(int id)
+        public async Task<IActionResult> OnGetAsync(int scheduleId)
         {
             var client = _clientFactory.CreateClient("API");
-            var response = await client.GetAsync($"odata/Tours/{id}");
+            var response = await client.GetAsync($"odata/TourSchedules/{scheduleId}?$expand=Tour");
             if (response.IsSuccessStatusCode)
             {
-                Tour = await response.Content.ReadFromJsonAsync<TourDetailViewModel>();
-                BookingInput.TourId = id;
+                Schedule = await response.Content.ReadFromJsonAsync<ScheduleDetailViewModel>();
+                BookingInput.ScheduleId = scheduleId;
 
                 if (User.Identity != null && User.Identity.IsAuthenticated)
                 {
@@ -49,10 +49,10 @@ namespace TourManagement.RazorWeb.Pages.Tours
         public async Task<IActionResult> OnPostAsync()
         {
             var client = _clientFactory.CreateClient("API");
-            var tourResponse = await client.GetAsync($"odata/Tours/{BookingInput.TourId}");
+            var tourResponse = await client.GetAsync($"odata/TourSchedules/{BookingInput.ScheduleId}?$expand=Tour");
             if (tourResponse.IsSuccessStatusCode)
             {
-                Tour = await tourResponse.Content.ReadFromJsonAsync<TourDetailViewModel>();
+                Schedule = await tourResponse.Content.ReadFromJsonAsync<ScheduleDetailViewModel>();
             }
 
             if (!ModelState.IsValid)
@@ -72,7 +72,7 @@ namespace TourManagement.RazorWeb.Pages.Tours
 
             var bookingPayload = new
             {
-                TourId = BookingInput.TourId,
+                ScheduleId = BookingInput.ScheduleId,
                 CustomerName = BookingInput.CustomerName,
                 PhoneNumber = BookingInput.PhoneNumber,
                 Email = BookingInput.Email,
@@ -109,7 +109,7 @@ namespace TourManagement.RazorWeb.Pages.Tours
     public class BookingInputModel
     {
         [Required]
-        public int TourId { get; set; }
+        public int ScheduleId { get; set; }
 
         [Required(ErrorMessage = "Full Name is required")]
         [StringLength(100)]
@@ -142,5 +142,29 @@ namespace TourManagement.RazorWeb.Pages.Tours
         public string PaymentMethod { get; set; } = string.Empty;
 
         public string? PromoCode { get; set; }
+    }
+
+    public class ScheduleDetailViewModel
+    {
+        public int ScheduleId { get; set; }
+        public DateTime StartDate { get; set; }
+        public decimal ActualAdultPrice { get; set; }
+        public decimal ActualChildPrice { get; set; }
+        public int AvailableSeats { get; set; }
+        public TourDetailViewModel? Tour { get; set; }
+    }
+
+    public class TourDetailViewModel
+    {
+        public int TourId { get; set; }
+        public string TourName { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public string Itinerary { get; set; } = string.Empty;
+        public string IncludedServices { get; set; } = string.Empty;
+        public string ExcludedServices { get; set; } = string.Empty;
+        public string Image { get; set; } = string.Empty;
+        public string Destination { get; set; } = string.Empty;
+        public int Days { get; set; }
+        public int Nights { get; set; }
     }
 }

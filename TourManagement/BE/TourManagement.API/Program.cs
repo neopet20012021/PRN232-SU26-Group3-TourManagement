@@ -29,6 +29,7 @@ static IEdmModel GetEdmModel()
     var builder = new ODataConventionModelBuilder();
     builder.EntitySet<Booking>("Bookings");
     builder.EntitySet<Tour>("Tours");
+    builder.EntitySet<TourSchedule>("TourSchedules");
     builder.EntitySet<User>("Users");
     return builder.GetEdmModel();
 }

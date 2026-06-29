@@ -44,12 +44,6 @@ namespace TourManagement.Data.Models
         public string Destination { get; set; } = string.Empty;
 
         [Required]
-        public DateTime DepartureDate { get; set; }
-
-        [Required]
-        public int AvailableSeats { get; set; }
-
-        [Required]
         public int MaxCapacity { get; set; }
 
         [Required]
@@ -71,6 +65,6 @@ namespace TourManagement.Data.Models
 
         public DateTime? UpdatedDate { get; set; }
 
-        public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
+        public virtual ICollection<TourSchedule> Schedules { get; set; } = new List<TourSchedule>();
     }
 }

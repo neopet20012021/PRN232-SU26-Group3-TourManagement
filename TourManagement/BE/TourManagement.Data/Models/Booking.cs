@@ -15,11 +15,11 @@ namespace TourManagement.Data.Models
         [Column(TypeName = "VARCHAR(20)")]
         public string BookingCode { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Tour là bắt buộc")]
-        public int TourId { get; set; }
+        [Required(ErrorMessage = "Lịch khởi hành là bắt buộc")]
+        public int ScheduleId { get; set; }
 
-        [ForeignKey(nameof(TourId))]
-        public virtual Tour? Tour { get; set; }
+        [ForeignKey(nameof(ScheduleId))]
+        public virtual TourSchedule? Schedule { get; set; }
 
         [Required(ErrorMessage = "Tên khách hàng là bắt buộc")]
         [StringLength(100)]

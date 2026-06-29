@@ -53,11 +53,11 @@ else
                     <div class="row g-3">
                         <div class="col-12">
                             <label class="text-muted small mb-1">Tên Tour</label>
-                            <p class="fw-bold text-primary mb-0">@Model.Booking.Tour?.TourName</p>
+                            <p class="fw-bold text-primary mb-0">@Model.Booking.Schedule?.Tour?.TourName</p>
                         </div>
                         <div class="col-md-4">
                             <label class="text-muted small mb-1">Ngày Khởi Hành</label>
-                            <p class="fw-semibold mb-0">@Model.Booking.Tour?.DepartureDate.ToString("dd/MM/yyyy")</p>
+                            <p class="fw-semibold mb-0">@Model.Booking.Schedule?.StartDate.ToString("dd/MM/yyyy")</p>
                         </div>
                         <div class="col-md-8">
                             <label class="text-muted small mb-1">Cơ Cấu Khách</label>
@@ -111,6 +111,8 @@ else
                         <h4 class="mb-0">
                             @if(Model.Booking.Status.ToLower() == "pending") {
                                 <span class="badge bg-warning text-dark border border-warning px-3 py-2 w-100">Chờ Thanh Toán</span>
+                            } else if (Model.Booking.Status.ToLower() == "deposited") {
+                                <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 px-3 py-2 w-100">Đã Đặt Cọc</span>
                             } else if (Model.Booking.Status.ToLower() == "paid" || Model.Booking.Status.ToLower() == "confirmed") {
                                 <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-3 py-2 w-100">Đã Thanh Toán</span>
                             } else if (Model.Booking.Status.ToLower() == "cancelled") {
@@ -129,7 +131,8 @@ else
                                 <label asp-for="NewStatus" class="form-label fw-semibold">Cập Nhật Trạng Thái Mới</label>
                                 <select asp-for="NewStatus" class="form-select border-secondary">
                                     <option value="Pending">Pending (Chờ thanh toán)</option>
-                                    <option value="Paid">Paid (Đã thanh toán)</option>
+                                    <option value="Deposited">Deposited (Đã đặt cọc)</option>
+                                    <option value="Paid">Paid (Đã thanh toán đủ)</option>
                                     <option value="Confirmed">Confirmed (Đã xác nhận)</option>
                                     <option value="Cancelled">Cancelled (Hủy bỏ)</option>
                                 </select>

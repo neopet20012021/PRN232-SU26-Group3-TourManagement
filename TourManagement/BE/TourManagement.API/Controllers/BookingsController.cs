@@ -56,21 +56,21 @@ namespace TourManagement.API.Controllers
             }
 
             // Check Available Seats
-            var tour = await _context.Tours.FindAsync(booking.TourId);
-            if (tour == null)
+            var schedule = await _context.TourSchedules.FindAsync(booking.ScheduleId);
+            if (schedule == null)
             {
-                return NotFound("Tour not found.");
+                return NotFound("Schedule not found.");
             }
 
             int totalPax = booking.AdultCount + booking.ChildCount; // Infants don't take seats usually
-            if (tour.AvailableSeats < totalPax)
+            if (schedule.AvailableSeats < totalPax)
             {
-                return BadRequest($"Not enough available seats. Only {tour.AvailableSeats} seats left.");
+                return BadRequest($"Not enough available seats. Only {schedule.AvailableSeats} seats left.");
             }
 
             try 
             {
-                var priceCalc = await bookingService.CalculatePriceAsync(booking.TourId, booking.AdultCount, booking.ChildCount, booking.PromoCode);
+                var priceCalc = await bookingService.CalculatePriceAsync(booking.ScheduleId, booking.AdultCount, booking.ChildCount, booking.PromoCode);
                 booking.TotalPrice = priceCalc.FinalPrice;
             } 
             catch 
@@ -79,8 +79,8 @@ namespace TourManagement.API.Controllers
             }
 
             // Deduct seats
-            tour.AvailableSeats -= totalPax;
-            _context.Entry(tour).State = EntityState.Modified;
+            schedule.AvailableSeats -= totalPax;
+            _context.Entry(schedule).State = EntityState.Modified;
 
             // Simple code generation
             booking.BookingCode = "BK" + DateTime.Now.ToString("yyyyMMddHHmmss");
@@ -98,6 +98,9 @@ namespace TourManagement.API.Controllers
         [AllowAnonymous] // Changed to AllowAnonymous so RazorWeb can call it without passing tokens. RazorWeb itself enforces Admin roles.
         public async Task<IActionResult> Put(int key, [FromBody] Booking update)
         {
+            ModelState.Remove("Schedule");
+            ModelState.Remove("Tour");
+            ModelState.Remove("User");
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -107,6 +110,29 @@ namespace TourManagement.API.Controllers
             {
                 return BadRequest();
             }
+
+            var existingBooking = await _context.Bookings.AsNoTracking().FirstOrDefaultAsync(b => b.BookingId == key);
+            if (existingBooking == null)
+            {
+                return NotFound();
+            }
+
+            int oldPax = (existingBooking.Status.ToLower() == "cancelled") ? 0 : (existingBooking.AdultCount + existingBooking.ChildCount);
+            int newPax = (update.Status.ToLower() == "cancelled") ? 0 : (update.AdultCount + update.ChildCount);
+            int paxDiff = newPax - oldPax;
+
+            if (paxDiff != 0)
+            {
+                var schedule = await _context.TourSchedules.FindAsync(update.ScheduleId);
+                if (schedule != null)
+                {
+                    schedule.AvailableSeats -= paxDiff;
+                    // Optional: check if AvailableSeats < 0, but Admin edits might be intentional
+                }
+            }
+
+            // Remove navigation properties to avoid EF Core tracking conflicts
+            update.Schedule = null;
 
             _context.Entry(update).State = EntityState.Modified;
 
@@ -137,6 +163,15 @@ namespace TourManagement.API.Controllers
             if (booking == null)
             {
                 return NotFound();
+            }
+
+            if (booking.Status.ToLower() != "cancelled")
+            {
+                var schedule = await _context.TourSchedules.FindAsync(booking.ScheduleId);
+                if (schedule != null)
+                {
+                    schedule.AvailableSeats += (booking.AdultCount + booking.ChildCount);
+                }
             }
 
             _context.Bookings.Remove(booking);

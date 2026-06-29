@@ -4,7 +4,7 @@
     ViewData["Title"] = "Tour Details";
 }
 
-@if (Model.Tour == null)
+@if (Model.Schedule == null || Model.Schedule.Tour == null)
 {
     <div class="alert alert-danger">Tour not found.</div>
 }
@@ -12,42 +12,43 @@ else
 {
     <div class="row justify-content-center">
         <div class="col-md-10">
-            <img src="@(string.IsNullOrEmpty(Model.Tour.Image) ? "https://via.placeholder.com/800x400?text=No+Image" : Model.Tour.Image)" class="img-fluid rounded mb-4 shadow-sm" alt="@Model.Tour.TourName" style="width:100%; max-height:500px; object-fit:cover;">
+            <img src="@(string.IsNullOrEmpty(Model.Schedule.Tour.Image) ? "https://via.placeholder.com/800x400?text=No+Image" : Model.Schedule.Tour.Image)" class="img-fluid rounded mb-4 shadow-sm" alt="@Model.Schedule.Tour.TourName" style="width:100%; max-height:500px; object-fit:cover;">
             
             <div class="d-flex justify-content-between align-items-start mb-3">
                 <div>
-                    <h2 class="fw-bold">@Model.Tour.TourName</h2>
-                    <p class="text-muted fs-5"><i class="bi bi-geo-alt-fill text-danger"></i> @Model.Tour.Destination • <i class="bi bi-clock-fill text-primary"></i> @Model.Tour.Days Days @Model.Tour.Nights Nights</p>
+                    <h2 class="fw-bold">@Model.Schedule.Tour.TourName</h2>
+                    <p class="text-muted fs-5"><i class="bi bi-geo-alt-fill text-danger"></i> @Model.Schedule.Tour.Destination • <i class="bi bi-clock-fill text-primary"></i> @Model.Schedule.Tour.Days Days @Model.Schedule.Tour.Nights Nights</p>
+                    <p class="text-success fs-5"><i class="bi bi-calendar-check text-success"></i> Khởi hành: @Model.Schedule.StartDate.ToString("dd/MM/yyyy")</p>
                 </div>
                 <div class="text-end">
-                    <h3 class="text-danger fw-bold mb-1">@Model.Tour.PricePerAdult.ToString("N0") VND</h3>
+                    <h3 class="text-danger fw-bold mb-1">@Model.Schedule.ActualAdultPrice.ToString("N0") VND</h3>
                     <p class="text-muted mb-2">per adult</p>
-                    <a href="/Tours/Book?id=@Model.Tour.TourId" class="btn btn-primary btn-lg px-5 rounded-pill fw-bold shadow">Book Now</a>
+                    <a href="/Tours/Book?scheduleId=@Model.Schedule.ScheduleId" class="btn btn-primary btn-lg px-5 rounded-pill fw-bold shadow">Book Now</a>
                 </div>
             </div>
             <hr />
             
             <h4 class="fw-bold text-primary mb-3">Overview</h4>
-            <p class="fs-5" style="line-height: 1.8;">@Model.Tour.Description</p>
+            <p class="fs-5" style="line-height: 1.8;">@Model.Schedule.Tour.Description</p>
             
             <h4 class="fw-bold text-primary mt-5 mb-3">Itinerary</h4>
             <div class="p-4 bg-light rounded-4">
-                <p style="white-space: pre-line; line-height: 1.8;">@Model.Tour.Itinerary</p>
+                <p style="white-space: pre-line; line-height: 1.8;">@Model.Schedule.Tour.Itinerary</p>
             </div>
 
             <div class="row mt-5">
                 <div class="col-md-6">
                     <h5 class="fw-bold text-success"><i class="bi bi-check-circle-fill"></i> Included Services</h5>
-                    <p style="white-space: pre-line;">@Model.Tour.IncludedServices</p>
+                    <p style="white-space: pre-line;">@Model.Schedule.Tour.IncludedServices</p>
                 </div>
                 <div class="col-md-6">
                     <h5 class="fw-bold text-danger"><i class="bi bi-x-circle-fill"></i> Excluded Services</h5>
-                    <p style="white-space: pre-line;">@Model.Tour.ExcludedServices</p>
+                    <p style="white-space: pre-line;">@Model.Schedule.Tour.ExcludedServices</p>
                 </div>
             </div>
             
             <div class="text-center mt-5 mb-5">
-                <a href="/Tours/Book?id=@Model.Tour.TourId" class="btn btn-primary btn-lg px-5 rounded-pill fw-bold shadow-lg">Proceed to Book This Tour</a>
+                <a href="/Tours/Book?scheduleId=@Model.Schedule.ScheduleId" class="btn btn-primary btn-lg px-5 rounded-pill fw-bold shadow-lg">Proceed to Book This Tour</a>
             </div>
         </div>
     </div>

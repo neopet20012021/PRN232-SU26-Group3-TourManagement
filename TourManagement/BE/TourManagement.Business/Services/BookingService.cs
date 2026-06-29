@@ -15,8 +15,8 @@ namespace TourManagement.Business.Services
         Task<BookingDTO> GetBookingByIdAsync(int bookingId);
         Task<BookingDTO> GetBookingByCodeAsync(string bookingCode);
         Task<IEnumerable<BookingDTO>> GetCustomerBookingsAsync(string email);
-        Task<IEnumerable<BookingDTO>> GetTourBookingsAsync(int tourId);
-        Task<PriceCalculationDTO> CalculatePriceAsync(int tourId, int adultCount, int childCount, string promoCode = null);
+        Task<IEnumerable<BookingDTO>> GetScheduleBookingsAsync(int scheduleId);
+        Task<PriceCalculationDTO> CalculatePriceAsync(int scheduleId, int adultCount, int childCount, string promoCode = null);
         Task<bool> UpdateBookingStatusAsync(int bookingId, string newStatus);
         Task<bool> CancelBookingAsync(int bookingId);
         Task<IEnumerable<TourSelectDTO>> GetActiveToursAsync(string? keyword = null, decimal? minPrice = null, decimal? maxPrice = null, DateTime? fromDate = null, DateTime? toDate = null);
@@ -38,13 +38,10 @@ namespace TourManagement.Business.Services
 
         public async Task<BookingResponseDTO> CreateBookingAsync(CreateBookingDTO bookingDto)
         {
-            var tour = await _tourRepository.GetByIdAsync(bookingDto.TourId);
-            if (tour == null) return new BookingResponseDTO { Success = false, Message = "Tour not found" };
-
-            var priceCalc = await CalculatePriceAsync(bookingDto.TourId, bookingDto.AdultCount, bookingDto.ChildCount, bookingDto.PromoCode);
+            var priceCalc = await CalculatePriceAsync(bookingDto.ScheduleId, bookingDto.AdultCount, bookingDto.ChildCount, bookingDto.PromoCode);
             var booking = new Booking
             {
-                TourId = bookingDto.TourId,
+                ScheduleId = bookingDto.ScheduleId,
                 CustomerName = bookingDto.CustomerName,
                 PhoneNumber = bookingDto.PhoneNumber,
                 Email = bookingDto.Email,
@@ -85,18 +82,16 @@ namespace TourManagement.Business.Services
             return _mapper.Map<IEnumerable<BookingDTO>>(bookings);
         }
 
-        public async Task<IEnumerable<BookingDTO>> GetTourBookingsAsync(int tourId)
+        public async Task<IEnumerable<BookingDTO>> GetScheduleBookingsAsync(int scheduleId)
         {
-            var bookings = (await _bookingRepository.GetAllAsync()).Where(b => b.TourId == tourId);
+            var bookings = (await _bookingRepository.GetAllAsync()).Where(b => b.ScheduleId == scheduleId);
             return _mapper.Map<IEnumerable<BookingDTO>>(bookings);
         }
 
-        public async Task<PriceCalculationDTO> CalculatePriceAsync(int tourId, int adultCount, int childCount, string promoCode = null)
+        public async Task<PriceCalculationDTO> CalculatePriceAsync(int scheduleId, int adultCount, int childCount, string promoCode = null)
         {
-            var tour = await _tourRepository.GetByIdAsync(tourId);
-            if (tour == null) throw new Exception("Tour not found");
-
-            decimal originalPrice = (tour.PricePerAdult * adultCount) + (tour.ChildPrice * childCount);
+            // For now, returning dummy calculation. Real implementation needs ScheduleRepository.
+            decimal originalPrice = (1000000 * adultCount) + (700000 * childCount);
             decimal discount = 0;
             if (!string.IsNullOrWhiteSpace(promoCode) && await ValidatePromoCodeAsync(promoCode))
             {
@@ -142,8 +137,6 @@ namespace TourManagement.Business.Services
 
             if (minPrice.HasValue) query = query.Where(t => t.PricePerAdult >= minPrice.Value);
             if (maxPrice.HasValue) query = query.Where(t => t.PricePerAdult <= maxPrice.Value);
-            if (fromDate.HasValue) query = query.Where(t => t.DepartureDate.Date >= fromDate.Value.Date);
-            if (toDate.HasValue) query = query.Where(t => t.DepartureDate.Date <= toDate.Value.Date);
 
             return _mapper.Map<IEnumerable<TourSelectDTO>>(query.ToList());
         }

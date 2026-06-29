@@ -36,8 +36,8 @@
                                 <span class="fw-semibold text-dark">@booking.CustomerName</span><br/>
                                 <small class="text-muted"><i class="bi bi-telephone-fill me-1"></i> @booking.PhoneNumber</small>
                             </td>
-                            <td style="max-width: 200px;" class="text-truncate text-primary" title="@booking.Tour?.TourName">
-                                @booking.Tour?.TourName
+                            <td style="max-width: 200px;" class="text-truncate text-primary" title="@booking.Schedule?.Tour?.TourName">
+                                @booking.Schedule?.Tour?.TourName
                             </td>
                             <td><i class="bi bi-people-fill text-muted me-1"></i> @(booking.AdultCount + booking.ChildCount + booking.InfantCount) khách</td>
                             <td class="text-danger fw-bold">@booking.TotalPrice.ToString("N0") <small>đ</small></td>

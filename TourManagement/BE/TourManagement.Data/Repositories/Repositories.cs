@@ -82,8 +82,8 @@ namespace TourManagement.Data.Repositories
         public async Task<IEnumerable<Models.Tour>> GetActiveTours()
         {
             return await _dbSet
-                .Where(t => t.IsActive && t.DepartureDate >= DateTime.Now && t.AvailableSeats > 0)
-                .OrderBy(t => t.DepartureDate)
+                .Where(t => t.IsActive)
+                .OrderByDescending(t => t.CreatedDate)
                 .ToListAsync();
         }
 
@@ -91,7 +91,7 @@ namespace TourManagement.Data.Repositories
         {
             return await _dbSet
                 .Where(t => t.IsActive && t.Category == category)
-                .OrderBy(t => t.DepartureDate)
+                .OrderByDescending(t => t.CreatedDate)
                 .ToListAsync();
         }
 
@@ -103,7 +103,7 @@ namespace TourManagement.Data.Repositories
                     t.TourCode.Contains(searchTerm) ||
                     t.Destination.Contains(searchTerm)
                 ))
-                .OrderBy(t => t.DepartureDate)
+                .OrderByDescending(t => t.CreatedDate)
                 .ToListAsync();
         }
     }

@@ -13,6 +13,7 @@ namespace TourManagement.Data.Context
         public DbSet<Tour> Tours { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<TourSchedule> TourSchedules { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -70,10 +71,21 @@ namespace TourManagement.Data.Context
                 entity.HasIndex(e => e.BookingCode)
                     .IsUnique();
 
-                entity.HasOne(d => d.Tour)
+                entity.HasOne(d => d.Schedule)
                     .WithMany(p => p.Bookings)
-                    .HasForeignKey(d => d.TourId)
+                    .HasForeignKey(d => d.ScheduleId)
                     .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            // Configure TourSchedule entity
+            modelBuilder.Entity<TourSchedule>(entity =>
+            {
+                entity.HasKey(e => e.ScheduleId);
+
+                entity.HasOne(d => d.Tour)
+                    .WithMany(p => p.Schedules)
+                    .HasForeignKey(d => d.TourId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             // Configure User entity
@@ -102,6 +114,24 @@ namespace TourManagement.Data.Context
                     Role = "Staff",
                     FullName = "Staff Member",
                     Email = "staff@tourmanagement.com"
+                },
+                new User
+                {
+                    UserId = 101,
+                    Username = "nguyenvan",
+                    PasswordHash = "nguyenvan123", // Password hash placeholder
+                    Role = "Customer",
+                    FullName = "Nguyễn Văn A",
+                    Email = "nguyenvan@gmail.com"
+                },
+                new User
+                {
+                    UserId = 102,
+                    Username = "lethi",
+                    PasswordHash = "lethi123",
+                    Role = "Customer",
+                    FullName = "Lê Thị B",
+                    Email = "lethi@gmail.com"
                 }
             );
 
@@ -119,8 +149,6 @@ namespace TourManagement.Data.Context
                     ChildPrice = 1750000,
                     Category = "mien-bac",
                     Destination = "Sa Pa",
-                    DepartureDate = DateTime.Now.AddDays(10),
-                    AvailableSeats = 20,
                     MaxCapacity = 30,
                     IsActive = true,
                     Itinerary = "Ngày 1: Hà Nội - Sa Pa | Ngày 2: Bản Cát Cát | Ngày 3: Fansipan - Hà Nội",
@@ -140,8 +168,6 @@ namespace TourManagement.Data.Context
                     ChildPrice = 2240000,
                     Category = "mien-bac",
                     Destination = "Hạ Long",
-                    DepartureDate = DateTime.Now.AddDays(5),
-                    AvailableSeats = 15,
                     MaxCapacity = 20,
                     IsActive = true,
                     Itinerary = "Ngày 1: Tuần Châu - Vịnh Hạ Long | Ngày 2: Vịnh Lan Hạ - Hà Nội",
@@ -161,14 +187,110 @@ namespace TourManagement.Data.Context
                     ChildPrice = 3150000,
                     Category = "mien-trung",
                     Destination = "Đà Nẵng",
-                    DepartureDate = DateTime.Now.AddDays(15),
-                    AvailableSeats = 25,
                     MaxCapacity = 40,
                     IsActive = true,
                     Itinerary = "Ngày 1: Đà Nẵng | Ngày 2: Hội An | Ngày 3: Bà Nà Hills | Ngày 4: Sơn Trà - Chợ Hàn",
                     IncludedServices = "Khách sạn 4 sao, Vé máy bay khứ hồi, Xe đưa đón, Vé tham quan",
                     ExcludedServices = "Chi phí cá nhân",
                     Image = "https://images.unsplash.com/photo-1559592413-7cec4d0cae2b?q=80&w=600&auto=format&fit=crop"
+                }
+            );
+
+            // Seed Data cho TourSchedules
+            modelBuilder.Entity<TourSchedule>().HasData(
+                new TourSchedule
+                {
+                    ScheduleId = 1,
+                    TourId = 1,
+                    StartDate = DateTime.Now.AddDays(10),
+                    EndDate = DateTime.Now.AddDays(13),
+                    MaxParticipants = 30,
+                    AvailableSeats = 20,
+                    ActualAdultPrice = 2500000,
+                    ActualChildPrice = 1750000,
+                    Status = "Active"
+                },
+                new TourSchedule
+                {
+                    ScheduleId = 2,
+                    TourId = 2,
+                    StartDate = DateTime.Now.AddDays(5),
+                    EndDate = DateTime.Now.AddDays(7),
+                    MaxParticipants = 20,
+                    AvailableSeats = 15,
+                    ActualAdultPrice = 3200000,
+                    ActualChildPrice = 2240000,
+                    Status = "Active"
+                },
+                new TourSchedule
+                {
+                    ScheduleId = 3,
+                    TourId = 3,
+                    StartDate = DateTime.Now.AddDays(15),
+                    EndDate = DateTime.Now.AddDays(19),
+                    MaxParticipants = 40,
+                    AvailableSeats = 25,
+                    ActualAdultPrice = 4500000,
+                    ActualChildPrice = 3150000,
+                    Status = "Active"
+                }
+            );
+
+            // Seed Data cho Bookings
+            modelBuilder.Entity<Booking>().HasData(
+                new Booking
+                {
+                    BookingId = 101,
+                    BookingCode = "BK-20230601-101",
+                    CustomerName = "Nguyễn Văn A",
+                    Email = "nguyenvan@gmail.com",
+                    PhoneNumber = "0901234567",
+                    ScheduleId = 1,
+                    AdultCount = 2,
+                    ChildCount = 0,
+                    InfantCount = 0,
+                    TotalPrice = 5000000, // 2 * 2500000
+                    BookingDate = DateTime.Now.AddDays(-5),
+                    Status = "Paid",
+                    PaymentMethod = "BankTransfer",
+                    SpecialRequest = "Phòng view biển nếu có thể",
+                    FinalPrice = 5000000
+                },
+                new Booking
+                {
+                    BookingId = 102,
+                    BookingCode = "BK-20230602-102",
+                    CustomerName = "Lê Thị B",
+                    Email = "lethi@gmail.com",
+                    PhoneNumber = "0987654321",
+                    ScheduleId = 2,
+                    AdultCount = 2,
+                    ChildCount = 1,
+                    InfantCount = 0,
+                    TotalPrice = 8640000, // 2 * 3200000 + 1 * 2240000
+                    BookingDate = DateTime.Now.AddDays(-2),
+                    Status = "Pending",
+                    PaymentMethod = "CreditCard",
+                    SpecialRequest = "Có trẻ em đi kèm",
+                    FinalPrice = 8640000
+                },
+                new Booking
+                {
+                    BookingId = 103,
+                    BookingCode = "BK-20230603-103",
+                    CustomerName = "Trần Trung C",
+                    Email = "tranc@yahoo.com",
+                    PhoneNumber = "0912333444",
+                    ScheduleId = 1,
+                    AdultCount = 1,
+                    ChildCount = 0,
+                    InfantCount = 0,
+                    TotalPrice = 2500000,
+                    BookingDate = DateTime.Now.AddDays(-1),
+                    Status = "Deposited",
+                    PaymentMethod = "Cash",
+                    SpecialRequest = "",
+                    FinalPrice = 2500000
                 }
             );
         }

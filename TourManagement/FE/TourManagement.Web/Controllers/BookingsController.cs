@@ -90,7 +90,7 @@ namespace TourManagement.Web.Controllers
             {
                 TourId = tour.TourId,
                 TourName = tour.TourName,
-                DepartureDate = tour.DepartureDate,
+                DepartureDate = tour.StartDate,
                 PricePerAdult = tour.PricePerAdult,
                 PricePerChild = tour.PricePerChild,
                 
@@ -165,7 +165,7 @@ namespace TourManagement.Web.Controllers
             var model = new BookingReviewViewModel
             {
                 TourName = tour?.TourName,
-                DepartureDate = tour?.DepartureDate ?? DateTime.Now,
+                DepartureDate = tour?.StartDate ?? DateTime.Now,
                 CustomerName = session.CustomerName,
                 Email = session.Email,
                 PhoneNumber = session.Phone,
@@ -192,7 +192,7 @@ namespace TourManagement.Web.Controllers
 
             var dto = new CreateBookingDTO
             {
-                TourId = session.SelectedTourId,
+                ScheduleId = session.SelectedTourId,
                 CustomerName = session.CustomerName ?? "",
                 Email = session.Email ?? "",
                 PhoneNumber = session.Phone ?? "",

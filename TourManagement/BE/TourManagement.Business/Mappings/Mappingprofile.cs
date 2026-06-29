@@ -10,7 +10,7 @@ namespace TourManagement.Business.Mappings
         {
             // Booking mappings
             CreateMap<Booking, BookingDTO>()
-                .ForMember(dest => dest.TourName, opt => opt.MapFrom(src => src.Tour != null ? src.Tour.TourName : ""))
+                .ForMember(dest => dest.TourName, opt => opt.MapFrom(src => src.Schedule != null && src.Schedule.Tour != null ? src.Schedule.Tour.TourName : ""))
                 .ReverseMap();
 
             CreateMap<CreateBookingDTO, Booking>()
@@ -41,8 +41,6 @@ namespace TourManagement.Business.Mappings
         public decimal ChildPrice { get; set; }
         public string Category { get; set; } = string.Empty;
         public string Destination { get; set; } = string.Empty;
-        public System.DateTime DepartureDate { get; set; }
-        public int AvailableSeats { get; set; }
         public int MaxCapacity { get; set; }
         public bool IsActive { get; set; }
         public string Image { get; set; } = string.Empty;

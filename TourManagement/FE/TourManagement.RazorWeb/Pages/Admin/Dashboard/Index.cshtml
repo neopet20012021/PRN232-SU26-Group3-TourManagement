@@ -1,0 +1,156 @@
+@page
+@model TourManagement.RazorWeb.Pages.Admin.Dashboard.IndexModel
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold text-dark m-0"><i class="bi bi-speedometer2 text-primary me-2"></i> Bảng Tổng Quan (Analytics)</h3>
+</div>
+
+<div class="row g-4 mb-5">
+    <!-- Doanh thu -->
+    <div class="col-xl-3 col-sm-6">
+        <div class="card border-0 shadow-sm rounded-4 h-100 bg-primary text-white bg-gradient">
+            <div class="card-body p-4 position-relative overflow-hidden">
+                <div class="position-relative z-1">
+                    <h6 class="text-white-50 fw-semibold mb-1">Tổng Doanh Thu</h6>
+                    <h3 class="fw-bold mb-0">@Model.Stats.TotalRevenue.ToString("N0") <small class="fs-6 fw-normal">VND</small></h3>
+                </div>
+                <i class="bi bi-wallet2 position-absolute opacity-25" style="font-size: 5rem; right: -10px; bottom: -15px;"></i>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Đơn đặt Tour -->
+    <div class="col-xl-3 col-sm-6">
+        <div class="card border-0 shadow-sm rounded-4 h-100 bg-success text-white bg-gradient">
+            <div class="card-body p-4 position-relative overflow-hidden">
+                <div class="position-relative z-1">
+                    <h6 class="text-white-50 fw-semibold mb-1">Tổng Booking</h6>
+                    <h2 class="fw-bold mb-0">@Model.Stats.TotalBookings</h2>
+                    <div class="mt-2 text-white-50 small">
+                        <i class="bi bi-exclamation-circle-fill text-warning me-1"></i> @Model.Stats.PendingBookings chờ xử lý
+                    </div>
+                </div>
+                <i class="bi bi-journal-check position-absolute opacity-25" style="font-size: 5rem; right: -10px; bottom: -15px;"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tour gốc -->
+    <div class="col-xl-3 col-sm-6">
+        <div class="card border-0 shadow-sm rounded-4 h-100 bg-info text-white bg-gradient">
+            <div class="card-body p-4 position-relative overflow-hidden">
+                <div class="position-relative z-1">
+                    <h6 class="text-white-50 fw-semibold mb-1">Tour Gốc Hiện Hành</h6>
+                    <h2 class="fw-bold mb-0">@Model.Stats.TotalTours</h2>
+                    <div class="mt-2 text-white-50 small">
+                        @Model.Stats.TotalSchedules lịch khởi hành mở
+                    </div>
+                </div>
+                <i class="bi bi-map-fill position-absolute opacity-25" style="font-size: 5rem; right: -10px; bottom: -15px;"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Users -->
+    <div class="col-xl-3 col-sm-6">
+        <div class="card border-0 shadow-sm rounded-4 h-100 bg-secondary text-white bg-gradient">
+            <div class="card-body p-4 position-relative overflow-hidden">
+                <div class="position-relative z-1">
+                    <h6 class="text-white-50 fw-semibold mb-1">Tổng Người Dùng</h6>
+                    <h2 class="fw-bold mb-0">@Model.Stats.TotalUsers</h2>
+                </div>
+                <i class="bi bi-people-fill position-absolute opacity-25" style="font-size: 5rem; right: -10px; bottom: -15px;"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-6">
+        <div class="card admin-card border-0 shadow-sm">
+            <div class="card-header bg-white py-3 border-bottom">
+                <h5 class="fw-bold text-dark mb-0"><i class="bi bi-bar-chart-line-fill text-primary me-2"></i> Báo Cáo Doanh Thu (Demo)</h5>
+            </div>
+            <div class="card-body p-4">
+                <canvas id="revenueChart" height="250"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card admin-card border-0 shadow-sm h-100">
+            <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+                <h5 class="fw-bold text-dark mb-0"><i class="bi bi-clock-history text-success me-2"></i> Trạng Thái Booking (Demo)</h5>
+            </div>
+            <div class="card-body p-4 d-flex justify-content-center align-items-center">
+                <div style="width: 250px;">
+                    <canvas id="bookingStatusChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Revenue Chart
+            var ctxRev = document.getElementById('revenueChart').getContext('2d');
+            var revenueChart = new Chart(ctxRev, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Doanh Thu (Triệu VND)',
+                        data: [120, 190, 150, 250, 220, @(Model.Stats.TotalRevenue/1000000)],
+                        borderColor: '#0d6efd',
+                        backgroundColor: 'rgba(13, 110, 253, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, grid: { borderDash: [2, 4] } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+
+            // Booking Status Chart
+            var ctxStatus = document.getElementById('bookingStatusChart').getContext('2d');
+            var pending = @Model.Stats.PendingBookings;
+            var completed = @(Model.Stats.TotalBookings - Model.Stats.PendingBookings);
+            
+            // To avoid empty chart if no bookings
+            if(pending === 0 && completed === 0) {
+                pending = 1; completed = 3;
+            }
+
+            var statusChart = new Chart(ctxStatus, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Đã Xong/Đã Hủy', 'Chờ Xử Lý'],
+                    datasets: [{
+                        data: [completed, pending],
+                        backgroundColor: ['#198754', '#ffc107'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    cutout: '70%',
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        });
+    </script>
+}

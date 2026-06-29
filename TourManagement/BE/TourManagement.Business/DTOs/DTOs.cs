@@ -5,8 +5,8 @@ namespace TourManagement.Business.DTOs
 {
     public class CreateBookingDTO
     {
-        [Required(ErrorMessage = "Tour là bắt buộc")]
-        public int TourId { get; set; }
+        [Required(ErrorMessage = "Lịch khởi hành là bắt buộc")]
+        public int ScheduleId { get; set; }
 
         [Required(ErrorMessage = "Tên khách hàng là bắt buộc")]
         [StringLength(100, MinimumLength = 3, ErrorMessage = "Tên phải từ 3-100 ký tự")]
@@ -49,7 +49,7 @@ namespace TourManagement.Business.DTOs
     {
         public int BookingId { get; set; }
         public string BookingCode { get; set; } = string.Empty;
-        public int TourId { get; set; }
+        public int ScheduleId { get; set; }
         public string TourName { get; set; } = string.Empty;
         public string CustomerName { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;
@@ -83,7 +83,9 @@ namespace TourManagement.Business.DTOs
         public int TourId { get; set; }
         public string TourName { get; set; } = string.Empty;
         public string TourCode { get; set; } = string.Empty;
-        public DateTime DepartureDate { get; set; }
+        public int ScheduleId { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
         public int AvailableSeats { get; set; }
         public decimal PricePerAdult { get; set; }
         public decimal PricePerChild { get; set; }

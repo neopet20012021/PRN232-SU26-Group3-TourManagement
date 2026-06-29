@@ -29,9 +29,9 @@
             {
                 <tr>
                     <td><strong>@booking.BookingCode</strong></td>
-                    <td>@(booking.Tour?.TourName ?? "N/A")</td>
+                    <td>@(booking.Schedule?.Tour?.TourName ?? "N/A")</td>
                     <td>@booking.BookingDate.ToString("dd/MM/yyyy HH:mm")</td>
-                    <td>@(booking.Tour?.DepartureDate.ToString("dd/MM/yyyy") ?? "N/A")</td>
+                    <td>@(booking.Schedule?.StartDate.ToString("dd/MM/yyyy") ?? "N/A")</td>
                     <td>@booking.AdultCount</td>
                     <td>@booking.ChildCount</td>
                     <td class="text-primary fw-bold">@booking.TotalPrice.ToString("N0") VND</td>

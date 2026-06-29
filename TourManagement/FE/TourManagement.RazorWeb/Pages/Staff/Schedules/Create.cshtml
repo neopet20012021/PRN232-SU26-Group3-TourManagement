@@ -1,0 +1,98 @@
+@page
+@model TourManagement.RazorWeb.Pages.Staff.Schedules.CreateModel
+@{
+    ViewData["Title"] = "Thêm Ngày Khởi Hành Mới";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold text-dark m-0">Tạo Ngày Khởi Hành (Tour Schedule)</h3>
+    <a href="/Index" class="btn btn-outline-secondary px-4 rounded-pill fw-semibold shadow-sm">
+        <i class="bi bi-arrow-left me-1"></i> Trở về
+    </a>
+</div>
+
+@if (!ModelState.IsValid)
+{
+    <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+        <div asp-validation-summary="ModelOnly" class="mb-0"></div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="card admin-card border-0 shadow-sm">
+    <div class="card-header bg-white border-bottom py-3">
+        <h5 class="mb-0 text-primary"><i class="bi bi-calendar-plus me-2"></i> Thông Tin Ngày Khởi Hành</h5>
+    </div>
+    <div class="card-body p-4">
+        <form method="post" id="createScheduleForm">
+            <div class="row g-4">
+                <div class="col-md-12">
+                    <label asp-for="Schedule.TourId" class="form-label fw-semibold">Tour Gốc (Template) <span class="text-danger">*</span></label>
+                    <select asp-for="Schedule.TourId" asp-items="Model.TourList" class="form-select form-select-lg">
+                        <option value="">-- Chọn Tour Gốc --</option>
+                    </select>
+                    <span asp-validation-for="Schedule.TourId" class="text-danger small mt-1 d-block"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="Schedule.StartDate" class="form-label fw-semibold">Ngày Khởi Hành <span class="text-danger">*</span></label>
+                    <input asp-for="Schedule.StartDate" class="form-control" type="datetime-local" />
+                    <span asp-validation-for="Schedule.StartDate" class="text-danger small mt-1 d-block"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="Schedule.MaxParticipants" class="form-label fw-semibold">Số Lượng Chỗ Tối Đa <span class="text-danger">*</span></label>
+                    <input asp-for="Schedule.MaxParticipants" class="form-control" type="number" min="1" />
+                    <span asp-validation-for="Schedule.MaxParticipants" class="text-danger small mt-1 d-block"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="Schedule.ActualAdultPrice" class="form-label fw-semibold">Giá Thực Tế (Người Lớn) <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <input asp-for="Schedule.ActualAdultPrice" class="form-control" type="number" step="1000" />
+                        <span class="input-group-text">VNĐ</span>
+                    </div>
+                    <span asp-validation-for="Schedule.ActualAdultPrice" class="text-danger small mt-1 d-block"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="Schedule.ActualChildPrice" class="form-label fw-semibold">Giá Thực Tế (Trẻ Em) <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <input asp-for="Schedule.ActualChildPrice" class="form-control" type="number" step="1000" />
+                        <span class="input-group-text">VNĐ</span>
+                    </div>
+                    <span asp-validation-for="Schedule.ActualChildPrice" class="text-danger small mt-1 d-block"></span>
+                </div>
+
+                <div class="col-md-12">
+                    <label asp-for="Schedule.GuideName" class="form-label fw-semibold">Hướng Dẫn Viên (Không bắt buộc)</label>
+                    <input asp-for="Schedule.GuideName" class="form-control" type="text" placeholder="Nhập tên hướng dẫn viên..." />
+                    <span asp-validation-for="Schedule.GuideName" class="text-danger small mt-1 d-block"></span>
+                </div>
+            </div>
+
+            <hr class="my-4 text-muted">
+            
+            <div class="d-flex justify-content-end gap-2">
+                <button type="reset" class="btn btn-light border px-4 rounded-pill fw-semibold">Xóa Form</button>
+                <button type="submit" class="btn btn-primary px-5 rounded-pill fw-semibold shadow-sm">
+                    <i class="bi bi-save me-1"></i> Lưu Ngày Khởi Hành
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Calculate child price based on adult price optionally
+        document.getElementById('Schedule_ActualAdultPrice').addEventListener('input', function() {
+            var adultPrice = this.value;
+            if(adultPrice && !isNaN(adultPrice)) {
+                var childPrice = Math.round(adultPrice * 0.7);
+                document.getElementById('Schedule_ActualChildPrice').value = childPrice;
+            }
+        });
+    </script>
+}

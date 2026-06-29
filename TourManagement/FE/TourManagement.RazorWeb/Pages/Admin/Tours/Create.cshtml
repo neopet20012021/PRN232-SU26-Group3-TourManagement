@@ -1,0 +1,133 @@
+@page
+@model TourManagement.RazorWeb.Pages.Admin.Tours.CreateModel
+@{
+    ViewData["Title"] = "Thêm Tour Mới";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold text-dark m-0">Thêm Tour Mới</h3>
+    <a href="/Admin/Tours/Index" class="btn btn-outline-secondary px-4 rounded-pill fw-semibold shadow-sm">
+        <i class="bi bi-arrow-left me-1"></i> Quay Lại
+    </a>
+</div>
+
+<div class="card admin-card shadow-sm border-0">
+    <div class="card-header bg-white border-bottom py-3">
+        <h5 class="mb-0 text-primary fw-bold"><i class="bi bi-info-circle me-2"></i> Thông Tin Tour</h5>
+    </div>
+    <div class="card-body p-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-4" role="alert"></div>
+
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <label asp-for="Tour.TourCode" class="form-label fw-semibold">Mã Tour <span class="text-danger">*</span></label>
+                    <input asp-for="Tour.TourCode" class="form-control" placeholder="VD: VT-2023-01" />
+                    <span asp-validation-for="Tour.TourCode" class="text-danger small mt-1 d-block"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Tour.TourName" class="form-label fw-semibold">Tên Tour <span class="text-danger">*</span></label>
+                    <input asp-for="Tour.TourName" class="form-control" placeholder="Tên đầy đủ của tour" />
+                    <span asp-validation-for="Tour.TourName" class="text-danger small mt-1 d-block"></span>
+                </div>
+
+                <div class="col-md-4">
+                    <label asp-for="Tour.Category" class="form-label fw-semibold">Thể Loại <span class="text-danger">*</span></label>
+                    <input asp-for="Tour.Category" class="form-control" placeholder="Nghỉ dưỡng, khám phá..." />
+                    <span asp-validation-for="Tour.Category" class="text-danger small mt-1 d-block"></span>
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="Tour.Destination" class="form-label fw-semibold">Điểm Đến <span class="text-danger">*</span></label>
+                    <input asp-for="Tour.Destination" class="form-control" placeholder="Vũng Tàu, Đà Lạt..." />
+                    <span asp-validation-for="Tour.Destination" class="text-danger small mt-1 d-block"></span>
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="Tour.Days" class="form-label fw-semibold">Số Ngày <span class="text-danger">*</span></label>
+                    <input asp-for="Tour.Days" class="form-control" type="number" min="1" />
+                    <span asp-validation-for="Tour.Days" class="text-danger small mt-1 d-block"></span>
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="Tour.Nights" class="form-label fw-semibold">Số Đêm <span class="text-danger">*</span></label>
+                    <input asp-for="Tour.Nights" class="form-control" type="number" min="0" />
+                    <span asp-validation-for="Tour.Nights" class="text-danger small mt-1 d-block"></span>
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="Tour.MaxCapacity" class="form-label fw-semibold">Tổng Số Chỗ <span class="text-danger">*</span></label>
+                    <input asp-for="Tour.MaxCapacity" class="form-control" type="number" min="1" />
+                    <span asp-validation-for="Tour.MaxCapacity" class="text-danger small mt-1 d-block"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="Tour.PricePerAdult" class="form-label fw-semibold">Giá Người Lớn (VNĐ) <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <input asp-for="Tour.PricePerAdult" class="form-control" type="number" min="0" step="1000" />
+                        <span class="input-group-text bg-light">VNĐ</span>
+                    </div>
+                    <span asp-validation-for="Tour.PricePerAdult" class="text-danger small mt-1 d-block"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Tour.ChildPrice" class="form-label fw-semibold">Giá Trẻ Em (VNĐ) <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <input asp-for="Tour.ChildPrice" class="form-control" type="number" min="0" step="1000" />
+                        <span class="input-group-text bg-light">VNĐ</span>
+                    </div>
+                    <span asp-validation-for="Tour.ChildPrice" class="text-danger small mt-1 d-block"></span>
+                </div>
+
+                <div class="col-12">
+                    <label asp-for="Tour.Image" class="form-label fw-semibold">Link Hình Ảnh</label>
+                    <input asp-for="Tour.Image" class="form-control" placeholder="https://example.com/image.jpg" />
+                    <span asp-validation-for="Tour.Image" class="text-danger small mt-1 d-block"></span>
+                </div>
+
+                <div class="col-12">
+                    <label asp-for="Tour.Description" class="form-label fw-semibold">Mô Tả <span class="text-danger">*</span></label>
+                    <textarea asp-for="Tour.Description" class="form-control" rows="4" placeholder="Nhập mô tả chi tiết về tour..."></textarea>
+                    <span asp-validation-for="Tour.Description" class="text-danger small mt-1 d-block"></span>
+                </div>
+
+                <div class="col-md-4">
+                    <label asp-for="Tour.Itinerary" class="form-label fw-semibold">Lịch Trình Tóm Tắt</label>
+                    <textarea asp-for="Tour.Itinerary" class="form-control" rows="3" placeholder="Ngày 1: ... Ngày 2: ..."></textarea>
+                    <span asp-validation-for="Tour.Itinerary" class="text-danger small mt-1 d-block"></span>
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="Tour.IncludedServices" class="form-label fw-semibold">Dịch Vụ Bao Gồm</label>
+                    <textarea asp-for="Tour.IncludedServices" class="form-control" rows="3" placeholder="- Xe đưa đón... - Khách sạn..."></textarea>
+                    <span asp-validation-for="Tour.IncludedServices" class="text-danger small mt-1 d-block"></span>
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="Tour.ExcludedServices" class="form-label fw-semibold">Dịch Vụ Không Bao Gồm</label>
+                    <textarea asp-for="Tour.ExcludedServices" class="form-control" rows="3" placeholder="- VAT... - Chi phí cá nhân..."></textarea>
+                    <span asp-validation-for="Tour.ExcludedServices" class="text-danger small mt-1 d-block"></span>
+                </div>
+
+                <div class="col-12">
+                    <div class="form-check form-switch mt-2">
+                        <input asp-for="Tour.IsActive" class="form-check-input" type="checkbox" role="switch">
+                        <label class="form-check-label fw-semibold ms-2 text-dark" asp-for="Tour.IsActive">Kích hoạt Tour (Cho phép người dùng đặt chỗ)</label>
+                    </div>
+                </div>
+
+                <div class="col-12 mt-5 border-top pt-4 text-end">
+                    <a href="/Admin/Tours/Index" class="btn btn-light border shadow-sm px-4 me-2">Hủy Bỏ</a>
+                    <button type="submit" class="btn btn-primary px-5 shadow-sm fw-semibold"><i class="bi bi-save me-1"></i> Thêm Tour</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Calculate child price based on adult price
+        document.getElementById('Tour_PricePerAdult').addEventListener('input', function() {
+            var adultPrice = this.value;
+            if(adultPrice && !isNaN(adultPrice)) {
+                var childPrice = Math.round(adultPrice * 0.7);
+                document.getElementById('Tour_ChildPrice').value = childPrice;
+            }
+        });
+    </script>
+}

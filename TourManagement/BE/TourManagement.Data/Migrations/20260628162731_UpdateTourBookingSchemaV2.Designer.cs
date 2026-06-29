@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TourManagement.Data.Context;
 
@@ -11,9 +12,11 @@ using TourManagement.Data.Context;
 namespace TourManagement.Data.Migrations
 {
     [DbContext(typeof(TourManagementDbContext))]
-    partial class TourManagementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260628162731_UpdateTourBookingSchemaV2")]
+    partial class UpdateTourBookingSchemaV2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -125,68 +128,6 @@ namespace TourManagement.Data.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Bookings");
-
-                    b.HasData(
-                        new
-                        {
-                            BookingId = 101,
-                            AdultCount = 2,
-                            BookingCode = "BK-20230601-101",
-                            BookingDate = new DateTime(2026, 6, 24, 0, 1, 41, 456, DateTimeKind.Local).AddTicks(8695),
-                            ChildCount = 0,
-                            CreatedDate = new DateTime(2026, 6, 29, 0, 1, 41, 456, DateTimeKind.Local).AddTicks(8691),
-                            CustomerName = "Nguyễn Văn A",
-                            DiscountAmount = 0m,
-                            Email = "nguyenvan@gmail.com",
-                            FinalPrice = 5000000m,
-                            InfantCount = 0,
-                            PaymentMethod = "BankTransfer",
-                            PhoneNumber = "0901234567",
-                            ScheduleId = 1,
-                            SpecialRequest = "Phòng view biển nếu có thể",
-                            Status = "Paid",
-                            TotalPrice = 5000000m
-                        },
-                        new
-                        {
-                            BookingId = 102,
-                            AdultCount = 2,
-                            BookingCode = "BK-20230602-102",
-                            BookingDate = new DateTime(2026, 6, 27, 0, 1, 41, 456, DateTimeKind.Local).AddTicks(8702),
-                            ChildCount = 1,
-                            CreatedDate = new DateTime(2026, 6, 29, 0, 1, 41, 456, DateTimeKind.Local).AddTicks(8700),
-                            CustomerName = "Lê Thị B",
-                            DiscountAmount = 0m,
-                            Email = "lethi@gmail.com",
-                            FinalPrice = 8640000m,
-                            InfantCount = 0,
-                            PaymentMethod = "CreditCard",
-                            PhoneNumber = "0987654321",
-                            ScheduleId = 2,
-                            SpecialRequest = "Có trẻ em đi kèm",
-                            Status = "Pending",
-                            TotalPrice = 8640000m
-                        },
-                        new
-                        {
-                            BookingId = 103,
-                            AdultCount = 1,
-                            BookingCode = "BK-20230603-103",
-                            BookingDate = new DateTime(2026, 6, 28, 0, 1, 41, 456, DateTimeKind.Local).AddTicks(8705),
-                            ChildCount = 0,
-                            CreatedDate = new DateTime(2026, 6, 29, 0, 1, 41, 456, DateTimeKind.Local).AddTicks(8703),
-                            CustomerName = "Trần Trung C",
-                            DiscountAmount = 0m,
-                            Email = "tranc@yahoo.com",
-                            FinalPrice = 2500000m,
-                            InfantCount = 0,
-                            PaymentMethod = "Cash",
-                            PhoneNumber = "0912333444",
-                            ScheduleId = 1,
-                            SpecialRequest = "",
-                            Status = "Deposited",
-                            TotalPrice = 2500000m
-                        });
                 });
 
             modelBuilder.Entity("TourManagement.Data.Models.Tour", b =>
@@ -278,7 +219,7 @@ namespace TourManagement.Data.Migrations
                             TourId = 1,
                             Category = "mien-bac",
                             ChildPrice = 1750000m,
-                            CreatedDate = new DateTime(2026, 6, 29, 0, 1, 41, 456, DateTimeKind.Local).AddTicks(8621),
+                            CreatedDate = new DateTime(2026, 6, 28, 23, 27, 27, 462, DateTimeKind.Local).AddTicks(6563),
                             Days = 3,
                             Description = "Khám phá vẻ đẹp huyền ảo của sương mù Sa Pa và đỉnh Fansipan hùng vĩ.",
                             Destination = "Sa Pa",
@@ -298,7 +239,7 @@ namespace TourManagement.Data.Migrations
                             TourId = 2,
                             Category = "mien-bac",
                             ChildPrice = 2240000m,
-                            CreatedDate = new DateTime(2026, 6, 29, 0, 1, 41, 456, DateTimeKind.Local).AddTicks(8639),
+                            CreatedDate = new DateTime(2026, 6, 28, 23, 27, 27, 462, DateTimeKind.Local).AddTicks(6584),
                             Days = 2,
                             Description = "Trải nghiệm đẳng cấp 5 sao trên du thuyền khám phá Vịnh Hạ Long và Vịnh Lan Hạ.",
                             Destination = "Hạ Long",
@@ -318,7 +259,7 @@ namespace TourManagement.Data.Migrations
                             TourId = 3,
                             Category = "mien-trung",
                             ChildPrice = 3150000m,
-                            CreatedDate = new DateTime(2026, 6, 29, 0, 1, 41, 456, DateTimeKind.Local).AddTicks(8643),
+                            CreatedDate = new DateTime(2026, 6, 28, 23, 27, 27, 462, DateTimeKind.Local).AddTicks(6591),
                             Days = 4,
                             Description = "Tour miền Trung di sản: Đà Nẵng, Hội An, Bà Nà rực rỡ sắc màu.",
                             Destination = "Đà Nẵng",
@@ -389,10 +330,10 @@ namespace TourManagement.Data.Migrations
                             ActualAdultPrice = 2500000m,
                             ActualChildPrice = 1750000m,
                             AvailableSeats = 20,
-                            CreatedDate = new DateTime(2026, 6, 29, 0, 1, 41, 456, DateTimeKind.Local).AddTicks(8661),
-                            EndDate = new DateTime(2026, 7, 12, 0, 1, 41, 456, DateTimeKind.Local).AddTicks(8668),
+                            CreatedDate = new DateTime(2026, 6, 28, 23, 27, 27, 462, DateTimeKind.Local).AddTicks(6620),
+                            EndDate = new DateTime(2026, 7, 11, 23, 27, 27, 462, DateTimeKind.Local).AddTicks(6628),
                             MaxParticipants = 30,
-                            StartDate = new DateTime(2026, 7, 9, 0, 1, 41, 456, DateTimeKind.Local).AddTicks(8664),
+                            StartDate = new DateTime(2026, 7, 8, 23, 27, 27, 462, DateTimeKind.Local).AddTicks(6623),
                             Status = "Active",
                             TourId = 1
                         },
@@ -402,10 +343,10 @@ namespace TourManagement.Data.Migrations
                             ActualAdultPrice = 3200000m,
                             ActualChildPrice = 2240000m,
                             AvailableSeats = 15,
-                            CreatedDate = new DateTime(2026, 6, 29, 0, 1, 41, 456, DateTimeKind.Local).AddTicks(8670),
-                            EndDate = new DateTime(2026, 7, 6, 0, 1, 41, 456, DateTimeKind.Local).AddTicks(8672),
+                            CreatedDate = new DateTime(2026, 6, 28, 23, 27, 27, 462, DateTimeKind.Local).AddTicks(6632),
+                            EndDate = new DateTime(2026, 7, 5, 23, 27, 27, 462, DateTimeKind.Local).AddTicks(6635),
                             MaxParticipants = 20,
-                            StartDate = new DateTime(2026, 7, 4, 0, 1, 41, 456, DateTimeKind.Local).AddTicks(8671),
+                            StartDate = new DateTime(2026, 7, 3, 23, 27, 27, 462, DateTimeKind.Local).AddTicks(6634),
                             Status = "Active",
                             TourId = 2
                         },
@@ -415,10 +356,10 @@ namespace TourManagement.Data.Migrations
                             ActualAdultPrice = 4500000m,
                             ActualChildPrice = 3150000m,
                             AvailableSeats = 25,
-                            CreatedDate = new DateTime(2026, 6, 29, 0, 1, 41, 456, DateTimeKind.Local).AddTicks(8674),
-                            EndDate = new DateTime(2026, 7, 18, 0, 1, 41, 456, DateTimeKind.Local).AddTicks(8675),
+                            CreatedDate = new DateTime(2026, 6, 28, 23, 27, 27, 462, DateTimeKind.Local).AddTicks(6638),
+                            EndDate = new DateTime(2026, 7, 17, 23, 27, 27, 462, DateTimeKind.Local).AddTicks(6640),
                             MaxParticipants = 40,
-                            StartDate = new DateTime(2026, 7, 14, 0, 1, 41, 456, DateTimeKind.Local).AddTicks(8675),
+                            StartDate = new DateTime(2026, 7, 13, 23, 27, 27, 462, DateTimeKind.Local).AddTicks(6639),
                             Status = "Active",
                             TourId = 3
                         });
@@ -482,24 +423,6 @@ namespace TourManagement.Data.Migrations
                             PasswordHash = "staff123",
                             Role = "Staff",
                             Username = "staff"
-                        },
-                        new
-                        {
-                            UserId = 101,
-                            Email = "nguyenvan@gmail.com",
-                            FullName = "Nguyễn Văn A",
-                            PasswordHash = "nguyenvan123",
-                            Role = "Customer",
-                            Username = "nguyenvan"
-                        },
-                        new
-                        {
-                            UserId = 102,
-                            Email = "lethi@gmail.com",
-                            FullName = "Lê Thị B",
-                            PasswordHash = "lethi123",
-                            Role = "Customer",
-                            Username = "lethi"
                         });
                 });
 

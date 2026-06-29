@@ -29,7 +29,7 @@ namespace TourManagement.RazorWeb.Pages
                 ? $"CreatedBy eq '{User.Identity?.Name}'" 
                 : $"(UserId eq {userId} or CreatedBy eq '{User.Identity?.Name}')";
 
-            var response = await client.GetAsync($"odata/Bookings?$expand=Tour&$filter={filterQuery}&$orderby=BookingDate desc");
+            var response = await client.GetAsync($"odata/Bookings?$expand=Schedule($expand=Tour)&$filter={filterQuery}&$orderby=BookingDate desc");
             
             if (response.IsSuccessStatusCode)
             {
@@ -50,8 +50,8 @@ namespace TourManagement.RazorWeb.Pages
         {
             public int BookingId { get; set; }
             public string BookingCode { get; set; } = string.Empty;
-            public int TourId { get; set; }
-            public TourViewModel? Tour { get; set; }
+            public int ScheduleId { get; set; }
+            public ScheduleViewModel? Schedule { get; set; }
             public int AdultCount { get; set; }
             public int ChildCount { get; set; }
             public decimal TotalPrice { get; set; }
@@ -59,10 +59,15 @@ namespace TourManagement.RazorWeb.Pages
             public DateTime BookingDate { get; set; }
         }
 
+        public class ScheduleViewModel
+        {
+            public DateTime StartDate { get; set; }
+            public TourViewModel? Tour { get; set; }
+        }
+
         public class TourViewModel
         {
             public string TourName { get; set; } = string.Empty;
-            public DateTime DepartureDate { get; set; }
         }
     }
 }
