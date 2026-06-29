@@ -187,7 +187,7 @@ namespace TourManagement.API.Controllers
             try
             {
                 var result = await bookingService.CalculatePriceAsync(
-                    request.TourId,
+                    request.ScheduleId,
                     request.AdultCount,
                     request.ChildCount,
                     request.PromoCode
@@ -218,7 +218,7 @@ namespace TourManagement.API.Controllers
 
     public class PriceCalculationRequest
     {
-        public int TourId { get; set; }
+        public int ScheduleId { get; set; }
         public int AdultCount { get; set; }
         public int ChildCount { get; set; }
         public string? PromoCode { get; set; }

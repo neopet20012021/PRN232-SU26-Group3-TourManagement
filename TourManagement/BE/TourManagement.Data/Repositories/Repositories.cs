@@ -124,4 +124,15 @@ namespace TourManagement.Data.Repositories
             return await _dbSet.FirstOrDefaultAsync(u => u.Username == username);
         }
     }
+
+    public interface ITourScheduleRepository : IRepository<Models.TourSchedule>
+    {
+    }
+
+    public class TourScheduleRepository : Repository<Models.TourSchedule>, ITourScheduleRepository
+    {
+        public TourScheduleRepository(TourManagementDbContext context) : base(context)
+        {
+        }
+    }
 }

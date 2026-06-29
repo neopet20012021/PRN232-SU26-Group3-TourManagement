@@ -104,6 +104,26 @@ namespace TourManagement.RazorWeb.Pages.Tours
                 return Page();
             }
         }
+
+        public async Task<IActionResult> OnPostCalculatePriceAsync([FromBody] PriceCalculationRequest request)
+        {
+            var client = _clientFactory.CreateClient("API");
+            var response = await client.PostAsJsonAsync("odata/Bookings/calculate-price", request);
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadAsStringAsync();
+                return Content(result, "application/json");
+            }
+            return BadRequest(new { success = false, message = "Failed to calculate price." });
+        }
+    }
+
+    public class PriceCalculationRequest
+    {
+        public int ScheduleId { get; set; }
+        public int AdultCount { get; set; }
+        public int ChildCount { get; set; }
+        public string? PromoCode { get; set; }
     }
 
     public class BookingInputModel

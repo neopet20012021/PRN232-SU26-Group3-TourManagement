@@ -51,6 +51,7 @@ builder.Services.AddDbContext<TourManagementDbContext>(options =>
 
 // Register Repositories
 builder.Services.AddScoped<ITourRepository, TourRepository>();
+builder.Services.AddScoped<ITourScheduleRepository, TourScheduleRepository>();
 builder.Services.AddScoped<IBookingRepository, BookingRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 

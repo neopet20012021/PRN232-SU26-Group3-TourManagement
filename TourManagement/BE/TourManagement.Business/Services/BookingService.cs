@@ -27,12 +27,14 @@ namespace TourManagement.Business.Services
     {
         private readonly IBookingRepository _bookingRepository;
         private readonly ITourRepository _tourRepository;
+        private readonly ITourScheduleRepository _scheduleRepository;
         private readonly IMapper _mapper;
 
-        public BookingService(IBookingRepository bookingRepository, ITourRepository tourRepository, IMapper mapper)
+        public BookingService(IBookingRepository bookingRepository, ITourRepository tourRepository, ITourScheduleRepository scheduleRepository, IMapper mapper)
         {
             _bookingRepository = bookingRepository;
             _tourRepository = tourRepository;
+            _scheduleRepository = scheduleRepository;
             _mapper = mapper;
         }
 
@@ -90,9 +92,15 @@ namespace TourManagement.Business.Services
 
         public async Task<PriceCalculationDTO> CalculatePriceAsync(int scheduleId, int adultCount, int childCount, string promoCode = null)
         {
-            // For now, returning dummy calculation. Real implementation needs ScheduleRepository.
-            decimal originalPrice = (1000000 * adultCount) + (700000 * childCount);
+            var schedule = await _scheduleRepository.GetByIdAsync(scheduleId);
+            if (schedule == null)
+            {
+                throw new Exception("Schedule not found");
+            }
+
+            decimal originalPrice = (schedule.ActualAdultPrice * adultCount) + (schedule.ActualChildPrice * childCount);
             decimal discount = 0;
+            
             if (!string.IsNullOrWhiteSpace(promoCode) && await ValidatePromoCodeAsync(promoCode))
             {
                 discount = originalPrice * 0.1m; // 10% discount for demo

@@ -206,11 +206,46 @@ else
         const priceAdult = @(Model.Schedule?.ActualAdultPrice ?? 0);
         const priceChild = @(Model.Schedule?.ActualChildPrice ?? 0);
 
-        function updatePrice() {
+        async function updatePrice() {
             let adult = parseInt(document.getElementById('adultCount').value) || 0;
             let child = parseInt(document.getElementById('childCount').value) || 0;
+            let promoCode = document.getElementById('promoCode').value;
+            let scheduleId = document.getElementById('scheduleId').value;
+            let token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+
+            try {
+                let response = await fetch('?handler=CalculatePrice', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': token
+                    },
+                    body: JSON.stringify({
+                        ScheduleId: parseInt(scheduleId),
+                        AdultCount: adult,
+                        ChildCount: child,
+                        PromoCode: promoCode
+                    })
+                });
+
+                if (response.ok) {
+                    let result = await response.json();
+                    if (result.success && result.data) {
+                        let finalPrice = result.data.finalPrice;
+                        let text = finalPrice.toLocaleString('vi-VN') + " VND";
+                        if (result.data.appliedPromoCode) {
+                            text += " (Đã áp dụng mã giảm giá)";
+                        }
+                        document.getElementById('totalPriceDisplay').innerText = text;
+                        return;
+                    }
+                }
+            } catch (error) {
+                console.error("Error calculating price:", error);
+            }
+
+            // Fallback
             let total = (adult * priceAdult) + (child * priceChild);
-            
             document.getElementById('totalPriceDisplay').innerText = total.toLocaleString('vi-VN') + " VND";
         }
 
@@ -219,13 +254,8 @@ else
             let code = document.getElementById('promoCode').value;
             if(!code) return;
             
-            alert('Promo code applied successfully!');
+            alert('Đang kiểm tra mã giảm giá...');
             updatePrice(); 
-            // Mock discount visual update
-            let adult = parseInt(document.getElementById('adultCount').value) || 0;
-            let child = parseInt(document.getElementById('childCount').value) || 0;
-            let total = ((adult * priceAdult) + (child * priceChild)) * 0.9;
-            document.getElementById('totalPriceDisplay').innerText = total.toLocaleString('vi-VN') + " VND (Discount applied)";
         });
     </script>
 }
