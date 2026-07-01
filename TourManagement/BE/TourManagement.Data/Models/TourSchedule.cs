@@ -24,17 +24,21 @@ namespace TourManagement.Data.Models
         public DateTime EndDate { get; set; }
 
         [Required]
+        [Range(1, int.MaxValue, ErrorMessage = "Số người tham gia tối đa phải lớn hơn 0")]
         public int MaxParticipants { get; set; }
 
         [Required]
+        [Range(0, int.MaxValue, ErrorMessage = "Số chỗ trống không được nhỏ hơn 0")]
         public int AvailableSeats { get; set; }
 
         [Required]
         [Column(TypeName = "DECIMAL(18, 2)")]
+        [Range(typeof(decimal), "0", "1000000000", ErrorMessage = "Giá không được nhỏ hơn 0")]
         public decimal ActualAdultPrice { get; set; }
 
         [Required]
         [Column(TypeName = "DECIMAL(18, 2)")]
+        [Range(typeof(decimal), "0", "1000000000", ErrorMessage = "Giá không được nhỏ hơn 0")]
         public decimal ActualChildPrice { get; set; }
 
         [StringLength(20)]

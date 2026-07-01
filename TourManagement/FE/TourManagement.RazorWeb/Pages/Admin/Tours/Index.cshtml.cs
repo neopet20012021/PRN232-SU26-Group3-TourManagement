@@ -21,6 +21,13 @@ namespace TourManagement.RazorWeb.Pages.Admin.Tours
 
         public List<TourAdminViewModel> Tours { get; set; } = new List<TourAdminViewModel>();
 
+        [BindProperty(SupportsGet = true)]
+        public string? SearchQuery { get; set; }
+
+        public int TotalTours { get; set; }
+        public int ActiveTours { get; set; }
+        public int InactiveTours { get; set; }
+
         public async Task OnGetAsync()
         {
             var client = _clientFactory.CreateClient("API");
@@ -31,7 +38,24 @@ namespace TourManagement.RazorWeb.Pages.Admin.Tours
                 var result = await response.Content.ReadFromJsonAsync<ODataResponse<TourAdminViewModel>>();
                 if (result != null && result.Value != null)
                 {
-                    Tours = result.Value;
+                    var allTours = result.Value;
+                    TotalTours = allTours.Count;
+                    ActiveTours = allTours.Count(t => t.IsActive);
+                    InactiveTours = TotalTours - ActiveTours;
+
+                    if (!string.IsNullOrWhiteSpace(SearchQuery))
+                    {
+                        var lowerQuery = SearchQuery.ToLower();
+                        Tours = allTours.Where(t => 
+                            (t.TourName != null && t.TourName.ToLower().Contains(lowerQuery)) ||
+                            (t.TourCode != null && t.TourCode.ToLower().Contains(lowerQuery)) ||
+                            (t.Destination != null && t.Destination.ToLower().Contains(lowerQuery))
+                        ).ToList();
+                    }
+                    else
+                    {
+                        Tours = allTours;
+                    }
                 }
             }
         }

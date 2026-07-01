@@ -15,6 +15,7 @@ namespace TourManagement.Data.Models
         [StringLength(150)]
         public string TourName { get; set; } = string.Empty;
 
+        [Required(ErrorMessage = "Mã tour là bắt buộc")]
         [StringLength(20)]
         [Column(TypeName = "VARCHAR(20)")]
         public string TourCode { get; set; } = string.Empty;
@@ -24,17 +25,21 @@ namespace TourManagement.Data.Models
         public string Description { get; set; } = string.Empty;
 
         [Required]
+        [Range(1, int.MaxValue, ErrorMessage = "Số ngày phải lớn hơn 0")]
         public int Days { get; set; }
 
         [Required]
+        [Range(0, int.MaxValue, ErrorMessage = "Số đêm không được nhỏ hơn 0")]
         public int Nights { get; set; }
 
         [Required]
         [Column(TypeName = "DECIMAL(18, 2)")]
+        [Range(typeof(decimal), "0", "1000000000", ErrorMessage = "Giá không được nhỏ hơn 0")]
         public decimal PricePerAdult { get; set; }
 
         [Required]
         [Column(TypeName = "DECIMAL(18, 2)")]
+        [Range(typeof(decimal), "0", "1000000000", ErrorMessage = "Giá không được nhỏ hơn 0")]
         public decimal ChildPrice { get; set; } // 70% of adult price
 
         [StringLength(100)]
@@ -44,6 +49,7 @@ namespace TourManagement.Data.Models
         public string Destination { get; set; } = string.Empty;
 
         [Required]
+        [Range(1, int.MaxValue, ErrorMessage = "Sức chứa tối đa phải lớn hơn 0")]
         public int MaxCapacity { get; set; }
 
         [Required]

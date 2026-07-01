@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using TourManagement.RazorWeb.Pages.Tours; // To reuse ViewModels
 
@@ -20,6 +21,13 @@ namespace TourManagement.RazorWeb.Pages.Admin.Bookings
 
         public List<BookingAdminViewModel> Bookings { get; set; } = new List<BookingAdminViewModel>();
 
+        [BindProperty(SupportsGet = true)]
+        public string? SearchQuery { get; set; }
+
+        public int TotalBookings { get; set; }
+        public int PendingBookings { get; set; }
+        public decimal TotalRevenue { get; set; }
+
         public async Task OnGetAsync()
         {
             var client = _clientFactory.CreateClient("API");
@@ -30,7 +38,25 @@ namespace TourManagement.RazorWeb.Pages.Admin.Bookings
                 var result = await response.Content.ReadFromJsonAsync<ODataResponse<BookingAdminViewModel>>();
                 if (result != null && result.Value != null)
                 {
-                    Bookings = result.Value;
+                    var allBookings = result.Value;
+                    TotalBookings = allBookings.Count;
+                    PendingBookings = allBookings.Count(b => b.Status.ToLower() == "pending");
+                    TotalRevenue = allBookings.Where(b => b.Status.ToLower() == "paid" || b.Status.ToLower() == "confirmed")
+                                              .Sum(b => b.TotalPrice);
+
+                    if (!string.IsNullOrWhiteSpace(SearchQuery))
+                    {
+                        var lowerQuery = SearchQuery.ToLower();
+                        Bookings = allBookings.Where(b => 
+                            (b.CustomerName != null && b.CustomerName.ToLower().Contains(lowerQuery)) ||
+                            (b.BookingCode != null && b.BookingCode.ToLower().Contains(lowerQuery)) ||
+                            (b.PhoneNumber != null && b.PhoneNumber.Contains(lowerQuery))
+                        ).ToList();
+                    }
+                    else
+                    {
+                        Bookings = allBookings;
+                    }
                 }
             }
         }

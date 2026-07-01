@@ -20,6 +20,13 @@ namespace TourManagement.RazorWeb.Pages.Admin.Users
 
         public List<UserViewModel> UsersList { get; set; } = new List<UserViewModel>();
 
+        [BindProperty(SupportsGet = true)]
+        public string? SearchQuery { get; set; }
+
+        public int TotalUsers { get; set; }
+        public int AdminCount { get; set; }
+        public int StaffCount { get; set; }
+
         public async Task<IActionResult> OnGetAsync()
         {
             var client = _clientFactory.CreateClient("API");
@@ -44,6 +51,21 @@ namespace TourManagement.RazorWeb.Pages.Admin.Users
                     {
                         UsersList = resultOdata.Value;
                     }
+                }
+
+                var allUsers = UsersList;
+                TotalUsers = allUsers.Count;
+                AdminCount = allUsers.Count(u => u.Role == "Admin");
+                StaffCount = allUsers.Count(u => u.Role == "Staff");
+
+                if (!string.IsNullOrWhiteSpace(SearchQuery))
+                {
+                    var lowerQuery = SearchQuery.ToLower();
+                    UsersList = allUsers.Where(u => 
+                        (u.FullName != null && u.FullName.ToLower().Contains(lowerQuery)) ||
+                        (u.Email != null && u.Email.ToLower().Contains(lowerQuery)) ||
+                        (u.Username != null && u.Username.ToLower().Contains(lowerQuery))
+                    ).ToList();
                 }
             }
             return Page();

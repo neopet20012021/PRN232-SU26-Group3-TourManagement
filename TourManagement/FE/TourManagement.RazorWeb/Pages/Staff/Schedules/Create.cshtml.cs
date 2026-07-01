@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace TourManagement.RazorWeb.Pages.Staff.Schedules
 {
-    [Authorize(Roles = "Staff, Admin")]
+    [Authorize(Roles = "Staff")]
     public class CreateModel : PageModel
     {
         private readonly IHttpClientFactory _clientFactory;
@@ -41,17 +41,32 @@ namespace TourManagement.RazorWeb.Pages.Staff.Schedules
                 return Page();
             }
 
-            var client = _clientFactory.CreateClient("API");
-            var response = await client.PostAsJsonAsync("odata/TourSchedules", new
+            if (Schedule.StartDate.Date < DateTime.Now.Date)
             {
+                ModelState.AddModelError("Schedule.StartDate", "Ngày khởi hành phải từ ngày hôm nay trở đi.");
+                await LoadToursAsync();
+                return Page();
+            }
+
+            var client = _clientFactory.CreateClient("API");
+            var payload = new
+            {
+                ScheduleId = 0,
                 TourId = Schedule.TourId,
-                StartDate = Schedule.StartDate,
+                StartDate = DateTime.SpecifyKind(Schedule.StartDate, DateTimeKind.Utc),
+                EndDate = DateTime.SpecifyKind(Schedule.StartDate, DateTimeKind.Utc), // Dummy value to pass OData required check
                 MaxParticipants = Schedule.MaxParticipants,
+                AvailableSeats = Schedule.MaxParticipants, // Dummy value to pass OData required check
                 ActualAdultPrice = Schedule.ActualAdultPrice,
                 ActualChildPrice = Schedule.ActualChildPrice,
-                GuideName = Schedule.GuideName,
-                Status = "Active"
-            });
+                GuideName = Schedule.GuideName ?? "",
+                Status = "Active",
+                CreatedDate = DateTime.UtcNow
+            };
+
+            var json = System.Text.Json.JsonSerializer.Serialize(payload);
+            var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+            var response = await client.PostAsync("odata/TourSchedules", content);
 
             if (response.IsSuccessStatusCode)
             {
@@ -60,7 +75,8 @@ namespace TourManagement.RazorWeb.Pages.Staff.Schedules
                 return RedirectToPage("/Index"); 
             }
 
-            ModelState.AddModelError(string.Empty, "Đã xảy ra lỗi khi tạo ngày khởi hành. Vui lòng thử lại.");
+            var errorBody = await response.Content.ReadAsStringAsync();
+            ModelState.AddModelError(string.Empty, "Đã xảy ra lỗi khi tạo ngày khởi hành. " + errorBody);
             await LoadToursAsync();
             return Page();
         }

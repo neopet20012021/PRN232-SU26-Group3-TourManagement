@@ -20,6 +20,13 @@ namespace TourManagement.RazorWeb.Pages.Staff.Schedules
 
         public List<ScheduleViewModel> Schedules { get; set; } = new List<ScheduleViewModel>();
 
+        [BindProperty(SupportsGet = true)]
+        public string? SearchQuery { get; set; }
+
+        public int TotalSchedules { get; set; }
+        public int ActiveSchedules { get; set; }
+        public int TotalAvailableSeats { get; set; }
+
         public async Task OnGetAsync()
         {
             var client = _clientFactory.CreateClient("API");
@@ -30,13 +37,34 @@ namespace TourManagement.RazorWeb.Pages.Staff.Schedules
                 var result = await response.Content.ReadFromJsonAsync<ODataResponse<ScheduleViewModel>>();
                 if (result != null && result.Value != null)
                 {
-                    Schedules = result.Value;
+                    var allSchedules = result.Value;
+                    TotalSchedules = allSchedules.Count;
+                    ActiveSchedules = allSchedules.Count(s => s.Status == "Active");
+                    TotalAvailableSeats = allSchedules.Sum(s => s.AvailableSeats);
+
+                    if (!string.IsNullOrWhiteSpace(SearchQuery))
+                    {
+                        var lowerQuery = SearchQuery.ToLower();
+                        Schedules = allSchedules.Where(s => 
+                            (s.Tour?.TourName != null && s.Tour.TourName.ToLower().Contains(lowerQuery)) ||
+                            (s.Tour?.TourCode != null && s.Tour.TourCode.ToLower().Contains(lowerQuery))
+                        ).ToList();
+                    }
+                    else
+                    {
+                        Schedules = allSchedules;
+                    }
                 }
             }
         }
 
         public async Task<IActionResult> OnPostDeleteAsync(int id)
         {
+            if (!User.IsInRole("Staff"))
+            {
+                return Forbid();
+            }
+
             var client = _clientFactory.CreateClient("API");
             var response = await client.DeleteAsync($"odata/TourSchedules/{id}");
             return RedirectToPage();

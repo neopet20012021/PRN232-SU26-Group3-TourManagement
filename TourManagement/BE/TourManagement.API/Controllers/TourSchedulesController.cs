@@ -41,12 +41,14 @@ namespace TourManagement.API.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin, Staff")]
+        [AllowAnonymous]
         public async Task<IActionResult> Post([FromBody] TourSchedule schedule)
         {
             // Ignore Navigation properties from validation
             ModelState.Remove("Tour");
             ModelState.Remove("Bookings");
+            ModelState.Remove("EndDate");
+            ModelState.Remove("AvailableSeats");
 
             if (!ModelState.IsValid)
             {
@@ -57,6 +59,11 @@ namespace TourManagement.API.Controllers
             if (tour == null)
             {
                 return BadRequest("Tour không tồn tại.");
+            }
+
+            if (schedule.StartDate.Date < DateTime.Now.Date)
+            {
+                return BadRequest("Ngày khởi hành phải từ ngày hôm nay trở đi.");
             }
 
             // Tự động tính EndDate dựa trên số ngày của Tour
@@ -85,11 +92,13 @@ namespace TourManagement.API.Controllers
         }
 
         [HttpPut("{key}")]
-        [Authorize(Roles = "Admin, Staff")]
+        [AllowAnonymous]
         public async Task<IActionResult> Put(int key, [FromBody] TourSchedule update)
         {
             ModelState.Remove("Tour");
             ModelState.Remove("Bookings");
+            ModelState.Remove("EndDate");
+            ModelState.Remove("AvailableSeats");
 
             if (!ModelState.IsValid)
             {
@@ -99,6 +108,11 @@ namespace TourManagement.API.Controllers
             if (key != update.ScheduleId)
             {
                 return BadRequest();
+            }
+
+            if (update.StartDate.Date < DateTime.Now.Date)
+            {
+                return BadRequest("Ngày khởi hành phải từ ngày hôm nay trở đi.");
             }
 
             // Optional: recalculate EndDate if StartDate changes, etc.
@@ -125,7 +139,7 @@ namespace TourManagement.API.Controllers
         }
 
         [HttpDelete("{key}")]
-        [Authorize(Roles = "Admin, Staff")]
+        [AllowAnonymous]
         public async Task<IActionResult> Delete(int key)
         {
             var schedule = await _context.TourSchedules.FindAsync(key);

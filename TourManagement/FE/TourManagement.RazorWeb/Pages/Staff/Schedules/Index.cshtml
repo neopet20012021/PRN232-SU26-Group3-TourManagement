@@ -6,9 +6,76 @@
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h3 class="fw-bold text-dark m-0">Quản Lý Lịch Khởi Hành (Schedules)</h3>
-    <a href="/Staff/Schedules/Create" class="btn btn-success px-4 rounded-pill fw-semibold shadow-sm">
-        <i class="bi bi-plus-circle me-1"></i> Thêm Lịch Mới
-    </a>
+    @if (User.IsInRole("Staff"))
+    {
+        <a href="/Staff/Schedules/Create" class="btn btn-success px-4 rounded-pill fw-semibold shadow-sm">
+            <i class="bi bi-plus-circle me-1"></i> Thêm Lịch Mới
+        </a>
+    }
+</div>
+
+<!-- Summary Cards -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card bg-info text-white border-0 shadow-sm h-100">
+            <div class="card-body d-flex align-items-center">
+                <div class="bg-white bg-opacity-25 p-3 rounded-3 me-3">
+                    <i class="bi bi-calendar3 fs-3"></i>
+                </div>
+                <div>
+                    <h6 class="mb-0 text-white-50">Tổng Số Lịch Khởi Hành</h6>
+                    <h3 class="mb-0 fw-bold">@Model.TotalSchedules</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-success text-white border-0 shadow-sm h-100">
+            <div class="card-body d-flex align-items-center">
+                <div class="bg-white bg-opacity-25 p-3 rounded-3 me-3">
+                    <i class="bi bi-play-circle fs-3"></i>
+                </div>
+                <div>
+                    <h6 class="mb-0 text-white-50">Đang Hoạt Động</h6>
+                    <h3 class="mb-0 fw-bold">@Model.ActiveSchedules</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-warning text-dark border-0 shadow-sm h-100">
+            <div class="card-body d-flex align-items-center">
+                <div class="bg-white bg-opacity-50 p-3 rounded-3 me-3">
+                    <i class="bi bi-people fs-3"></i>
+                </div>
+                <div>
+                    <h6 class="mb-0 text-dark-50">Tổng Ghế Trống</h6>
+                    <h3 class="mb-0 fw-bold">@Model.TotalAvailableSeats</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Search Filter -->
+<div class="card admin-card mb-4 border-0 shadow-sm">
+    <div class="card-body p-3">
+        <form method="get" class="row g-2 align-items-center">
+            <div class="col-md-10">
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
+                    <input type="text" asp-for="SearchQuery" class="form-control border-start-0 ps-0" placeholder="Tìm kiếm theo mã tour, tên tour..." />
+                </div>
+            </div>
+            <div class="col-md-2 d-flex gap-2">
+                <button type="submit" class="btn btn-primary w-100 fw-semibold">Lọc</button>
+                @if (!string.IsNullOrEmpty(Model.SearchQuery))
+                {
+                    <a href="/Staff/Schedules/Index" class="btn btn-outline-secondary w-100">Xóa</a>
+                }
+            </div>
+        </form>
+    </div>
 </div>
 
 <div class="card admin-card border-0 shadow-sm">
@@ -67,9 +134,16 @@
                                 }
                             </td>
                             <td class="text-center pe-4">
-                                <form method="post" asp-page-handler="Delete" asp-route-id="@schedule.ScheduleId" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa lịch này không?');">
-                                    <button type="submit" class="btn btn-sm btn-light text-danger shadow-sm border" title="Xóa"><i class="bi bi-trash"></i></button>
-                                </form>
+                                @if (User.IsInRole("Staff"))
+                                {
+                                    <form method="post" asp-page-handler="Delete" asp-route-id="@schedule.ScheduleId" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa lịch này không?');">
+                                        <button type="submit" class="btn btn-sm btn-light text-danger shadow-sm border" title="Xóa"><i class="bi bi-trash"></i></button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <span class="text-muted small">Chỉ xem</span>
+                                }
                             </td>
                         </tr>
                     }

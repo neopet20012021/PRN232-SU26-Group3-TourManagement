@@ -49,6 +49,16 @@ namespace TourManagement.API.Controllers
                 return BadRequest(ModelState);
             }
 
+            if (tour.Nights > tour.Days || tour.Nights < tour.Days - 1)
+            {
+                return BadRequest("Số đêm không hợp lệ so với số ngày.");
+            }
+
+            if (await _context.Tours.AnyAsync(t => t.TourCode == tour.TourCode))
+            {
+                return BadRequest("Mã tour đã tồn tại.");
+            }
+
             _context.Tours.Add(tour);
             await _context.SaveChangesAsync();
 
@@ -67,6 +77,16 @@ namespace TourManagement.API.Controllers
             if (key != update.TourId)
             {
                 return BadRequest();
+            }
+
+            if (update.Nights > update.Days || update.Nights < update.Days - 1)
+            {
+                return BadRequest("Số đêm không hợp lệ so với số ngày.");
+            }
+
+            if (await _context.Tours.AnyAsync(t => t.TourCode == update.TourCode && t.TourId != key))
+            {
+                return BadRequest("Mã tour đã tồn tại.");
             }
 
             _context.Entry(update).State = EntityState.Modified;

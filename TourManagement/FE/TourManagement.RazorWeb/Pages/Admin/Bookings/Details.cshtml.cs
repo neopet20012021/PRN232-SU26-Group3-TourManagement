@@ -77,6 +77,13 @@ namespace TourManagement.RazorWeb.Pages.Admin.Bookings
             // Update status
             Booking.Status = NewStatus;
             
+            // Fix DateTime formatting for OData (must be UTC for ISO 8601 'Z' suffix)
+            Booking.BookingDate = DateTime.SpecifyKind(Booking.BookingDate, DateTimeKind.Utc);
+            Booking.CreatedDate = DateTime.SpecifyKind(Booking.CreatedDate, DateTimeKind.Utc);
+            
+            // Avoid sending mismatched navigation properties back
+            Booking.Schedule = null;
+
             // We use PUT to update the booking. OData requires the full object usually.
             var content = new StringContent(JsonSerializer.Serialize(Booking), Encoding.UTF8, "application/json");
             
@@ -91,7 +98,8 @@ namespace TourManagement.RazorWeb.Pages.Admin.Bookings
             }
             else
             {
-                ErrorMessage = "Failed to update booking status. Ensure API Authorization is correctly configured.";
+                var errorBody = await updateResponse.Content.ReadAsStringAsync();
+                ErrorMessage = $"Failed to update booking status. Error: {errorBody}";
             }
 
             return Page();

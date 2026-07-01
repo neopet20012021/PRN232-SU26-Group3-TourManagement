@@ -55,6 +55,16 @@ namespace TourManagement.API.Controllers
                 return BadRequest(ModelState);
             }
 
+            if (booking.AdultCount + booking.ChildCount <= 0)
+            {
+                return BadRequest("Phải có ít nhất 1 hành khách.");
+            }
+
+            if (booking.AdultCount == 0 && booking.ChildCount > 0)
+            {
+                return BadRequest("Trẻ em không thể đặt tour mà không có người lớn đi kèm.");
+            }
+
             // Check Available Seats
             var schedule = await _context.TourSchedules.FindAsync(booking.ScheduleId);
             if (schedule == null)

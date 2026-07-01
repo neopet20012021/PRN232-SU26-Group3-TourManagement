@@ -39,12 +39,15 @@ namespace TourManagement.Data.Models
         public string? CCCD { get; set; }
 
         [Required]
+        [Range(0, int.MaxValue, ErrorMessage = "Số lượng người lớn không được nhỏ hơn 0")]
         public int AdultCount { get; set; } = 1;
 
         [Required]
+        [Range(0, int.MaxValue, ErrorMessage = "Số lượng trẻ em không được nhỏ hơn 0")]
         public int ChildCount { get; set; } = 0;
 
         [Required]
+        [Range(0, int.MaxValue, ErrorMessage = "Số lượng trẻ sơ sinh không được nhỏ hơn 0")]
         public int InfantCount { get; set; } = 0;
 
         [StringLength(50)]

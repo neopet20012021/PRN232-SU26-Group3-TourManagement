@@ -36,6 +36,12 @@ namespace TourManagement.RazorWeb.Pages.Admin.Tours
                 return Page();
             }
 
+            if (Tour.Nights > Tour.Days || Tour.Nights < Tour.Days - 1)
+            {
+                ModelState.AddModelError("Tour.Nights", "Số đêm không hợp lệ so với số ngày (phải bằng số ngày hoặc nhỏ hơn 1 ngày).");
+                return Page();
+            }
+
             var client = _clientFactory.CreateClient("API");
             var response = await client.PostAsJsonAsync("odata/Tours", Tour);
 
