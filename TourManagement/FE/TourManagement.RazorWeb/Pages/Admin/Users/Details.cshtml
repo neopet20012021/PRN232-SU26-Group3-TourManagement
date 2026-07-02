@@ -1,0 +1,60 @@
+@page
+@model TourManagement.RazorWeb.Pages.Admin.Users.DetailsModel
+@{
+    ViewData["Title"] = "Chi Tiết Người Dùng";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold text-dark m-0">Hồ Sơ Người Dùng</h3>
+    <div class="d-flex gap-2">
+        <a href="/Admin/Users/Index" class="btn btn-outline-secondary px-4 rounded-pill fw-semibold shadow-sm">
+            <i class="bi bi-arrow-left me-1"></i> Trở về
+        </a>
+        <a href="/Admin/Users/Edit?id=@Model.UserDetail?.UserId" class="btn btn-primary px-4 rounded-pill fw-semibold shadow-sm">
+            <i class="bi bi-pencil me-1"></i> Chỉnh Sửa
+        </a>
+    </div>
+</div>
+
+@if (Model.UserDetail == null)
+{
+    <div class="alert alert-danger shadow-sm border-0"><i class="bi bi-exclamation-triangle-fill me-2"></i> Không tìm thấy thông tin người dùng.</div>
+}
+else
+{
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card admin-card border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="card-header border-0 py-5 text-center text-white" style="background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);">
+                    <div class="bg-white text-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3 shadow" style="width: 100px; height: 100px; font-size: 3rem;">
+                        <i class="bi bi-person-fill"></i>
+                    </div>
+                    <h4 class="fw-bold mb-1">@Model.UserDetail.FullName</h4>
+                    <span class="badge bg-light text-primary rounded-pill px-3 py-2 fw-bold shadow-sm">
+                        @if(Model.UserDetail.Role == "Admin") { <i class="bi bi-shield-lock-fill text-danger me-1"></i> }
+                        else if(Model.UserDetail.Role == "Staff") { <i class="bi bi-person-badge-fill text-success me-1"></i> }
+                        @Model.UserDetail.Role
+                    </span>
+                </div>
+                <div class="card-body p-5">
+                    <h5 class="fw-bold text-dark mb-4 border-bottom pb-2"><i class="bi bi-info-circle-fill text-primary me-2"></i> Thông Tin Cơ Bản</h5>
+                    
+                    <div class="row g-4">
+                        <div class="col-sm-6">
+                            <label class="text-muted small d-block mb-1">ID Hệ Thống</label>
+                            <p class="fw-semibold text-dark fs-5 mb-0">#@Model.UserDetail.UserId</p>
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="text-muted small d-block mb-1">Tên Đăng Nhập</label>
+                            <p class="fw-semibold text-dark fs-5 mb-0">@Model.UserDetail.Username</p>
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="text-muted small d-block mb-1">Địa Chỉ Email</label>
+                            <p class="fw-semibold text-dark fs-5 mb-0">@Model.UserDetail.Email</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

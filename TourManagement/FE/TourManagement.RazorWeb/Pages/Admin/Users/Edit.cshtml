@@ -1,0 +1,67 @@
+@page
+@model TourManagement.RazorWeb.Pages.Admin.Users.EditModel
+@{
+    ViewData["Title"] = "Cập Nhật Người Dùng";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold text-dark m-0">Cập Nhật Thông Tin</h3>
+    <a href="/Admin/Users/Index" class="btn btn-outline-secondary px-4 rounded-pill fw-semibold shadow-sm">
+        <i class="bi bi-arrow-left me-1"></i> Trở về
+    </a>
+</div>
+
+@if (!ModelState.IsValid && ModelState.ErrorCount > 0)
+{
+    <div class="alert alert-danger shadow-sm border-0 alert-dismissible fade show">
+        <div asp-validation-summary="ModelOnly" class="mb-0"></div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="card admin-card border-0 shadow-sm">
+    <div class="card-header bg-white border-bottom py-3">
+        <h5 class="fw-bold text-primary mb-0"><i class="bi bi-pencil-square me-2"></i> Chỉnh Sửa Phân Quyền & Cập Nhật</h5>
+    </div>
+    <div class="card-body p-4">
+        <form method="post">
+            <input type="hidden" asp-for="UserId" />
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <label asp-for="UserInput.FullName" class="form-label fw-semibold">Họ và tên <span class="text-danger">*</span></label>
+                    <input asp-for="UserInput.FullName" class="form-control" />
+                    <span asp-validation-for="UserInput.FullName" class="text-danger small mt-1 d-block"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="UserInput.Email" class="form-label fw-semibold">Email <span class="text-danger">*</span></label>
+                    <input asp-for="UserInput.Email" class="form-control" type="email" />
+                    <span asp-validation-for="UserInput.Email" class="text-danger small mt-1 d-block"></span>
+                </div>
+
+                <div class="col-md-12">
+                    <label asp-for="UserInput.Role" class="form-label fw-semibold">Vai trò <span class="text-danger">*</span></label>
+                    <select asp-for="UserInput.Role" class="form-select">
+                        <option value="Customer">Customer (Khách hàng)</option>
+                        <option value="Staff">Staff (Nhân viên)</option>
+                        <option value="Admin">Admin (Quản trị viên)</option>
+                    </select>
+                    <span asp-validation-for="UserInput.Role" class="text-danger small mt-1 d-block"></span>
+                </div>
+            </div>
+
+            <hr class="my-4 text-muted">
+            
+            <div class="d-flex justify-content-end gap-2">
+                <a href="/Admin/Users/Index" class="btn btn-light border px-4 rounded-pill fw-semibold">Hủy</a>
+                <button type="submit" class="btn btn-primary px-5 rounded-pill fw-semibold shadow-sm">
+                    <i class="bi bi-save me-1"></i> Cập Nhật
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

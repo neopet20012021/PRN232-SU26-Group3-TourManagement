@@ -1,0 +1,229 @@
+@model IEnumerable<TourManagement.Business.DTOs.TourSelectDTO>
+@{
+    ViewData["Title"] = "Chọn Tour Khởi Hành - Bước 1";
+    Layout = "_Layout";
+}
+
+<!-- Stepper Container -->
+<div class="booking-stepper-container mb-4 mt-3">
+    <div class="step active">
+        <div class="step-icon">1</div>
+        <div class="step-label">1. Chọn Tour</div>
+    </div>
+    <div class="step-line"></div>
+    <div class="step">
+        <div class="step-icon">2</div>
+        <div class="step-label">2. Nhập thông tin</div>
+    </div>
+    <div class="step-line"></div>
+    <div class="step">
+        <div class="step-icon">3</div>
+        <div class="step-label">3. Kiểm tra</div>
+    </div>
+    <div class="step-line"></div>
+    <div class="step">
+        <div class="step-icon">4</div>
+        <div class="step-label">4. Hoàn tất</div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-12 text-center">
+        <h2 class="fw-bold text-primary mb-3">Danh sách Tour Đang Mở Bán</h2>
+        <p class="text-muted">Vui lòng chọn một tour mà bạn muốn đặt để tiếp tục.</p>
+    </div>
+</div>
+
+<!-- Advanced Search & Filter Panel -->
+<div class="card shadow-sm border-0 rounded-4 mb-5">
+    <div class="card-body p-4">
+        <form method="get" asp-action="Create" class="row g-3">
+            <div class="col-md-12">
+                <label class="form-label fw-bold text-muted small">Từ khóa tìm kiếm (Tên, Mã, Điểm đến)</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-white"><i class="fas fa-search text-muted"></i></span>
+                    <input type="text" name="keyword" value="@ViewBag.Keyword" class="form-control" placeholder="Ví dụ: Hạ Long, Đà Nẵng, TM-123...">
+                </div>
+            </div>
+            
+            <div class="col-md-3">
+                <label class="form-label fw-bold text-muted small">Giá từ (VNĐ)</label>
+                <input type="number" name="minPrice" value="@ViewBag.MinPrice" class="form-control" placeholder="VD: 1000000">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label fw-bold text-muted small">Giá đến (VNĐ)</label>
+                <input type="number" name="maxPrice" value="@ViewBag.MaxPrice" class="form-control" placeholder="VD: 5000000">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label fw-bold text-muted small">Từ ngày khởi hành</label>
+                <input type="date" name="fromDate" value="@ViewBag.FromDate" class="form-control">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label fw-bold text-muted small">Đến ngày khởi hành</label>
+                <input type="date" name="toDate" value="@ViewBag.ToDate" class="form-control">
+            </div>
+            
+            <div class="col-12 text-end mt-4">
+                <a asp-action="Create" class="btn btn-outline-secondary me-2 px-4 rounded-pill">Xóa bộ lọc</a>
+                <button type="submit" class="btn btn-primary px-5 rounded-pill fw-bold shadow-sm"><i class="fas fa-filter me-2"></i> Tìm kiếm Tour</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    @if (Model != null && Model.Any())
+    {
+        foreach (var tour in Model)
+        {
+            <div class="col">
+                <div class="card h-100 shadow-sm border-0 rounded-4 tour-card">
+                    <div class="position-relative">
+                        <img src="@(string.IsNullOrEmpty(tour.Image) ? "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?q=80&w=600&auto=format&fit=crop" : tour.Image)" class="card-img-top rounded-top-4 object-fit-cover" alt="@tour.TourName" style="height: 220px;">
+                        <div class="position-absolute top-0 end-0 m-3">
+                            <span class="badge bg-primary fs-6 shadow-sm">@tour.Category</span>
+                        </div>
+                    </div>
+                    
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title fw-bold text-dark mb-3">@tour.TourName</h5>
+                        
+                        <div class="d-flex align-items-center mb-2 text-muted">
+                            <i class="fas fa-barcode text-primary me-2" style="width: 20px;"></i>
+                            <span>Mã Tour: <strong>@tour.TourCode</strong></span>
+                        </div>
+                        
+                        <div class="d-flex align-items-center mb-2 text-muted">
+                            <i class="fas fa-map-marker-alt text-danger me-2" style="width: 20px;"></i>
+                            <span>Điểm đến: <strong>@tour.Destination</strong></span>
+                        </div>
+
+                        <div class="d-flex align-items-center mb-2 text-muted">
+                            <i class="fas fa-calendar-alt text-success me-2" style="width: 20px;"></i>
+                            <span>Khởi hành: <strong>@tour.StartDate.ToString("dd/MM/yyyy HH:mm")</strong></span>
+                        </div>
+                        
+                        <div class="d-flex align-items-center mb-4 text-muted">
+                            <i class="fas fa-users text-info me-2" style="width: 20px;"></i>
+                            <span>Chỗ trống: <strong>@tour.AvailableSeats</strong></span>
+                        </div>
+
+                        <div class="mt-auto border-top pt-3">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div>
+                                    <small class="text-muted d-block">Giá người lớn</small>
+                                    <span class="fs-5 fw-bold text-danger">@tour.PricePerAdult.ToString("N0") ₫</span>
+                                </div>
+                                <div class="text-end">
+                                    <small class="text-muted d-block">Giá trẻ em</small>
+                                    <span class="fs-6 fw-bold text-dark">@tour.PricePerChild.ToString("N0") ₫</span>
+                                </div>
+                            </div>
+                            
+                            <form asp-action="SelectTour" method="post" class="d-grid">
+                                <input type="hidden" name="tourId" value="@tour.TourId" />
+                                <button type="submit" class="btn btn-primary rounded-pill py-2 fw-bold shadow-sm">
+                                    <i class="fas fa-cart-plus me-2"></i> Chọn Tour Này
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="col-12 text-center py-5">
+            <h4 class="text-muted">Hiện tại không có tour nào đang mở bán.</h4>
+        </div>
+    }
+</div>
+
+<style>
+/* CSS for stepper */
+.booking-stepper-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.step-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #e9ecef;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.step-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.step.active .step-icon {
+    background-color: #0d6efd;
+    color: #fff;
+    box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.2);
+}
+
+.step.active .step-label {
+    color: #0d6efd;
+    font-weight: bold;
+}
+
+.step.completed .step-icon {
+    background-color: #198754;
+    color: #fff;
+}
+
+.step.completed .step-label {
+    color: #198754;
+}
+
+.step-line {
+    flex-grow: 1;
+    height: 3px;
+    background-color: #e9ecef;
+    margin: 0 10px;
+    position: relative;
+    top: -12px;
+}
+
+.step-line.completed {
+    background-color: #198754;
+}
+
+/* Tour Cards Custom styling */
+.tour-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.tour-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important;
+}
+.object-fit-cover {
+    object-fit: cover;
+}
+</style>
