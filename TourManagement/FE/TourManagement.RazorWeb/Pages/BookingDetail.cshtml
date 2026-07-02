@@ -1,0 +1,281 @@
+@page "{bookingCode}"
+@model TourManagement.RazorWeb.Pages.BookingDetailModel
+@{
+    ViewData["Title"] = "Chi Tiết Booking - " + Model.Booking?.BookingCode;
+}
+
+<style>
+    .detail-hero {
+        background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+        border-radius: 20px;
+        color: #fff;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+    .detail-hero::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 300px;
+        height: 300px;
+        background: rgba(255,255,255,0.05);
+        border-radius: 50%;
+    }
+    .info-card {
+        background: #fff;
+        border-radius: 16px;
+        border: 1px solid #e2e8f0;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .info-card .card-title {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #334155;
+        border-bottom: 2px solid #f1f5f9;
+        padding-bottom: 0.75rem;
+        margin-bottom: 1.25rem;
+    }
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #f8fafc;
+    }
+    .info-row:last-child { border-bottom: none; }
+    .info-label { color: #64748b; font-size: 0.9rem; }
+    .info-value { font-weight: 600; color: #1e293b; text-align: right; max-width: 60%; }
+    .status-badge {
+        padding: 0.4rem 1rem;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 700;
+    }
+    .price-highlight {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: #ef4444;
+    }
+    .timeline-item {
+        display: flex;
+        gap: 1rem;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #f1f5f9;
+    }
+    .timeline-item:last-child { border-bottom: none; }
+    .timeline-dot {
+        width: 12px;
+        height: 12px;
+        min-width: 12px;
+        border-radius: 50%;
+        margin-top: 5px;
+    }
+</style>
+
+@if (Model.Booking == null)
+{
+    <div class="alert alert-danger rounded-4 text-center py-5">
+        <i class="bi bi-exclamation-circle" style="font-size: 3rem;"></i>
+        <h4 class="mt-3">Không tìm thấy booking</h4>
+        <a href="/MyBookings" class="btn btn-primary mt-3 rounded-pill px-4">Quay lại danh sách</a>
+    </div>
+}
+else
+{
+    var b = Model.Booking;
+    var statusColor = b.Status.ToLower() switch {
+        "pending"   => ("bg-warning text-dark", "⏳ Chờ xác nhận"),
+        "confirmed" => ("bg-success text-white", "✅ Đã xác nhận"),
+        "paid"      => ("bg-primary text-white", "💳 Đã thanh toán"),
+        "deposited" => ("bg-info text-white", "🏦 Đặt cọc"),
+        "cancelled" => ("bg-danger text-white", "❌ Đã hủy"),
+        _           => ("bg-secondary text-white", b.Status)
+    };
+
+    <!-- Hero Header -->
+    <div class="detail-hero">
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+            <div>
+                <div class="opacity-75 small mb-1 text-white"><i class="bi bi-ticket-perforated me-1"></i>Mã đặt chỗ</div>
+                <h2 class="fw-bold mb-1 text-white">@b.BookingCode</h2>
+                <p class="opacity-75 mb-0 text-white"><i class="bi bi-calendar-check me-1"></i>Đặt ngày @b.BookingDate.ToString("dd/MM/yyyy HH:mm")</p>
+            </div>
+            <span class="status-badge @statusColor.Item1 fs-6">@statusColor.Item2</span>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Left Column -->
+        <div class="col-lg-7">
+
+            <!-- Tour Info -->
+            <div class="info-card">
+                <div class="card-title"><i class="bi bi-map-fill text-primary me-2"></i>Thông Tin Tour</div>
+                <div class="info-row">
+                    <span class="info-label">Tên tour</span>
+                    <span class="info-value">@(b.Schedule?.Tour?.TourName ?? "N/A")</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Điểm đến</span>
+                    <span class="info-value">@(b.Schedule?.Tour?.Destination ?? "N/A")</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Ngày khởi hành</span>
+                    <span class="info-value text-primary fw-bold">@(b.Schedule?.StartDate.ToString("dd/MM/yyyy") ?? "N/A")</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Ngày kết thúc</span>
+                    <span class="info-value">@(b.Schedule?.EndDate.ToString("dd/MM/yyyy") ?? "N/A")</span>
+                </div>
+                @if (b.Schedule?.Tour?.Days > 0)
+                {
+                    <div class="info-row">
+                        <span class="info-label">Thời gian</span>
+                        <span class="info-value">@b.Schedule.Tour.Days ngày @b.Schedule.Tour.Nights đêm</span>
+                    </div>
+                }
+            </div>
+
+            <!-- Passenger Info -->
+            <div class="info-card">
+                <div class="card-title"><i class="bi bi-people-fill text-success me-2"></i>Hành Khách</div>
+                <div class="info-row">
+                    <span class="info-label"><i class="bi bi-person-fill text-primary me-1"></i>Họ và tên</span>
+                    <span class="info-value">@b.CustomerName</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label"><i class="bi bi-telephone-fill text-success me-1"></i>Số điện thoại</span>
+                    <span class="info-value">@b.PhoneNumber</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label"><i class="bi bi-envelope-fill text-info me-1"></i>Email</span>
+                    <span class="info-value">@b.Email</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label"><i class="bi bi-people me-1"></i>Người lớn</span>
+                    <span class="info-value">@b.AdultCount người</span>
+                </div>
+                @if (b.ChildCount > 0)
+                {
+                    <div class="info-row">
+                        <span class="info-label"><i class="bi bi-person-hearts me-1"></i>Trẻ em</span>
+                        <span class="info-value">@b.ChildCount người</span>
+                    </div>
+                }
+                @if (b.InfantCount > 0)
+                {
+                    <div class="info-row">
+                        <span class="info-label"><i class="bi bi-emoji-smile me-1"></i>Em bé</span>
+                        <span class="info-value">@b.InfantCount người</span>
+                    </div>
+                }
+                @if (!string.IsNullOrEmpty(b.RoomType))
+                {
+                    <div class="info-row">
+                        <span class="info-label"><i class="bi bi-house-fill me-1"></i>Loại phòng</span>
+                        <span class="info-value">@b.RoomType</span>
+                    </div>
+                }
+                @if (!string.IsNullOrEmpty(b.SpecialRequest))
+                {
+                    <div class="info-row">
+                        <span class="info-label"><i class="bi bi-chat-dots me-1"></i>Yêu cầu đặc biệt</span>
+                        <span class="info-value">@b.SpecialRequest</span>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="col-lg-5">
+
+            <!-- Price Summary -->
+            <div class="info-card">
+                <div class="card-title"><i class="bi bi-receipt text-warning me-2"></i>Chi Tiết Giá</div>
+                <div class="info-row">
+                    <span class="info-label">Giá gốc</span>
+                    <span class="info-value">@b.TotalPrice.ToString("N0") ₫</span>
+                </div>
+                @if (b.DiscountAmount > 0)
+                {
+                    <div class="info-row">
+                        <span class="info-label text-success"><i class="bi bi-tag-fill me-1"></i>Giảm giá @(!string.IsNullOrEmpty(b.PromoCode) ? $"({b.PromoCode})" : "")</span>
+                        <span class="info-value text-success">- @b.DiscountAmount.ToString("N0") ₫</span>
+                    </div>
+                }
+                <div class="info-row" style="border-top: 2px solid #e2e8f0; margin-top: 0.5rem; padding-top: 1rem;">
+                    <span class="info-label fw-bold fs-5">Tổng thanh toán</span>
+                    <span class="price-highlight">@b.FinalPrice.ToString("N0") ₫</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Phương thức TT</span>
+                    <span class="info-value">
+                        @(b.PaymentMethod switch {
+                            "Cash" => "💵 Tiền mặt",
+                            "BankTransfer" => "🏦 Chuyển khoản",
+                            "CreditCard" => "💳 Thẻ tín dụng",
+                            _ => b.PaymentMethod
+                        })
+                    </span>
+                </div>
+            </div>
+
+            <!-- Booking Status Timeline -->
+            <div class="info-card">
+                <div class="card-title"><i class="bi bi-clock-history text-info me-2"></i>Trạng Thái</div>
+                <div class="timeline-item">
+                    <div class="timeline-dot bg-success mt-1"></div>
+                    <div>
+                        <div class="fw-bold small">Đặt chỗ thành công</div>
+                        <div class="text-muted" style="font-size:0.8rem;">@b.BookingDate.ToString("dd/MM/yyyy HH:mm")</div>
+                    </div>
+                </div>
+                @if (b.Status.ToLower() == "confirmed" || b.Status.ToLower() == "paid" || b.Status.ToLower() == "deposited")
+                {
+                    <div class="timeline-item">
+                        <div class="timeline-dot bg-primary mt-1"></div>
+                        <div>
+                            <div class="fw-bold small">Đã xác nhận</div>
+                            <div class="text-muted" style="font-size:0.8rem;">Tour được xác nhận bởi nhân viên</div>
+                        </div>
+                    </div>
+                }
+                @if (b.Status.ToLower() == "paid")
+                {
+                    <div class="timeline-item">
+                        <div class="timeline-dot bg-success mt-1"></div>
+                        <div>
+                            <div class="fw-bold small">Đã thanh toán</div>
+                            <div class="text-muted" style="font-size:0.8rem;">Thanh toán hoàn tất</div>
+                        </div>
+                    </div>
+                }
+                @if (b.Status.ToLower() == "cancelled")
+                {
+                    <div class="timeline-item">
+                        <div class="timeline-dot bg-danger mt-1"></div>
+                        <div>
+                            <div class="fw-bold small text-danger">Đã hủy</div>
+                            <div class="text-muted" style="font-size:0.8rem;">Booking đã bị hủy</div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- Actions -->
+            <div class="d-grid gap-2">
+                <a href="/MyBookings" class="btn btn-outline-secondary rounded-pill">
+                    <i class="bi bi-arrow-left me-2"></i>Quay lại danh sách
+                </a>
+                <a href="/Index" class="btn btn-primary rounded-pill">
+                    <i class="bi bi-compass me-2"></i>Đặt tour mới
+                </a>
+            </div>
+        </div>
+    </div>
+}

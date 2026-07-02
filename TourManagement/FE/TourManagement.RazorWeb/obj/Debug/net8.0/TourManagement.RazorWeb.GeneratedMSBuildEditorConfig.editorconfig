@@ -1,0 +1,155 @@
+is_global = true
+build_property.TargetFramework = net8.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = TourManagement.RazorWeb
+build_property.RootNamespace = TourManagement.RazorWeb
+build_property.ProjectDir = D:\FPT\PRN232\PRN232-SU26-Group3-TourManagement\TourManagement\FE\TourManagement.RazorWeb\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 8.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = D:\FPT\PRN232\PRN232-SU26-Group3-TourManagement\TourManagement\FE\TourManagement.RazorWeb
+build_property._RazorSourceGeneratorDebug = 
+
+[D:/FPT/PRN232/PRN232-SU26-Group3-TourManagement/TourManagement/FE/TourManagement.RazorWeb/Pages/Admin/Bookings/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cQm9va2luZ3NcRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/FPT/PRN232/PRN232-SU26-Group3-TourManagement/TourManagement/FE/TourManagement.RazorWeb/Pages/Admin/Bookings/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cQm9va2luZ3NcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/FPT/PRN232/PRN232-SU26-Group3-TourManagement/TourManagement/FE/TourManagement.RazorWeb/Pages/Admin/Dashboard/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cRGFzaGJvYXJkXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/FPT/PRN232/PRN232-SU26-Group3-TourManagement/TourManagement/FE/TourManagement.RazorWeb/Pages/Admin/PromoCodes/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cUHJvbW9Db2Rlc1xDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/FPT/PRN232/PRN232-SU26-Group3-TourManagement/TourManagement/FE/TourManagement.RazorWeb/Pages/Admin/PromoCodes/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cUHJvbW9Db2Rlc1xFZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/FPT/PRN232/PRN232-SU26-Group3-TourManagement/TourManagement/FE/TourManagement.RazorWeb/Pages/Admin/PromoCodes/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cUHJvbW9Db2Rlc1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/FPT/PRN232/PRN232-SU26-Group3-TourManagement/TourManagement/FE/TourManagement.RazorWeb/Pages/Admin/Tours/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cVG91cnNcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/FPT/PRN232/PRN232-SU26-Group3-TourManagement/TourManagement/FE/TourManagement.RazorWeb/Pages/Admin/Tours/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cVG91cnNcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/FPT/PRN232/PRN232-SU26-Group3-TourManagement/TourManagement/FE/TourManagement.RazorWeb/Pages/Admin/Tours/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cVG91cnNcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/FPT/PRN232/PRN232-SU26-Group3-TourManagement/TourManagement/FE/TourManagement.RazorWeb/Pages/Admin/Users/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cVXNlcnNcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/FPT/PRN232/PRN232-SU26-Group3-TourManagement/TourManagement/FE/TourManagement.RazorWeb/Pages/Admin/Users/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cVXNlcnNcRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/FPT/PRN232/PRN232-SU26-Group3-TourManagement/TourManagement/FE/TourManagement.RazorWeb/Pages/Admin/Users/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cVXNlcnNcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/FPT/PRN232/PRN232-SU26-Group3-TourManagement/TourManagement/FE/TourManagement.RazorWeb/Pages/Admin/Users/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cVXNlcnNcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/FPT/PRN232/PRN232-SU26-Group3-TourManagement/TourManagement/FE/TourManagement.RazorWeb/Pages/Admin/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/FPT/PRN232/PRN232-SU26-Group3-TourManagement/TourManagement/FE/TourManagement.RazorWeb/Pages/BookingDetail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQm9va2luZ0RldGFpbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/FPT/PRN232/PRN232-SU26-Group3-TourManagement/TourManagement/FE/TourManagement.RazorWeb/Pages/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRXJyb3IuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/FPT/PRN232/PRN232-SU26-Group3-TourManagement/TourManagement/FE/TourManagement.RazorWeb/Pages/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/FPT/PRN232/PRN232-SU26-Group3-TourManagement/TourManagement/FE/TourManagement.RazorWeb/Pages/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTG9naW4uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/FPT/PRN232/PRN232-SU26-Group3-TourManagement/TourManagement/FE/TourManagement.RazorWeb/Pages/Logout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTG9nb3V0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/FPT/PRN232/PRN232-SU26-Group3-TourManagement/TourManagement/FE/TourManagement.RazorWeb/Pages/MyBookings.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTXlCb29raW5ncy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/FPT/PRN232/PRN232-SU26-Group3-TourManagement/TourManagement/FE/TourManagement.RazorWeb/Pages/Privacy.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJpdmFjeS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/FPT/PRN232/PRN232-SU26-Group3-TourManagement/TourManagement/FE/TourManagement.RazorWeb/Pages/Profile.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJvZmlsZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/FPT/PRN232/PRN232-SU26-Group3-TourManagement/TourManagement/FE/TourManagement.RazorWeb/Pages/Register.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUmVnaXN0ZXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/FPT/PRN232/PRN232-SU26-Group3-TourManagement/TourManagement/FE/TourManagement.RazorWeb/Pages/Shared/_AdminLayout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU2hhcmVkXF9BZG1pbkxheW91dC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/FPT/PRN232/PRN232-SU26-Group3-TourManagement/TourManagement/FE/TourManagement.RazorWeb/Pages/Shared/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/FPT/PRN232/PRN232-SU26-Group3-TourManagement/TourManagement/FE/TourManagement.RazorWeb/Pages/Staff/Schedules/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU3RhZmZcU2NoZWR1bGVzXENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/FPT/PRN232/PRN232-SU26-Group3-TourManagement/TourManagement/FE/TourManagement.RazorWeb/Pages/Staff/Schedules/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU3RhZmZcU2NoZWR1bGVzXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/FPT/PRN232/PRN232-SU26-Group3-TourManagement/TourManagement/FE/TourManagement.RazorWeb/Pages/Staff/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU3RhZmZcX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/FPT/PRN232/PRN232-SU26-Group3-TourManagement/TourManagement/FE/TourManagement.RazorWeb/Pages/Tours/Book.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVG91cnNcQm9vay5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/FPT/PRN232/PRN232-SU26-Group3-TourManagement/TourManagement/FE/TourManagement.RazorWeb/Pages/Tours/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVG91cnNcRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/FPT/PRN232/PRN232-SU26-Group3-TourManagement/TourManagement/FE/TourManagement.RazorWeb/Pages/Users/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVXNlcnNcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/FPT/PRN232/PRN232-SU26-Group3-TourManagement/TourManagement/FE/TourManagement.RazorWeb/Pages/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/FPT/PRN232/PRN232-SU26-Group3-TourManagement/TourManagement/FE/TourManagement.RazorWeb/Pages/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/FPT/PRN232/PRN232-SU26-Group3-TourManagement/TourManagement/FE/TourManagement.RazorWeb/Pages/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU2hhcmVkXF9MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = b-cx94eoxdww

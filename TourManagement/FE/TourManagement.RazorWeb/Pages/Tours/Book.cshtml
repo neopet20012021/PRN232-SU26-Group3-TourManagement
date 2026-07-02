@@ -1,0 +1,696 @@
+@page
+@model TourManagement.RazorWeb.Pages.Tours.BookModel
+@{
+    ViewData["Title"] = "Book Tour";
+}
+
+<style>
+    body {
+        background-color: var(--color-bg-body, #f8fafc);
+    }
+    
+    .tour-summary-card {
+        border: none;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+        background: #fff;
+    }
+    
+    .stepper-wrapper {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 2rem;
+        position: relative;
+    }
+    
+    .stepper-wrapper::before {
+        content: '';
+        position: absolute;
+        top: 24px;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: #e2e8f0;
+        z-index: 0;
+    }
+    
+    .stepper-progress {
+        position: absolute;
+        top: 24px;
+        left: 0;
+        height: 2px;
+        background: var(--color-primary, #0284c7);
+        z-index: 1;
+        transition: width 0.3s ease;
+    }
+    
+    .stepper-item {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 33.33%;
+    }
+    
+    .step-counter {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: #fff;
+        border: 2px solid #e2e8f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        color: #64748b;
+        margin-bottom: 8px;
+        transition: all 0.3s ease;
+    }
+    
+    .stepper-item.active .step-counter {
+        border-color: var(--color-primary, #0284c7);
+        color: var(--color-primary, #0284c7);
+        box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.1);
+    }
+    
+    .stepper-item.completed .step-counter {
+        background: var(--color-primary, #0284c7);
+        border-color: var(--color-primary, #0284c7);
+        color: #fff;
+    }
+    
+    .step-name {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #64748b;
+    }
+    
+    .stepper-item.active .step-name {
+        color: var(--color-primary, #0284c7);
+    }
+    
+    .pax-card {
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        background: #fff;
+        transition: all 0.2s ease;
+    }
+    
+    .pax-card:hover {
+        border-color: #cbd5e1;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+    }
+
+    .pax-icon {
+        width: 52px;
+        height: 52px;
+        min-width: 52px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+    
+    .qty-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: 1px solid #cbd5e1;
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        color: var(--color-primary, #0284c7);
+        transition: all 0.2s ease;
+    }
+    
+    .qty-btn:hover {
+        background: #f1f5f9;
+        border-color: #94a3b8;
+    }
+    
+    .qty-btn:active {
+        background: #e2e8f0;
+    }
+    
+    .qty-input-hidden {
+        display: none;
+    }
+    
+    .qty-display {
+        font-weight: 700;
+        font-size: 1.1rem;
+        width: 30px;
+        text-align: center;
+    }
+    
+    .booking-summary-card {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 1.5rem;
+        border: 1px solid #e2e8f0;
+    }
+    
+    .sticky-footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: #fff;
+        padding: 1rem;
+        box-shadow: 0 -4px 6px -1px rgba(0,0,0,0.05);
+        z-index: 1020;
+        border-top: 1px solid #e2e8f0;
+    }
+    
+    .btn-continue {
+        background: var(--color-primary, #0284c7);
+        color: #fff;
+        font-weight: 700;
+        padding: 1rem;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        border: none;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-continue:hover {
+        background: var(--color-primary-hover, #0369a1);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(2, 132, 199, 0.3);
+        color: white;
+    }
+    
+    .btn-continue:disabled {
+        background: #cbd5e1;
+        transform: none;
+        box-shadow: none;
+        cursor: not-allowed;
+    }
+</style>
+
+@if (Model.Schedule == null || Model.Schedule.Tour == null)
+{
+    <div class="container mt-5">
+        <div class="alert alert-danger rounded-3 shadow-sm"><i class="bi bi-exclamation-triangle-fill"></i> Không tìm thấy thông tin Tour.</div>
+    </div>
+}
+else
+{
+    <div class="container pb-5 mb-5 mt-4">
+        <div class="row justify-content-center">
+            
+            <div class="col-lg-8">
+                
+                <!-- Tour Summary Card -->
+                <div class="tour-summary-card mb-4 d-flex flex-column flex-md-row align-items-center p-3 gap-4">
+                    <img src="@(string.IsNullOrEmpty(Model.Schedule.Tour.Image) ? "https://via.placeholder.com/300" : Model.Schedule.Tour.Image)" class="rounded-3 shadow-sm" style="width: 100%; max-width: 200px; height: 140px; object-fit: cover;" alt="Tour Image">
+                    <div class="flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <h4 class="mb-2 fw-bold" style="font-family: 'Plus Jakarta Sans', sans-serif;">@Model.Schedule.Tour.TourName</h4>
+                            <div class="badge bg-primary px-2 py-1 fs-6"><i class="bi bi-star-fill text-warning"></i> 4.8</div>
+                        </div>
+                        <p class="text-muted mb-2"><i class="bi bi-geo-alt-fill text-danger me-1"></i> Khởi hành từ: @Model.Schedule.Tour.Destination</p>
+                        <p class="text-muted fw-medium mb-3"><i class="bi bi-calendar-event text-primary me-1"></i> Ngày đi: @Model.Schedule.StartDate.ToString("dd/MM/yyyy") &bull; @Model.Schedule.Tour.Days Ngày @Model.Schedule.Tour.Nights Đêm</p>
+                        <div class="d-flex gap-2 flex-wrap">
+                            <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25"><i class="bi bi-check2-circle"></i> Xác nhận tức thì</span>
+                            <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25"><i class="bi bi-shield-check"></i> Hủy miễn phí</span>
+                            <span class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25"><i class="bi bi-person-check"></i> Còn @Model.Schedule.AvailableSeats chỗ</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm border-0 rounded-4 mb-4">
+                    <div class="card-body p-4 p-md-5">
+                        <h3 class="fw-bold text-center mb-5" style="font-family: 'Plus Jakarta Sans', sans-serif;">Hoàn Tất Đặt Chỗ</h3>
+                        
+                        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                        {
+                            <div class="alert alert-danger rounded-3 shadow-sm mb-4"><i class="bi bi-exclamation-octagon-fill"></i> @Model.ErrorMessage</div>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+                        {
+                            <div class="alert alert-success text-center rounded-4 shadow-sm py-5">
+                                <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
+                                <h3 class="fw-bold mt-3">Đặt Tour Thành Công!</h3>
+                                <p class="text-muted">@Model.SuccessMessage</p>
+                                <a href="/MyBookings" class="btn btn-primary btn-lg rounded-pill px-5 mt-3 fw-bold">Xem Lịch Sử Đặt Chỗ</a>
+                            </div>
+                        }
+                        else if (Model.Schedule.AvailableSeats > 0)
+                        {
+                            <!-- Modern Stepper -->
+                            <div class="stepper-wrapper">
+                                <div class="stepper-progress" id="stepperProgress" style="width: 0%;"></div>
+                                <div class="stepper-item active" id="stepperItem1">
+                                    <div class="step-counter"><i class="bi bi-people-fill"></i></div>
+                                    <div class="step-name">Hành Khách</div>
+                                </div>
+                                <div class="stepper-item" id="stepperItem2">
+                                    <div class="step-counter"><i class="bi bi-person-lines-fill"></i></div>
+                                    <div class="step-name">Liên Hệ</div>
+                                </div>
+                                <div class="stepper-item" id="stepperItem3">
+                                    <div class="step-counter"><i class="bi bi-credit-card-fill"></i></div>
+                                    <div class="step-name">Thanh Toán</div>
+                                </div>
+                            </div>
+
+                            <form method="post" id="bookingForm">
+                                <input type="hidden" asp-for="BookingInput.ScheduleId" value="@Model.Schedule.ScheduleId" id="scheduleId" />
+                                
+                                <!-- STEP 1: PAX SELECTION -->
+                                <div class="wizard-step fade show active" id="step1">
+                                    <h5 class="fw-bold mb-4"><i class="bi bi-1-circle-fill text-primary me-2"></i> Chọn số lượng hành khách</h5>
+                                    
+                                    <div id="paxValidationAlert" class="alert alert-danger d-none rounded-3 shadow-sm"><i class="bi bi-info-circle-fill"></i> Vui lòng chọn ít nhất 1 Người lớn.</div>
+
+                                    <!-- Adult Card -->
+                                    <div class="pax-card d-flex align-items-center justify-content-between">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="pax-icon bg-primary bg-opacity-10 text-primary">
+                                                <i class="bi bi-person-fill fs-5"></i>
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-0 fw-bold">Người lớn</h6>
+                                                <small class="text-muted">Từ 12 tuổi trở lên</small>
+                                                <div class="text-danger fw-bold mt-1">@Model.Schedule.ActualAdultPrice.ToString("N0") VND</div>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center gap-3">
+                                            <button type="button" class="qty-btn shadow-sm" onclick="changeQty('adultCount', -1)"><i class="bi bi-dash"></i></button>
+                                            <span class="qty-display" id="display_adultCount">1</span>
+                                            <input asp-for="BookingInput.AdultCount" type="number" min="1" class="qty-input-hidden pax-input" id="adultCount" required value="1" />
+                                            <button type="button" class="qty-btn shadow-sm" onclick="changeQty('adultCount', 1)"><i class="bi bi-plus"></i></button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Child Card -->
+                                    <div class="pax-card d-flex align-items-center justify-content-between">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="pax-icon bg-info bg-opacity-10 text-info">
+                                                <i class="bi bi-person fs-5"></i>
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-0 fw-bold">Trẻ em</h6>
+                                                <small class="text-muted">Từ 2 - 11 tuổi</small>
+                                                <div class="text-danger fw-bold mt-1">@Model.Schedule.ActualChildPrice.ToString("N0") VND</div>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center gap-3">
+                                            <button type="button" class="qty-btn shadow-sm" onclick="changeQty('childCount', -1)"><i class="bi bi-dash"></i></button>
+                                            <span class="qty-display" id="display_childCount">0</span>
+                                            <input asp-for="BookingInput.ChildCount" type="number" min="0" class="qty-input-hidden pax-input" id="childCount" required value="0" />
+                                            <button type="button" class="qty-btn shadow-sm" onclick="changeQty('childCount', 1)"><i class="bi bi-plus"></i></button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Infant Card -->
+                                    <div class="pax-card d-flex align-items-center justify-content-between">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="pax-icon bg-success bg-opacity-10 text-success">
+                                                <i class="bi bi-emoji-smile fs-5"></i>
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-0 fw-bold">Em bé</h6>
+                                                <small class="text-muted">Dưới 2 tuổi</small>
+                                                <div class="text-success fw-bold mt-1">Miễn phí</div>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center gap-3">
+                                            <button type="button" class="qty-btn shadow-sm" onclick="changeQty('infantCount', -1)"><i class="bi bi-dash"></i></button>
+                                            <span class="qty-display" id="display_infantCount">0</span>
+                                            <input asp-for="BookingInput.InfantCount" type="number" min="0" class="qty-input-hidden pax-input" id="infantCount" value="0" />
+                                            <button type="button" class="qty-btn shadow-sm" onclick="changeQty('infantCount', 1)"><i class="bi bi-plus"></i></button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Coupon Section -->
+                                    <div class="card bg-light border-0 rounded-4 mt-4 mb-4">
+                                        <div class="card-body">
+                                            <h6 class="fw-bold mb-3"><i class="bi bi-ticket-perforated-fill text-warning me-2"></i>Mã Giảm Giá</h6>
+                                            
+                                            @if (Model.ShowWelcomeAlert)
+                                            {
+                                                <div class="alert alert-success border-0 shadow-sm py-2 px-3 mb-3 d-flex align-items-center gap-2" style="background-color: #ecfdf5; color: #065f46; border-radius: 10px;">
+                                                    <i class="bi bi-gift-fill fs-5 text-success"></i>
+                                                    <div class="small fw-semibold">Chào mừng thành viên mới! Mã giảm giá <strong class="text-danger">WELCOME (Giảm 15%)</strong> đã được tự động áp dụng cho lần đặt đầu tiên này.</div>
+                                                </div>
+                                            }
+
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-white border-end-0"><i class="bi bi-tag text-muted"></i></span>
+                                                <input asp-for="BookingInput.PromoCode" class="form-control border-start-0 ps-0" id="promoCode" placeholder="Nhập mã khuyến mãi..." />
+                                                <button class="btn btn-dark fw-bold px-4" type="button" id="applyPromoBtn">Áp Dụng</button>
+                                            </div>
+                                            <div id="promoAlert" class="mt-2 small fw-medium d-none"></div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Booking Summary -->
+                                    <div class="booking-summary-card mb-4 shadow-sm">
+                                        <h6 class="fw-bold mb-3 border-bottom pb-2">Chi Tiết Giá</h6>
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span class="text-muted" id="summaryAdultLabel">Người lớn x 1</span>
+                                            <span class="fw-medium" id="summaryAdultPrice">0 VND</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-2" id="summaryChildRow" style="display: none !important;">
+                                            <span class="text-muted" id="summaryChildLabel">Trẻ em x 0</span>
+                                            <span class="fw-medium" id="summaryChildPrice">0 VND</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-2 text-success" id="summaryDiscountRow" style="display: none !important;">
+                                            <span>Mã giảm giá</span>
+                                            <span class="fw-bold" id="summaryDiscountPrice">- 0 VND</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span class="text-muted">Thuế & Phí</span>
+                                            <span class="fw-medium text-success">Đã bao gồm</span>
+                                        </div>
+                                        <hr>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="fw-bold fs-5">Tổng cộng</span>
+                                            <span class="fw-bold fs-4 price-tag" id="totalPriceDisplay" style="color: var(--color-accent, #f97316);">0 VND</span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                
+                                <!-- STEP 2: CONTACT INFO -->
+                                <div class="wizard-step d-none" id="step2">
+                                    <h5 class="fw-bold mb-4"><i class="bi bi-2-circle-fill text-primary me-2"></i> Thông Tin Liên Hệ</h5>
+                                    @if (!User.Identity.IsAuthenticated)
+                                    {
+                                        <div class="alert alert-info py-3 rounded-3 shadow-sm border-0"><i class="bi bi-info-circle-fill"></i> Bạn đang đặt dưới dạng Khách. <a href="/Login" class="fw-bold">Đăng nhập</a> để điền tự động.</div>
+                                    }
+                                    <div class="row g-3">
+                                        <div class="col-12">
+                                            <label asp-for="BookingInput.CustomerName" class="form-label fw-bold">Họ và Tên <span class="text-danger">*</span></label>
+                                            <input asp-for="BookingInput.CustomerName" class="form-control form-control-lg bg-light" placeholder="Nguyễn Văn A" required />
+                                            <div class="invalid-feedback">Vui lòng nhập họ tên.</div>
+                                            <span asp-validation-for="BookingInput.CustomerName" class="text-danger small"></span>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label asp-for="BookingInput.PhoneNumber" class="form-label fw-bold">Số Điện Thoại <span class="text-danger">*</span></label>
+                                            <input asp-for="BookingInput.PhoneNumber" class="form-control form-control-lg bg-light" placeholder="09xxxxxxxxx" required />
+                                            <div class="invalid-feedback">Vui lòng nhập số điện thoại.</div>
+                                            <span asp-validation-for="BookingInput.PhoneNumber" class="text-danger small"></span>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label asp-for="BookingInput.Email" class="form-label fw-bold">Email <span class="text-danger">*</span></label>
+                                            <input asp-for="BookingInput.Email" type="email" class="form-control form-control-lg bg-light" placeholder="example@email.com" required />
+                                            <div class="invalid-feedback">Vui lòng nhập email hợp lệ.</div>
+                                            <span asp-validation-for="BookingInput.Email" class="text-danger small"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- STEP 3: PAYMENT -->
+                                <div class="wizard-step d-none" id="step3">
+                                    <h5 class="fw-bold mb-4"><i class="bi bi-3-circle-fill text-primary me-2"></i> Thanh Toán & Xác Nhận</h5>
+                                    
+                                    <div class="card border-0 bg-light rounded-4 mb-4">
+                                        <div class="card-body p-4">
+                                            <label asp-for="BookingInput.PaymentMethod" class="form-label fw-bold mb-3">Phương thức thanh toán <span class="text-danger">*</span></label>
+                                            <select asp-for="BookingInput.PaymentMethod" class="form-select form-select-lg mb-2 shadow-sm border-0" required>
+                                                <option value="">-- Chọn phương thức --</option>
+                                                <option value="Cash">Tiền mặt tại văn phòng</option>
+                                                <option value="BankTransfer">Chuyển khoản ngân hàng</option>
+                                                <option value="CreditCard">Thẻ Tín dụng / Ghi nợ</option>
+                                            </select>
+                                            <div class="invalid-feedback">Vui lòng chọn phương thức thanh toán.</div>
+                                            <span asp-validation-for="BookingInput.PaymentMethod" class="text-danger small"></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <label asp-for="BookingInput.SpecialRequest" class="form-label fw-bold">Yêu cầu đặc biệt (Không bắt buộc)</label>
+                                        <textarea asp-for="BookingInput.SpecialRequest" class="form-control bg-light" rows="3" placeholder="Ví dụ: Ăn chay, dị ứng hải sản..."></textarea>
+                                    </div>
+
+                                    <div class="alert alert-warning mb-4 rounded-3 border-0 shadow-sm">
+                                        <i class="bi bi-shield-lock-fill text-warning fs-4 float-start me-3"></i> 
+                                        <div class="overflow-hidden">Bằng việc bấm xác nhận, bạn đồng ý với các <strong>Điều khoản & Điều kiện</strong> về hoàn hủy tour của chúng tôi.</div>
+                                    </div>
+                                </div>
+
+                                <!-- Sticky Footer Actions -->
+                                <div class="sticky-footer">
+                                    <div class="container d-flex justify-content-between align-items-center gap-3 max-w-700 mx-auto" style="max-width: 800px;">
+                                        <button type="button" class="btn btn-light border btn-lg rounded-pill fw-bold d-none" id="btnBack" onclick="goBack()"><i class="bi bi-arrow-left"></i> Quay lại</button>
+                                        <div class="text-start d-none d-md-block" id="footerPriceWrap">
+                                            <small class="text-muted d-block lh-1">Tổng cộng</small>
+                                            <strong class="fs-4 text-danger" id="footerTotalPrice">0 VND</strong>
+                                        </div>
+                                        <button type="button" class="btn btn-continue flex-grow-1 shadow" id="btnNext" onclick="goNext()">Tiếp tục <i class="bi bi-arrow-right ms-1"></i></button>
+                                        <button type="submit" class="btn btn-success btn-continue flex-grow-1 shadow d-none" id="btnSubmit"><i class="bi bi-check-circle-fill me-1"></i> Hoàn Tất Đặt Tour</button>
+                                    </div>
+                                </div>
+                                <!-- Extra space for sticky footer -->
+                                <div style="height: 100px;"></div>
+
+                            </form>
+                        }
+                        else
+                        {
+                            <div class="alert alert-warning p-5 text-center rounded-4 shadow-sm">
+                                <i class="bi bi-emoji-frown text-warning" style="font-size: 4rem;"></i>
+                                <h3 class="fw-bold mt-3">Đã Hết Chỗ</h3>
+                                <p class="text-muted mb-4">Rất tiếc, tour này đã được đặt kín chỗ. Vui lòng chọn ngày khởi hành khác.</p>
+                                <a href="/Index" class="btn btn-primary rounded-pill px-5 fw-bold">Tìm Tour Khác</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        let currentStep = 1;
+        const totalSteps = 3;
+
+        const priceAdult = @(Model.Schedule?.ActualAdultPrice ?? 0);
+        const priceChild = @(Model.Schedule?.ActualChildPrice ?? 0);
+
+        function updateUI() {
+            // Manage Steps Visibility
+            document.querySelectorAll('.wizard-step').forEach(el => el.classList.add('d-none'));
+            document.getElementById('step' + currentStep).classList.remove('d-none');
+            
+            // Manage Stepper
+            let progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
+            document.getElementById('stepperProgress').style.width = progress + '%';
+            
+            for(let i=1; i<=totalSteps; i++) {
+                let item = document.getElementById('stepperItem' + i);
+                if(i < currentStep) {
+                    item.className = 'stepper-item completed';
+                    item.querySelector('.step-counter').innerHTML = '<i class="bi bi-check-lg"></i>';
+                } else if(i === currentStep) {
+                    item.className = 'stepper-item active';
+                    let icon = i===1 ? 'people-fill' : (i===2 ? 'person-lines-fill' : 'credit-card-fill');
+                    item.querySelector('.step-counter').innerHTML = `<i class="bi bi-${icon}"></i>`;
+                } else {
+                    item.className = 'stepper-item';
+                    let icon = i===1 ? 'people-fill' : (i===2 ? 'person-lines-fill' : 'credit-card-fill');
+                    item.querySelector('.step-counter').innerHTML = `<i class="bi bi-${icon}"></i>`;
+                }
+            }
+
+            // Manage Footer Buttons
+            document.getElementById('btnBack').classList.toggle('d-none', currentStep === 1);
+            
+            if(currentStep === totalSteps) {
+                document.getElementById('btnNext').classList.add('d-none');
+                document.getElementById('btnSubmit').classList.remove('d-none');
+            } else {
+                document.getElementById('btnNext').classList.remove('d-none');
+                document.getElementById('btnSubmit').classList.add('d-none');
+                document.getElementById('btnNext').innerHTML = currentStep === 1 ? 'Thông Tin Liên Hệ <i class="bi bi-arrow-right ms-1"></i>' : 'Thanh Toán <i class="bi bi-arrow-right ms-1"></i>';
+            }
+        }
+
+        function validateStep(step) {
+            let container = document.getElementById('step' + step);
+            let inputs = container.querySelectorAll('input[required], select[required]');
+            let valid = true;
+            inputs.forEach(input => {
+                if (!input.checkValidity()) {
+                    input.classList.add('is-invalid');
+                    valid = false;
+                } else {
+                    input.classList.remove('is-invalid');
+                }
+            });
+            
+            // Custom Validation for Adult
+            if(step === 1) {
+                let adultCount = parseInt(document.getElementById('adultCount').value) || 0;
+                if(adultCount < 1) {
+                    document.getElementById('paxValidationAlert').classList.remove('d-none');
+                    valid = false;
+                } else {
+                    document.getElementById('paxValidationAlert').classList.add('d-none');
+                }
+            }
+            return valid;
+        }
+
+        // Add event listeners to remove is-invalid on change
+        document.querySelectorAll('input, select').forEach(el => {
+            el.addEventListener('input', function() {
+                this.classList.remove('is-invalid');
+            });
+        });
+
+        function goNext() {
+            if (validateStep(currentStep)) {
+                currentStep++;
+                updateUI();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function goBack() {
+            if(currentStep > 1) {
+                currentStep--;
+                updateUI();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function changeQty(id, delta) {
+            let input = document.getElementById(id);
+            let display = document.getElementById('display_' + id);
+            let current = parseInt(input.value) || 0;
+            let min = parseInt(input.getAttribute('min')) || 0;
+            
+            let newVal = current + delta;
+            if(newVal < min) newVal = min;
+            
+            input.value = newVal;
+            display.innerText = newVal;
+            
+            updatePrice();
+        }
+
+        async function updatePrice() {
+            let adult = parseInt(document.getElementById('adultCount').value) || 0;
+            let child = parseInt(document.getElementById('childCount').value) || 0;
+            let promoCode = document.getElementById('promoCode').value;
+            let scheduleId = document.getElementById('scheduleId').value;
+            let token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+            let userEmail = document.getElementById('BookingInput_Email')?.value || '';
+
+            // Enable/Disable next button based on adult count
+            document.getElementById('btnNext').disabled = adult < 1;
+
+            let finalPrice = 0;
+            let discountAmount = 0;
+            let isPromoApplied = false;
+            let backendErrorMessage = "";
+
+            try {
+                let response = await fetch('?handler=CalculatePrice', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': token
+                    },
+                    body: JSON.stringify({
+                        ScheduleId: parseInt(scheduleId),
+                        AdultCount: adult,
+                        ChildCount: child,
+                        PromoCode: promoCode,
+                        UserEmail: userEmail
+                    })
+                });
+
+                if (response.ok) {
+                    let result = await response.json();
+                    if (result.success && result.data) {
+                        finalPrice = result.data.finalPrice;
+                        isPromoApplied = result.data.appliedPromoCode;
+                        
+                        let baseTotal = (adult * priceAdult) + (child * priceChild);
+                        discountAmount = baseTotal - finalPrice;
+                    } else if (result.success === false) {
+                        backendErrorMessage = result.message;
+                    }
+                } else {
+                    let errResult = await response.json();
+                    if(errResult && errResult.message) {
+                        backendErrorMessage = errResult.message;
+                    }
+                }
+            } catch (error) {
+                console.error("Error calculating price:", error);
+            }
+
+            if(finalPrice === 0 && !isPromoApplied) {
+                // Fallback
+                finalPrice = (adult * priceAdult) + (child * priceChild);
+            }
+
+            // Update Summary UI
+            document.getElementById('summaryAdultLabel').innerText = `Người lớn x ${adult}`;
+            document.getElementById('summaryAdultPrice').innerText = (adult * priceAdult).toLocaleString('vi-VN') + " VND";
+            
+            let childRow = document.getElementById('summaryChildRow');
+            if(child > 0) {
+                childRow.style.setProperty('display', 'flex', 'important');
+                document.getElementById('summaryChildLabel').innerText = `Trẻ em x ${child}`;
+                document.getElementById('summaryChildPrice').innerText = (child * priceChild).toLocaleString('vi-VN') + " VND";
+            } else {
+                childRow.style.setProperty('display', 'none', 'important');
+            }
+
+            let promoAlert = document.getElementById('promoAlert');
+            let discountRow = document.getElementById('summaryDiscountRow');
+
+            if(isPromoApplied) {
+                promoAlert.innerHTML = '<i class="bi bi-check-circle-fill"></i> Áp dụng thành công!';
+                promoAlert.className = 'mt-2 small fw-bold text-success';
+                
+                discountRow.style.setProperty('display', 'flex', 'important');
+                document.getElementById('summaryDiscountPrice').innerText = "-" + discountAmount.toLocaleString('vi-VN') + " VND";
+            } else {
+                if(promoCode.trim().length > 0) {
+                    promoAlert.innerHTML = '<i class="bi bi-x-circle-fill"></i> ' + (backendErrorMessage || 'Mã không hợp lệ');
+                    promoAlert.className = 'mt-2 small fw-bold text-danger';
+                } else {
+                    promoAlert.className = 'd-none';
+                }
+                discountRow.style.setProperty('display', 'none', 'important');
+            }
+
+            let finalStr = finalPrice.toLocaleString('vi-VN') + " VND";
+            document.getElementById('totalPriceDisplay').innerText = finalStr;
+            document.getElementById('footerTotalPrice').innerText = finalStr;
+        }
+
+        // Initialize UI
+        updateUI();
+        updatePrice();
+
+        document.getElementById('applyPromoBtn')?.addEventListener('click', function() {
+            updatePrice(); 
+        });
+
+        // Trigger price update when email changes to validate first booking WELCOME promo code
+        document.getElementById('BookingInput_Email')?.addEventListener('change', function() {
+            if(document.getElementById('promoCode').value.trim().toUpperCase() === 'WELCOME') {
+                updatePrice();
+            }
+        });
+
+    </script>
+}

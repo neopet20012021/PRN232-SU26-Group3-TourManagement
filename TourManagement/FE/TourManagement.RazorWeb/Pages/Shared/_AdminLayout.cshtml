@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Quản Trị Hệ Thống</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .sidebar {
+            width: 260px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #21252f;
+            color: #cbd5e1;
+            z-index: 1000;
+            overflow-y: auto;
+            transition: all 0.3s;
+        }
+        .sidebar-brand {
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #38bdf8;
+            background-color: #1a1d24;
+        }
+        .sidebar-section-title {
+            padding: 25px 20px 10px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #64748b;
+            letter-spacing: 0.05em;
+        }
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-weight: 500;
+            font-size: 1.05rem;
+        }
+        .sidebar-link:hover, .sidebar-link.active {
+            color: #fff;
+            background-color: rgba(255, 255, 255, 0.05);
+            text-decoration: none;
+        }
+        .sidebar-link i {
+            margin-right: 15px;
+            font-size: 1.25rem;
+            width: 24px;
+            text-align: center;
+        }
+        .main-content {
+            margin-left: 260px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s;
+        }
+        .top-header {
+            height: 70px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 0 30px;
+            z-index: 999;
+        }
+        .content-area {
+            flex: 1;
+            padding: 30px;
+        }
+        .back-home-btn {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            border: 1px solid #cbd5e1;
+            background: transparent;
+            color: #cbd5e1;
+        }
+        .back-home-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+        .admin-card {
+            border-radius: 12px;
+            border: none !important;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03) !important;
+        }
+    </style>
+</head>
+<body>
+    
+    @{
+        var isStaff = User.IsInRole("Staff");
+        var isAdmin = User.IsInRole("Admin");
+        var currentPath = ViewContext.HttpContext.Request.Path.ToString().ToLower();
+    }
+
+    <!-- Sidebar -->
+    <div class="sidebar d-flex flex-column">
+        <div class="sidebar-brand">
+            <i class="bi bi-compass text-info me-2"></i> 
+            @(isAdmin ? "ADMIN" : "STAFF")
+        </div>
+
+        <ul class="sidebar-nav flex-grow-1">
+            <li class="sidebar-section-title">DANH MỤC</li>
+            
+            @if (isAdmin)
+            {
+                <li>
+                    <a href="/Admin/Dashboard/Index" class="sidebar-link @(currentPath.Contains("dashboard") ? "active" : "")">
+                        <i class="bi bi-speedometer2"></i> Tổng Quan
+                    </a>
+                </li>
+                <li>
+                    <a href="/Admin/Tours/Index" class="sidebar-link @(currentPath.Contains("/tours") ? "active" : "")">
+                        <i class="bi bi-map"></i> Quản Lý Tour
+                    </a>
+                </li>
+                <li>
+                    <a href="/Admin/PromoCodes/Index" class="sidebar-link @(currentPath.Contains("/promocodes") ? "active" : "")">
+                        <i class="bi bi-ticket-perforated"></i> Quản Lý Khuyến Mãi
+                    </a>
+                </li>
+            }
+
+            @if (isAdmin || isStaff)
+            {
+                <li>
+                    <a href="/Staff/Schedules/Index" class="sidebar-link @(currentPath.Contains("/schedules") ? "active" : "")">
+                        <i class="bi bi-calendar-event"></i> Lịch Khởi Hành
+                    </a>
+                </li>
+                <li>
+                    <a href="/Admin/Bookings/Index" class="sidebar-link @(currentPath.Contains("/bookings") ? "active" : "")">
+                        <i class="bi bi-check-square"></i> Đặt Chỗ (Bookings)
+                    </a>
+                </li>
+            }
+
+            @if (isAdmin)
+            {
+                <li class="sidebar-section-title">HỆ THỐNG</li>
+                <li>
+                    <a href="/Admin/Users/Index" class="sidebar-link @(currentPath.Contains("/users") ? "active" : "")">
+                        <i class="bi bi-people"></i> Quản Lý User
+                    </a>
+                </li>
+            }
+        </ul>
+
+        <a href="/Index" class="btn back-home-btn fw-bold py-2">
+            <i class="bi bi-house-door me-2"></i> Trở Về Trang Chủ
+        </a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Header -->
+        <header class="top-header">
+            <div class="dropdown">
+                <a class="nav-link dropdown-toggle text-dark fw-bold d-flex align-items-center" href="#" id="adminUserDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <div class="bg-primary text-white rounded-circle d-flex justify-content-center align-items-center me-2" style="width: 35px; height: 35px;">
+                        <i class="bi bi-person-fill"></i>
+                    </div>
+                    Xin chào, @User.Identity?.Name
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2" aria-labelledby="adminUserDropdown">
+                    <li><a class="dropdown-item" href="/Profile"><i class="bi bi-person text-muted me-2"></i> Hồ Sơ Cá Nhân</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <a href="/Logout" class="dropdown-item text-danger fw-bold"><i class="bi bi-box-arrow-right me-2"></i> Đăng Xuất</a>
+                    </li>
+                </ul>
+            </div>
+        </header>
+
+        <!-- Dynamic Content -->
+        <main class="content-area">
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,175 @@
+@page
+@model TourManagement.RazorWeb.Pages.Admin.PromoCodes.IndexModel
+@{
+    ViewData["Title"] = "Quản Lý Khuyến Mãi";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold text-dark m-0">Quản Lý Chương Trình Khuyến Mãi</h3>
+    <a href="/Admin/PromoCodes/Create" class="btn btn-primary px-4 rounded-pill fw-semibold shadow-sm">
+        <i class="bi bi-plus-circle-fill me-1"></i> Tạo Mới Mã
+    </a>
+</div>
+
+<!-- Summary Cards -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card bg-primary text-white border-0 shadow-sm h-100">
+            <div class="card-body d-flex align-items-center">
+                <div class="bg-white bg-opacity-25 p-3 rounded-3 me-3">
+                    <i class="bi bi-ticket-perforated fs-3"></i>
+                </div>
+                <div>
+                    <h6 class="mb-0 text-white-50">Tổng Số Mã</h6>
+                    <h3 class="mb-0 fw-bold">@Model.PromoCodes.Count</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-success text-white border-0 shadow-sm h-100">
+            <div class="card-body d-flex align-items-center">
+                <div class="bg-white bg-opacity-25 p-3 rounded-3 me-3">
+                    <i class="bi bi-check-circle fs-3"></i>
+                </div>
+                <div>
+                    <h6 class="mb-0 text-white-50">Đang Hoạt Động</h6>
+                    <h3 class="mb-0 fw-bold">@Model.PromoCodes.Count(p => p.IsActive && p.EndDate >= DateTime.Now && p.UsageCount < p.MaxUsage)</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-warning text-white border-0 shadow-sm h-100">
+            <div class="card-body d-flex align-items-center">
+                <div class="bg-white bg-opacity-25 p-3 rounded-3 me-3">
+                    <i class="bi bi-exclamation-triangle fs-3"></i>
+                </div>
+                <div>
+                    <h6 class="mb-0 text-white-50">Đã Hết Hạn / Hết Lượt</h6>
+                    <h3 class="mb-0 fw-bold">@Model.PromoCodes.Count(p => !p.IsActive || p.EndDate < DateTime.Now || p.UsageCount >= p.MaxUsage)</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Search Filter -->
+<div class="card admin-card mb-4 border-0 shadow-sm">
+    <div class="card-body p-3">
+        <form method="get" class="row g-2 align-items-center">
+            <div class="col-md-10">
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
+                    <input type="text" asp-for="SearchQuery" class="form-control border-start-0 ps-0" placeholder="Tìm kiếm theo mã khuyến mãi..." />
+                </div>
+            </div>
+            <div class="col-md-2 d-flex gap-2">
+                <button type="submit" class="btn btn-primary w-100 fw-semibold">Lọc</button>
+                @if (!string.IsNullOrEmpty(Model.SearchQuery))
+                {
+                    <a href="/Admin/PromoCodes/Index" class="btn btn-outline-secondary w-100">Xóa</a>
+                }
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card admin-card border-0 shadow-sm">
+    <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+        <span class="fw-bold"><i class="bi bi-tags-fill text-primary me-2"></i> Danh sách mã khuyến mãi</span>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Mã</th>
+                        <th>Giảm Giá</th>
+                        <th>Đơn Hàng Tối Thiểu</th>
+                        <th>Thời Hạn Áp Dụng</th>
+                        <th>Lượt Sử Dụng</th>
+                        <th>Trạng Thái</th>
+                        <th class="text-end pe-4">Thao Tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.PromoCodes != null && Model.PromoCodes.Any())
+                    {
+                        foreach (var code in Model.PromoCodes)
+                        {
+                            bool isExpired = code.EndDate < DateTime.Now;
+                            bool isMaxedOut = code.UsageCount >= code.MaxUsage;
+                            bool isValidNow = code.IsActive && !isExpired && !isMaxedOut;
+
+                            <tr>
+                                <td class="ps-4">
+                                    <span class="badge bg-light text-primary border border-primary px-3 py-2 fw-bold font-monospace">@code.Code</span>
+                                </td>
+                                <td>
+                                    <strong class="text-success">@((code.DiscountPercent * 100).ToString("G29"))%</strong>
+                                </td>
+                                <td>
+                                    <span>@code.MinBookingValue.ToString("N0") VNĐ</span>
+                                </td>
+                                <td>
+                                    <div class="small text-muted">
+                                        <i class="bi bi-calendar-check me-1"></i>Từ: @code.StartDate.ToString("dd/MM/yyyy HH:mm")
+                                    </div>
+                                    <div class="small text-muted">
+                                        <i class="bi bi-calendar-x me-1"></i>Đến: @code.EndDate.ToString("dd/MM/yyyy HH:mm")
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="fw-semibold">@code.UsageCount</span> / <span class="text-muted">@code.MaxUsage</span>
+                                    <div class="progress mt-1" style="height: 5px; width: 100px;">
+                                        <div class="progress-bar bg-info" role="progressbar" style="width: @((double)code.UsageCount / code.MaxUsage * 100)%" aria-valuenow="@code.UsageCount" aria-valuemin="0" aria-valuemax="@code.MaxUsage"></div>
+                                    </div>
+                                </td>
+                                <td>
+                                    @if (isValidNow)
+                                    {
+                                        <span class="badge bg-success-subtle text-success border border-success px-3 py-1 rounded-pill">Hoạt Động</span>
+                                    }
+                                    else if (!code.IsActive)
+                                    {
+                                        <span class="badge bg-danger-subtle text-danger border border-danger px-3 py-1 rounded-pill">Vô Hiệu Hóa</span>
+                                    }
+                                    else if (isExpired)
+                                    {
+                                        <span class="badge bg-secondary-subtle text-secondary border border-secondary px-3 py-1 rounded-pill">Hết Hạn</span>
+                                    }
+                                    else if (isMaxedOut)
+                                    {
+                                        <span class="badge bg-warning-subtle text-warning border border-warning px-3 py-1 rounded-pill">Hết Lượt</span>
+                                    }
+                                </td>
+                                <td class="text-end pe-4">
+                                    <div class="d-flex justify-content-end gap-2">
+                                        <a href="/Admin/PromoCodes/Edit?id=@code.PromoCodeId" class="btn btn-sm btn-outline-primary px-3 rounded-pill">
+                                            <i class="bi bi-pencil-square"></i> Sửa
+                                        </a>
+                                        <form method="post" asp-page-handler="Delete" asp-route-id="@code.PromoCodeId" onsubmit="return confirm('Bạn có chắc chắn muốn xóa mã khuyến mãi này không?');" class="m-0">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger px-3 rounded-pill">
+                                                <i class="bi bi-trash"></i> Xóa
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="7" class="text-center py-5 text-muted">
+                                <i class="bi bi-tags fs-1 d-block mb-3"></i>
+                                Không có chương trình khuyến mãi nào được tìm thấy.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,221 @@
+@page
+@model TourManagement.RazorWeb.Pages.Admin.Dashboard.IndexModel
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold text-dark m-0"><i class="bi bi-speedometer2 text-primary me-2"></i> Bảng Tổng Quan (Analytics)</h3>
+</div>
+
+<div class="row g-4 mb-5">
+    <!-- Doanh thu -->
+    <div class="col-xl-3 col-sm-6">
+        <div class="card border-0 shadow-sm rounded-4 h-100 bg-primary text-white bg-gradient">
+            <div class="card-body p-4 position-relative overflow-hidden">
+                <div class="position-relative z-1">
+                    <h6 class="text-white-50 fw-semibold mb-1">Tổng Doanh Thu</h6>
+                    <h3 class="fw-bold mb-0">@Model.Stats.TotalRevenue.ToString("N0") <small class="fs-6 fw-normal">VND</small></h3>
+                </div>
+                <i class="bi bi-wallet2 position-absolute opacity-25" style="font-size: 5rem; right: -10px; bottom: -15px;"></i>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Đơn đặt Tour -->
+    <div class="col-xl-3 col-sm-6">
+        <div class="card border-0 shadow-sm rounded-4 h-100 bg-success text-white bg-gradient">
+            <div class="card-body p-4 position-relative overflow-hidden">
+                <div class="position-relative z-1">
+                    <h6 class="text-white-50 fw-semibold mb-1">Tổng Booking</h6>
+                    <h2 class="fw-bold mb-0">@Model.Stats.TotalBookings</h2>
+                    <div class="mt-2 text-white-50 small">
+                        <i class="bi bi-exclamation-circle-fill text-warning me-1"></i> @Model.Stats.PendingBookings chờ xử lý
+                    </div>
+                </div>
+                <i class="bi bi-journal-check position-absolute opacity-25" style="font-size: 5rem; right: -10px; bottom: -15px;"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tour gốc -->
+    <div class="col-xl-3 col-sm-6">
+        <div class="card border-0 shadow-sm rounded-4 h-100 bg-info text-white bg-gradient">
+            <div class="card-body p-4 position-relative overflow-hidden">
+                <div class="position-relative z-1">
+                    <h6 class="text-white-50 fw-semibold mb-1">Tour Gốc Hiện Hành</h6>
+                    <h2 class="fw-bold mb-0">@Model.Stats.TotalTours</h2>
+                    <div class="mt-2 text-white-50 small">
+                        @Model.Stats.TotalSchedules lịch khởi hành mở
+                    </div>
+                </div>
+                <i class="bi bi-map-fill position-absolute opacity-25" style="font-size: 5rem; right: -10px; bottom: -15px;"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Users -->
+    <div class="col-xl-3 col-sm-6">
+        <div class="card border-0 shadow-sm rounded-4 h-100 bg-secondary text-white bg-gradient">
+            <div class="card-body p-4 position-relative overflow-hidden">
+                <div class="position-relative z-1">
+                    <h6 class="text-white-50 fw-semibold mb-1">Tổng Người Dùng</h6>
+                    <h2 class="fw-bold mb-0">@Model.Stats.TotalUsers</h2>
+                </div>
+                <i class="bi bi-people-fill position-absolute opacity-25" style="font-size: 5rem; right: -10px; bottom: -15px;"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-6">
+        <div class="card admin-card border-0 shadow-sm">
+            <div class="card-header bg-white py-3 border-bottom">
+                <h5 class="fw-bold text-dark mb-0"><i class="bi bi-bar-chart-line-fill text-primary me-2"></i> Báo Cáo Doanh Thu (6 Tháng)</h5>
+            </div>
+            <div class="card-body p-4">
+                <canvas id="revenueChart" height="250"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card admin-card border-0 shadow-sm h-100">
+            <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+                <h5 class="fw-bold text-dark mb-0"><i class="bi bi-clock-history text-success me-2"></i> Trạng Thái Booking</h5>
+            </div>
+            <div class="card-body p-4 d-flex justify-content-center align-items-center">
+                <div style="width: 250px;">
+                    <canvas id="bookingStatusChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Prepare monthly revenue data
+            var revLabels = [];
+            var revData = [];
+            
+            @if(Model.Stats.MonthlyRevenue != null && Model.Stats.MonthlyRevenue.Any())
+            {
+                foreach(var item in Model.Stats.MonthlyRevenue)
+                {
+                    <text>
+                    revLabels.push('@item.MonthName');
+                    revData.push(@item.Revenue);
+                    </text>
+                }
+            }
+            else
+            {
+                <text>
+                revLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+                revData = [0, 0, 0, 0, 0, 0];
+                </text>
+            }
+
+            // Revenue Chart
+            var ctxRev = document.getElementById('revenueChart').getContext('2d');
+            var revenueChart = new Chart(ctxRev, {
+                type: 'line',
+                data: {
+                    labels: revLabels,
+                    datasets: [{
+                        label: 'Doanh Thu (VND)',
+                        data: revData,
+                        borderColor: '#2563eb',
+                        backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.parsed.y.toLocaleString('vi-VN') + ' VND';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: { 
+                            beginAtZero: true, 
+                            grid: { borderDash: [2, 4] },
+                            ticks: {
+                                callback: function(value) {
+                                    return (value / 1000000).toLocaleString('vi-VN') + 'M';
+                                }
+                            }
+                        },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+
+            // Booking Status Chart
+            var statusLabels = [];
+            var statusData = [];
+            var statusColors = [];
+
+            // Map status with localized text and colors
+            var statusMap = {
+                'pending': { text: '⏳ Chờ xử lý', color: '#ffc107' },
+                'confirmed': { text: '✅ Đã xác nhận', color: '#198754' },
+                'paid': { text: '💳 Đã thanh toán', color: '#0d6efd' },
+                'deposited': { text: '🏦 Đặt cọc', color: '#0dcaf0' },
+                'cancelled': { text: '❌ Đã hủy', color: '#dc3545' }
+            };
+
+            @if(Model.Stats.StatusCounts != null && Model.Stats.StatusCounts.Any())
+            {
+                foreach(var item in Model.Stats.StatusCounts)
+                {
+                    <text>
+                    var rawStatus = '@item.Status.ToLower()';
+                    var count = @item.Count;
+                    var mapped = statusMap[rawStatus] || { text: rawStatus.toUpperCase(), color: '#6c757d' };
+                    statusLabels.push(mapped.text);
+                    statusData.push(count);
+                    statusColors.push(mapped.color);
+                    </text>
+                }
+            }
+
+            if(statusData.length === 0) {
+                statusLabels = ['Không có dữ liệu'];
+                statusData = [1];
+                statusColors = ['#e2e8f0'];
+            }
+
+            var ctxStatus = document.getElementById('bookingStatusChart').getContext('2d');
+            var statusChart = new Chart(ctxStatus, {
+                type: 'doughnut',
+                data: {
+                    labels: statusLabels,
+                    datasets: [{
+                        data: statusData,
+                        backgroundColor: statusColors,
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    cutout: '70%',
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        });
+    </script>
+}
