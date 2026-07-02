@@ -43,6 +43,7 @@ namespace TourManagement.Business.DTOs
         public string? PromoCode { get; set; }
         public string PaymentMethod { get; set; } = "cash";
         public DateTime BookingDate { get; set; } = DateTime.Now;
+        public int? UserId { get; set; }
     }
 
     public class BookingDTO

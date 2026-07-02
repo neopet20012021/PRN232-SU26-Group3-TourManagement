@@ -72,7 +72,7 @@
     <div class="col-lg-6">
         <div class="card admin-card border-0 shadow-sm">
             <div class="card-header bg-white py-3 border-bottom">
-                <h5 class="fw-bold text-dark mb-0"><i class="bi bi-bar-chart-line-fill text-primary me-2"></i> Báo Cáo Doanh Thu (Demo)</h5>
+                <h5 class="fw-bold text-dark mb-0"><i class="bi bi-bar-chart-line-fill text-primary me-2"></i> Báo Cáo Doanh Thu (6 Tháng)</h5>
             </div>
             <div class="card-body p-4">
                 <canvas id="revenueChart" height="250"></canvas>
@@ -82,7 +82,7 @@
     <div class="col-lg-6">
         <div class="card admin-card border-0 shadow-sm h-100">
             <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
-                <h5 class="fw-bold text-dark mb-0"><i class="bi bi-clock-history text-success me-2"></i> Trạng Thái Booking (Demo)</h5>
+                <h5 class="fw-bold text-dark mb-0"><i class="bi bi-clock-history text-success me-2"></i> Trạng Thái Booking</h5>
             </div>
             <div class="card-body p-4 d-flex justify-content-center align-items-center">
                 <div style="width: 250px;">
@@ -97,17 +97,39 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            // Prepare monthly revenue data
+            var revLabels = [];
+            var revData = [];
+            
+            @if(Model.Stats.MonthlyRevenue != null && Model.Stats.MonthlyRevenue.Any())
+            {
+                foreach(var item in Model.Stats.MonthlyRevenue)
+                {
+                    <text>
+                    revLabels.push('@item.MonthName');
+                    revData.push(@item.Revenue);
+                    </text>
+                }
+            }
+            else
+            {
+                <text>
+                revLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+                revData = [0, 0, 0, 0, 0, 0];
+                </text>
+            }
+
             // Revenue Chart
             var ctxRev = document.getElementById('revenueChart').getContext('2d');
             var revenueChart = new Chart(ctxRev, {
                 type: 'line',
                 data: {
-                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    labels: revLabels,
                     datasets: [{
-                        label: 'Doanh Thu (Triệu VND)',
-                        data: [120, 190, 150, 250, 220, @(Model.Stats.TotalRevenue/1000000)],
-                        borderColor: '#0d6efd',
-                        backgroundColor: 'rgba(13, 110, 253, 0.1)',
+                        label: 'Doanh Thu (VND)',
+                        data: revData,
+                        borderColor: '#2563eb',
+                        backgroundColor: 'rgba(37, 99, 235, 0.1)',
                         borderWidth: 3,
                         tension: 0.4,
                         fill: true
@@ -115,31 +137,74 @@
                 },
                 options: {
                     responsive: true,
-                    plugins: { legend: { display: false } },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.parsed.y.toLocaleString('vi-VN') + ' VND';
+                                }
+                            }
+                        }
+                    },
                     scales: {
-                        y: { beginAtZero: true, grid: { borderDash: [2, 4] } },
+                        y: { 
+                            beginAtZero: true, 
+                            grid: { borderDash: [2, 4] },
+                            ticks: {
+                                callback: function(value) {
+                                    return (value / 1000000).toLocaleString('vi-VN') + 'M';
+                                }
+                            }
+                        },
                         x: { grid: { display: false } }
                     }
                 }
             });
 
             // Booking Status Chart
-            var ctxStatus = document.getElementById('bookingStatusChart').getContext('2d');
-            var pending = @Model.Stats.PendingBookings;
-            var completed = @(Model.Stats.TotalBookings - Model.Stats.PendingBookings);
-            
-            // To avoid empty chart if no bookings
-            if(pending === 0 && completed === 0) {
-                pending = 1; completed = 3;
+            var statusLabels = [];
+            var statusData = [];
+            var statusColors = [];
+
+            // Map status with localized text and colors
+            var statusMap = {
+                'pending': { text: '⏳ Chờ xử lý', color: '#ffc107' },
+                'confirmed': { text: '✅ Đã xác nhận', color: '#198754' },
+                'paid': { text: '💳 Đã thanh toán', color: '#0d6efd' },
+                'deposited': { text: '🏦 Đặt cọc', color: '#0dcaf0' },
+                'cancelled': { text: '❌ Đã hủy', color: '#dc3545' }
+            };
+
+            @if(Model.Stats.StatusCounts != null && Model.Stats.StatusCounts.Any())
+            {
+                foreach(var item in Model.Stats.StatusCounts)
+                {
+                    <text>
+                    var rawStatus = '@item.Status.ToLower()';
+                    var count = @item.Count;
+                    var mapped = statusMap[rawStatus] || { text: rawStatus.toUpperCase(), color: '#6c757d' };
+                    statusLabels.push(mapped.text);
+                    statusData.push(count);
+                    statusColors.push(mapped.color);
+                    </text>
+                }
             }
 
+            if(statusData.length === 0) {
+                statusLabels = ['Không có dữ liệu'];
+                statusData = [1];
+                statusColors = ['#e2e8f0'];
+            }
+
+            var ctxStatus = document.getElementById('bookingStatusChart').getContext('2d');
             var statusChart = new Chart(ctxStatus, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Đã Xong/Đã Hủy', 'Chờ Xử Lý'],
+                    labels: statusLabels,
                     datasets: [{
-                        data: [completed, pending],
-                        backgroundColor: ['#198754', '#ffc107'],
+                        data: statusData,
+                        backgroundColor: statusColors,
                         borderWidth: 0
                     }]
                 },

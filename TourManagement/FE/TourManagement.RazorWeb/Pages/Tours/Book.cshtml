@@ -104,6 +104,17 @@
         border-color: #cbd5e1;
         box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
     }
+
+    .pax-icon {
+        width: 52px;
+        height: 52px;
+        min-width: 52px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
     
     .qty-btn {
         width: 36px;
@@ -263,8 +274,8 @@ else
                                     <!-- Adult Card -->
                                     <div class="pax-card d-flex align-items-center justify-content-between">
                                         <div class="d-flex align-items-center gap-3">
-                                            <div class="bg-primary bg-opacity-10 p-3 rounded-circle text-primary">
-                                                <i class="bi bi-person-fill fs-4"></i>
+                                            <div class="pax-icon bg-primary bg-opacity-10 text-primary">
+                                                <i class="bi bi-person-fill fs-5"></i>
                                             </div>
                                             <div>
                                                 <h6 class="mb-0 fw-bold">Người lớn</h6>
@@ -283,8 +294,8 @@ else
                                     <!-- Child Card -->
                                     <div class="pax-card d-flex align-items-center justify-content-between">
                                         <div class="d-flex align-items-center gap-3">
-                                            <div class="bg-info bg-opacity-10 p-3 rounded-circle text-info">
-                                                <i class="bi bi-person fs-4"></i>
+                                            <div class="pax-icon bg-info bg-opacity-10 text-info">
+                                                <i class="bi bi-person fs-5"></i>
                                             </div>
                                             <div>
                                                 <h6 class="mb-0 fw-bold">Trẻ em</h6>
@@ -303,8 +314,8 @@ else
                                     <!-- Infant Card -->
                                     <div class="pax-card d-flex align-items-center justify-content-between">
                                         <div class="d-flex align-items-center gap-3">
-                                            <div class="bg-success bg-opacity-10 p-3 rounded-circle text-success">
-                                                <i class="bi bi-emoji-smile fs-4"></i>
+                                            <div class="pax-icon bg-success bg-opacity-10 text-success">
+                                                <i class="bi bi-emoji-smile fs-5"></i>
                                             </div>
                                             <div>
                                                 <h6 class="mb-0 fw-bold">Em bé</h6>
@@ -324,6 +335,15 @@ else
                                     <div class="card bg-light border-0 rounded-4 mt-4 mb-4">
                                         <div class="card-body">
                                             <h6 class="fw-bold mb-3"><i class="bi bi-ticket-perforated-fill text-warning me-2"></i>Mã Giảm Giá</h6>
+                                            
+                                            @if (Model.ShowWelcomeAlert)
+                                            {
+                                                <div class="alert alert-success border-0 shadow-sm py-2 px-3 mb-3 d-flex align-items-center gap-2" style="background-color: #ecfdf5; color: #065f46; border-radius: 10px;">
+                                                    <i class="bi bi-gift-fill fs-5 text-success"></i>
+                                                    <div class="small fw-semibold">Chào mừng thành viên mới! Mã giảm giá <strong class="text-danger">WELCOME (Giảm 15%)</strong> đã được tự động áp dụng cho lần đặt đầu tiên này.</div>
+                                                </div>
+                                            }
+
                                             <div class="input-group">
                                                 <span class="input-group-text bg-white border-end-0"><i class="bi bi-tag text-muted"></i></span>
                                                 <input asp-for="BookingInput.PromoCode" class="form-control border-start-0 ps-0" id="promoCode" placeholder="Nhập mã khuyến mãi..." />
@@ -568,6 +588,7 @@ else
             let promoCode = document.getElementById('promoCode').value;
             let scheduleId = document.getElementById('scheduleId').value;
             let token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+            let userEmail = document.getElementById('BookingInput_Email')?.value || '';
 
             // Enable/Disable next button based on adult count
             document.getElementById('btnNext').disabled = adult < 1;
@@ -575,6 +596,7 @@ else
             let finalPrice = 0;
             let discountAmount = 0;
             let isPromoApplied = false;
+            let backendErrorMessage = "";
 
             try {
                 let response = await fetch('?handler=CalculatePrice', {
@@ -587,7 +609,8 @@ else
                         ScheduleId: parseInt(scheduleId),
                         AdultCount: adult,
                         ChildCount: child,
-                        PromoCode: promoCode
+                        PromoCode: promoCode,
+                        UserEmail: userEmail
                     })
                 });
 
@@ -599,6 +622,13 @@ else
                         
                         let baseTotal = (adult * priceAdult) + (child * priceChild);
                         discountAmount = baseTotal - finalPrice;
+                    } else if (result.success === false) {
+                        backendErrorMessage = result.message;
+                    }
+                } else {
+                    let errResult = await response.json();
+                    if(errResult && errResult.message) {
+                        backendErrorMessage = errResult.message;
                     }
                 }
             } catch (error) {
@@ -634,7 +664,7 @@ else
                 document.getElementById('summaryDiscountPrice').innerText = "-" + discountAmount.toLocaleString('vi-VN') + " VND";
             } else {
                 if(promoCode.trim().length > 0) {
-                    promoAlert.innerHTML = '<i class="bi bi-x-circle-fill"></i> Mã không hợp lệ';
+                    promoAlert.innerHTML = '<i class="bi bi-x-circle-fill"></i> ' + (backendErrorMessage || 'Mã không hợp lệ');
                     promoAlert.className = 'mt-2 small fw-bold text-danger';
                 } else {
                     promoAlert.className = 'd-none';
@@ -653,6 +683,13 @@ else
 
         document.getElementById('applyPromoBtn')?.addEventListener('click', function() {
             updatePrice(); 
+        });
+
+        // Trigger price update when email changes to validate first booking WELCOME promo code
+        document.getElementById('BookingInput_Email')?.addEventListener('change', function() {
+            if(document.getElementById('promoCode').value.trim().toUpperCase() === 'WELCOME') {
+                updatePrice();
+            }
         });
 
     </script>

@@ -6,6 +6,7 @@ namespace TourManagement.Web.Models
     public class BookingWizardSessionModel
     {
         public int SelectedTourId { get; set; }
+        public int SelectedScheduleId { get; set; }
         public string? CustomerName { get; set; }
         public string? Email { get; set; }
         public string? Phone { get; set; }
@@ -23,6 +24,8 @@ namespace TourManagement.Web.Models
     {
         [Required(ErrorMessage = "Vui lòng chọn tour.")]
         public int TourId { get; set; }
+
+        public int ScheduleId { get; set; }
 
         public string TourName { get; set; } = string.Empty;
         public DateTime DepartureDate { get; set; }

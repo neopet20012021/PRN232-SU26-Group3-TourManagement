@@ -135,4 +135,15 @@ namespace TourManagement.Data.Repositories
         {
         }
     }
+
+    public interface IPromoCodeRepository : IRepository<Models.PromoCode>
+    {
+    }
+
+    public class PromoCodeRepository : Repository<Models.PromoCode>, IPromoCodeRepository
+    {
+        public PromoCodeRepository(TourManagementDbContext context) : base(context)
+        {
+        }
+    }
 }

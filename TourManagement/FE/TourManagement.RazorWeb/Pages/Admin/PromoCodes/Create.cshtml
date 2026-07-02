@@ -1,0 +1,102 @@
+@page
+@model TourManagement.RazorWeb.Pages.Admin.PromoCodes.CreateModel
+@{
+    ViewData["Title"] = "Tạo Mới Khuyến Mãi";
+}
+
+<div class="mb-4">
+    <a href="/Admin/PromoCodes/Index" class="btn btn-link text-decoration-none p-0 text-muted">
+        <i class="bi bi-arrow-left"></i> Quay lại danh sách
+    </a>
+    <h3 class="fw-bold text-dark mt-2">Tạo Mới Mã Khuyến Mãi</h3>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card admin-card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <form method="post">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="Input.Code" class="form-label fw-semibold">Mã Khuyến Mãi</label>
+                            <input asp-for="Input.Code" class="form-control font-monospace text-uppercase" placeholder="Ví dụ: SUMMER2026" />
+                            <span asp-validation-for="Input.Code" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Input.DiscountPercent" class="form-label fw-semibold">Phần Trăm Giảm Giá (%)</label>
+                            <div class="input-group">
+                                <input asp-for="Input.DiscountPercent" class="form-control" type="number" step="1" placeholder="Ví dụ: 10" />
+                                <span class="input-group-text">%</span>
+                            </div>
+                            <span asp-validation-for="Input.DiscountPercent" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="Input.MinBookingValue" class="form-label fw-semibold">Giá Trị Đơn Hàng Tối Thiểu (VNĐ)</label>
+                            <div class="input-group">
+                                <input asp-for="Input.MinBookingValue" class="form-control" type="number" step="1000" placeholder="Ví dụ: 2000000" />
+                                <span class="input-group-text">đ</span>
+                            </div>
+                            <span asp-validation-for="Input.MinBookingValue" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Input.MaxUsage" class="form-label fw-semibold">Lượt Sử Dụng Tối Đa</label>
+                            <input asp-for="Input.MaxUsage" class="form-control" type="number" placeholder="Ví dụ: 100" />
+                            <span class="text-muted small">Mã sẽ hết hiệu lực khi số lượt dùng đạt giới hạn này.</span>
+                            <span asp-validation-for="Input.MaxUsage" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label asp-for="Input.StartDate" class="form-label fw-semibold">Ngày Bắt Đầu</label>
+                            <input asp-for="Input.StartDate" class="form-control" type="datetime-local" />
+                            <span asp-validation-for="Input.StartDate" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Input.EndDate" class="form-label fw-semibold">Ngày Kết Thúc</label>
+                            <input asp-for="Input.EndDate" class="form-control" type="datetime-local" />
+                            <span asp-validation-for="Input.EndDate" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" asp-for="Input.IsActive" id="isActiveSwitch">
+                            <label class="form-check-label fw-semibold" for="isActiveSwitch">Kích hoạt mã khuyến mãi</label>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="/Admin/PromoCodes/Index" class="btn btn-outline-secondary px-4 rounded-pill">Hủy</a>
+                        <button type="submit" class="btn btn-primary px-4 rounded-pill fw-semibold shadow-sm">
+                            <i class="bi bi-check-circle me-1"></i> Lưu Lại
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm bg-light mb-4">
+            <div class="card-body">
+                <h5 class="fw-bold mb-3"><i class="bi bi-info-circle text-info me-2"></i>Hướng dẫn tạo mã</h5>
+                <ul class="small text-muted ps-3">
+                    <li class="mb-2"><strong>Mã khuyến mãi</strong> nên viết liền không dấu, gồm chữ cái viết hoa và số (ví dụ: <code>SUMMER2026</code>).</li>
+                    <li class="mb-2"><strong>Phần trăm giảm giá</strong> nhập từ 1 đến 100 đại diện cho tỉ lệ khấu trừ trên tổng tiền đặt chỗ (ví dụ: 10 = giảm 10%).</li>
+                    <li class="mb-2"><strong>Đơn hàng tối thiểu</strong> là số tiền tối thiểu của booking (chưa giảm giá) để mã có hiệu lực áp dụng.</li>
+                    <li><strong>Ngày bắt đầu & kết thúc</strong> xác định khoảng thời gian mà khách hàng có thể áp dụng mã này khi đặt vé.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

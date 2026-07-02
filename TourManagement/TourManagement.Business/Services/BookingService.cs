@@ -14,10 +14,13 @@ namespace TourManagement.Business.Services
         Task<BookingResponseDTO> CreateBookingAsync(CreateBookingDTO bookingDto);
         Task<BookingDTO> GetBookingByIdAsync(int bookingId);
         Task<BookingDTO> GetBookingByCodeAsync(string bookingCode);
+        Task<IEnumerable<BookingDTO>> GetAllBookingsAsync();
         Task<IEnumerable<BookingDTO>> GetCustomerBookingsAsync(string email);
         Task<IEnumerable<BookingDTO>> GetTourBookingsAsync(int tourId);
         Task<PriceCalculationDTO> CalculatePriceAsync(int tourId, int adultCount, int childCount, string promoCode = null);
         Task<bool> UpdateBookingStatusAsync(int bookingId, string newStatus);
+        Task<bool> UpdateBookingAsync(int bookingId, UpdateBookingDTO dto);
+        Task<bool> DeleteBookingAsync(int bookingId);
         Task<bool> CancelBookingAsync(int bookingId);
         Task<IEnumerable<TourSelectDTO>> GetActiveToursAsync(string? keyword = null, decimal? minPrice = null, decimal? maxPrice = null, DateTime? fromDate = null, DateTime? toDate = null);
         Task<bool> ValidatePromoCodeAsync(string promoCode);
@@ -39,7 +42,7 @@ namespace TourManagement.Business.Services
         public async Task<BookingResponseDTO> CreateBookingAsync(CreateBookingDTO bookingDto)
         {
             var tour = await _tourRepository.GetByIdAsync(bookingDto.TourId);
-            if (tour == null) return new BookingResponseDTO { Success = false, Message = "Tour not found" };
+            if (tour == null) return new BookingResponseDTO { Success = false, Message = "Tour không tồn tại." };
 
             var priceCalc = await CalculatePriceAsync(bookingDto.TourId, bookingDto.AdultCount, bookingDto.ChildCount, bookingDto.PromoCode);
             var booking = new Booking
@@ -58,25 +61,57 @@ namespace TourManagement.Business.Services
                 PaymentMethod = bookingDto.PaymentMethod,
                 BookingDate = bookingDto.BookingDate,
                 TotalPrice = priceCalc.FinalPrice,
+                DiscountAmount = priceCalc.DiscountAmount,
+                FinalPrice = priceCalc.FinalPrice,
                 Status = "pending",
-                BookingCode = GenerateBookingCode()
+                BookingCode = GenerateBookingCode(),
+                CreatedDate = DateTime.Now
             };
 
             await _bookingRepository.AddAsync(booking);
             await _bookingRepository.SaveChangesAsync();
-            return new BookingResponseDTO { Success = true, Data = _mapper.Map<BookingDTO>(booking) };
+
+            // Reload with Tour for mapper
+            var saved = await _bookingRepository.GetByIdAsync(booking.BookingId);
+            var dto = _mapper.Map<BookingDTO>(saved);
+            if (dto != null && tour != null)
+                dto.TourName = tour.TourName;
+
+            return new BookingResponseDTO { Success = true, Message = "Đặt tour thành công!", Data = dto };
         }
 
         public async Task<BookingDTO> GetBookingByIdAsync(int bookingId)
         {
             var booking = await _bookingRepository.GetByIdAsync(bookingId);
-            return _mapper.Map<BookingDTO>(booking);
+            if (booking == null) return null;
+            var dto = _mapper.Map<BookingDTO>(booking);
+            if (booking.Tour != null) dto.TourName = booking.Tour.TourName;
+            return dto;
         }
 
         public async Task<BookingDTO> GetBookingByCodeAsync(string bookingCode)
         {
-            var booking = (await _bookingRepository.GetAllAsync()).FirstOrDefault(b => b.BookingCode == bookingCode);
-            return _mapper.Map<BookingDTO>(booking);
+            var bookings = await _bookingRepository.GetAllAsync();
+            var booking = bookings.FirstOrDefault(b => b.BookingCode == bookingCode);
+            if (booking == null) return null;
+            var dto = _mapper.Map<BookingDTO>(booking);
+            if (booking.Tour != null) dto.TourName = booking.Tour.TourName;
+            return dto;
+        }
+
+        public async Task<IEnumerable<BookingDTO>> GetAllBookingsAsync()
+        {
+            var bookings = await _bookingRepository.GetAllAsync();
+            var tours = await _tourRepository.GetAllAsync();
+            var tourDict = tours.ToDictionary(t => t.TourId, t => t.TourName);
+
+            return bookings.Select(b =>
+            {
+                var dto = _mapper.Map<BookingDTO>(b);
+                if (tourDict.TryGetValue(b.TourId, out var name))
+                    dto.TourName = name;
+                return dto;
+            }).OrderByDescending(b => b.CreatedDate).ToList();
         }
 
         public async Task<IEnumerable<BookingDTO>> GetCustomerBookingsAsync(string email)
@@ -100,7 +135,7 @@ namespace TourManagement.Business.Services
             decimal discount = 0;
             if (!string.IsNullOrWhiteSpace(promoCode) && await ValidatePromoCodeAsync(promoCode))
             {
-                discount = originalPrice * 0.1m; // 10% discount for demo
+                discount = originalPrice * 0.1m; // 10% discount
             }
 
             return new PriceCalculationDTO
@@ -122,6 +157,36 @@ namespace TourManagement.Business.Services
             return true;
         }
 
+        public async Task<bool> UpdateBookingAsync(int bookingId, UpdateBookingDTO dto)
+        {
+            var booking = await _bookingRepository.GetByIdAsync(bookingId);
+            if (booking == null) return false;
+
+            booking.CustomerName = dto.CustomerName;
+            booking.PhoneNumber = dto.PhoneNumber;
+            booking.Email = dto.Email;
+            booking.AdultCount = dto.AdultCount;
+            booking.ChildCount = dto.ChildCount;
+            booking.InfantCount = dto.InfantCount;
+            booking.SpecialRequest = dto.SpecialRequest;
+            booking.Notes = dto.Notes;
+            booking.Status = dto.Status;
+            booking.PaymentMethod = dto.PaymentMethod;
+
+            _bookingRepository.Update(booking);
+            await _bookingRepository.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> DeleteBookingAsync(int bookingId)
+        {
+            var booking = await _bookingRepository.GetByIdAsync(bookingId);
+            if (booking == null) return false;
+            _bookingRepository.Remove(booking);
+            await _bookingRepository.SaveChangesAsync();
+            return true;
+        }
+
         public async Task<bool> CancelBookingAsync(int bookingId)
         {
             return await UpdateBookingStatusAsync(bookingId, "cancelled");
@@ -135,8 +200,8 @@ namespace TourManagement.Business.Services
             if (!string.IsNullOrWhiteSpace(keyword))
             {
                 var lowerKeyword = keyword.ToLower();
-                query = query.Where(t => t.TourName.ToLower().Contains(lowerKeyword) || 
-                                         t.TourCode.ToLower().Contains(lowerKeyword) || 
+                query = query.Where(t => t.TourName.ToLower().Contains(lowerKeyword) ||
+                                         t.TourCode.ToLower().Contains(lowerKeyword) ||
                                          t.Destination.ToLower().Contains(lowerKeyword));
             }
 

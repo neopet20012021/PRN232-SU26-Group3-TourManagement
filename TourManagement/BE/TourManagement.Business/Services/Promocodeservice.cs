@@ -1,30 +1,51 @@
-using System.Collections.Generic;
+using System;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using TourManagement.Data.Context;
 
 namespace TourManagement.Business.Services
 {
     public interface IPromoCodeService
     {
-        Task<bool> IsValidAsync(string promoCode);
+        Task<bool> IsValidAsync(string promoCode, decimal bookingValue = 0);
         Task<decimal> GetDiscountPercentAsync(string promoCode);
+        Task<bool> UsePromoCodeAsync(string promoCode);
     }
 
     public class PromoCodeService : IPromoCodeService
     {
-        // Promo codes tạm thời (có thể thay bằng DB query sau)
-        private readonly Dictionary<string, decimal> _promoCodes = new()
-        {
-            { "TOUR2025", 0.10m },
-            { "VIP50", 0.05m },
-            { "SUMMER100", 0.15m }
-        };
+        private readonly IServiceScopeFactory _scopeFactory;
 
-        public async Task<bool> IsValidAsync(string promoCode)
+        public PromoCodeService(IServiceScopeFactory scopeFactory)
+        {
+            _scopeFactory = scopeFactory;
+        }
+
+        public async Task<bool> IsValidAsync(string promoCode, decimal bookingValue = 0)
         {
             if (string.IsNullOrWhiteSpace(promoCode))
                 return false;
 
-            return await Task.FromResult(_promoCodes.ContainsKey(promoCode.ToUpper()));
+            using (var scope = _scopeFactory.CreateScope())
+            {
+                var context = scope.ServiceProvider.GetRequiredService<TourManagementDbContext>();
+                var code = await context.PromoCodes.FirstOrDefaultAsync(p => p.Code.ToUpper() == promoCode.ToUpper());
+                if (code == null)
+                    return false;
+
+                var now = DateTime.Now;
+                if (!code.IsActive)
+                    return false;
+                if (now < code.StartDate || now > code.EndDate)
+                    return false;
+                if (code.UsageCount >= code.MaxUsage)
+                    return false;
+                if (bookingValue > 0 && bookingValue < code.MinBookingValue)
+                    return false;
+
+                return true;
+            }
         }
 
         public async Task<decimal> GetDiscountPercentAsync(string promoCode)
@@ -32,8 +53,31 @@ namespace TourManagement.Business.Services
             if (string.IsNullOrWhiteSpace(promoCode))
                 return 0m;
 
-            _promoCodes.TryGetValue(promoCode.ToUpper(), out var discountPercent);
-            return await Task.FromResult(discountPercent);
+            using (var scope = _scopeFactory.CreateScope())
+            {
+                var context = scope.ServiceProvider.GetRequiredService<TourManagementDbContext>();
+                var code = await context.PromoCodes.FirstOrDefaultAsync(p => p.Code.ToUpper() == promoCode.ToUpper());
+                return code?.DiscountPercent ?? 0m;
+            }
+        }
+
+        public async Task<bool> UsePromoCodeAsync(string promoCode)
+        {
+            if (string.IsNullOrWhiteSpace(promoCode))
+                return false;
+
+            using (var scope = _scopeFactory.CreateScope())
+            {
+                var context = scope.ServiceProvider.GetRequiredService<TourManagementDbContext>();
+                var code = await context.PromoCodes.FirstOrDefaultAsync(p => p.Code.ToUpper() == promoCode.ToUpper());
+                if (code == null)
+                    return false;
+
+                code.UsageCount++;
+                context.PromoCodes.Update(code);
+                await context.SaveChangesAsync();
+                return true;
+            }
         }
     }
 }

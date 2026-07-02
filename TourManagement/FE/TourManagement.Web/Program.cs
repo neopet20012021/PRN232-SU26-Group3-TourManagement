@@ -26,6 +26,8 @@ builder.Services.AddDbContext<TourManagementDbContext>(options =>
 // Register Repositories
 builder.Services.AddScoped<ITourRepository, TourRepository>();
 builder.Services.AddScoped<IBookingRepository, BookingRepository>();
+builder.Services.AddScoped<ITourScheduleRepository, TourScheduleRepository>();
+builder.Services.AddScoped<IPromoCodeRepository, PromoCodeRepository>();
 
 // Register Services
 builder.Services.AddScoped<IBookingService, BookingService>();
@@ -57,10 +59,11 @@ using (var scope = app.Services.CreateScope())
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
+    app.UseHttpsRedirection();
 }
 
-app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();

@@ -12,6 +12,7 @@ namespace TourManagement.Data.Context
 
         public DbSet<Tour> Tours { get; set; }
         public DbSet<Booking> Bookings { get; set; }
+        public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -73,6 +74,14 @@ namespace TourManagement.Data.Context
                     .WithMany(p => p.Bookings)
                     .HasForeignKey(d => d.TourId)
                     .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            // Configure User entity
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.HasKey(e => e.UserId);
+                entity.HasIndex(e => e.Username).IsUnique();
+                entity.HasIndex(e => e.Email).IsUnique();
             });
 
             // Seed Data cho Tours
@@ -141,6 +150,44 @@ namespace TourManagement.Data.Context
                     Image = "https://images.unsplash.com/photo-1559592413-7cec4d0cae2b?q=80&w=600&auto=format&fit=crop"
                 }
             );
+
+            // Seed Data cho Users (password hashed with BCrypt equivalent - using simple hash for demo)
+            // admin123 => stored as BCrypt hash, here we store plain for seeding and hash at runtime
+            modelBuilder.Entity<User>().HasData(
+                new User
+                {
+                    UserId = 1,
+                    Username = "admin",
+                    PasswordHash = BCryptHash("admin123"),
+                    FullName = "Nguyễn Quản Trị",
+                    Email = "admin@tourmanagement.vn",
+                    PhoneNumber = "0901234567",
+                    Role = "Admin",
+                    IsActive = true,
+                    CreatedDate = new DateTime(2026, 1, 1)
+                },
+                new User
+                {
+                    UserId = 2,
+                    Username = "customer1",
+                    PasswordHash = BCryptHash("customer123"),
+                    FullName = "Trần Văn Khách",
+                    Email = "customer1@gmail.com",
+                    PhoneNumber = "0912345678",
+                    Role = "Customer",
+                    IsActive = true,
+                    CreatedDate = new DateTime(2026, 1, 1)
+                }
+            );
+        }
+
+        // Simple password hashing for seeding (SHA256)
+        private static string BCryptHash(string password)
+        {
+            using var sha = System.Security.Cryptography.SHA256.Create();
+            var bytes = System.Text.Encoding.UTF8.GetBytes(password + "TourMgmt_Salt_2026");
+            var hash = sha.ComputeHash(bytes);
+            return Convert.ToBase64String(hash);
         }
     }
 }

@@ -107,4 +107,31 @@ namespace TourManagement.Data.Repositories
                 .ToListAsync();
         }
     }
+
+    public interface IUserRepository : IRepository<Models.User>
+    {
+        Task<Models.User> GetByUsernameAsync(string username);
+        Task<Models.User> GetByEmailAsync(string email);
+        Task<bool> UsernameExistsAsync(string username);
+        Task<bool> EmailExistsAsync(string email);
+    }
+
+    public class UserRepository : Repository<Models.User>, IUserRepository
+    {
+        public UserRepository(TourManagementDbContext context) : base(context)
+        {
+        }
+
+        public async Task<Models.User> GetByUsernameAsync(string username)
+            => await _dbSet.FirstOrDefaultAsync(u => u.Username == username && u.IsActive);
+
+        public async Task<Models.User> GetByEmailAsync(string email)
+            => await _dbSet.FirstOrDefaultAsync(u => u.Email == email && u.IsActive);
+
+        public async Task<bool> UsernameExistsAsync(string username)
+            => await _dbSet.AnyAsync(u => u.Username == username);
+
+        public async Task<bool> EmailExistsAsync(string email)
+            => await _dbSet.AnyAsync(u => u.Email == email);
+    }
 }

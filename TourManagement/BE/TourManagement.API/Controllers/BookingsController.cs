@@ -44,7 +44,7 @@ namespace TourManagement.API.Controllers
 
         [HttpPost]
         [AllowAnonymous] // Allow customers to book tours
-        public async Task<IActionResult> Post([FromBody] Booking booking, [FromServices] TourManagement.Business.Services.IBookingService bookingService)
+        public async Task<IActionResult> Post([FromBody] Booking booking, [FromServices] TourManagement.Business.Services.IBookingService bookingService, [FromServices] TourManagement.Business.Services.IPromoCodeService promoCodeService)
         {
             ModelState.Remove("BookingCode");
             ModelState.Remove("Tour");
@@ -78,10 +78,17 @@ namespace TourManagement.API.Controllers
                 return BadRequest($"Not enough available seats. Only {schedule.AvailableSeats} seats left.");
             }
 
+            decimal originalPrice = (schedule.ActualAdultPrice * booking.AdultCount) + (schedule.ActualChildPrice * booking.ChildCount);
+            booking.TotalPrice = originalPrice;
+            booking.DiscountAmount = 0;
+            booking.FinalPrice = originalPrice;
+
             try 
             {
                 var priceCalc = await bookingService.CalculatePriceAsync(booking.ScheduleId, booking.AdultCount, booking.ChildCount, booking.PromoCode);
-                booking.TotalPrice = priceCalc.FinalPrice;
+                booking.TotalPrice = priceCalc.OriginalPrice;
+                booking.DiscountAmount = priceCalc.DiscountAmount;
+                booking.FinalPrice = priceCalc.FinalPrice;
             } 
             catch 
             {
@@ -100,6 +107,11 @@ namespace TourManagement.API.Controllers
 
             _context.Bookings.Add(booking);
             await _context.SaveChangesAsync();
+
+            if (booking.DiscountAmount > 0 && !string.IsNullOrWhiteSpace(booking.PromoCode))
+            {
+                await promoCodeService.UsePromoCodeAsync(booking.PromoCode);
+            }
 
             return Created(booking);
         }
@@ -200,7 +212,9 @@ namespace TourManagement.API.Controllers
                     request.ScheduleId,
                     request.AdultCount,
                     request.ChildCount,
-                    request.PromoCode
+                    request.PromoCode,
+                    request.UserEmail,
+                    request.UserId
                 );
                 return Ok(new { success = true, data = result });
             }
@@ -232,5 +246,7 @@ namespace TourManagement.API.Controllers
         public int AdultCount { get; set; }
         public int ChildCount { get; set; }
         public string? PromoCode { get; set; }
+        public string? UserEmail { get; set; }
+        public int? UserId { get; set; }
     }
 }

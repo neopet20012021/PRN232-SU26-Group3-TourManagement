@@ -54,7 +54,9 @@ namespace TourManagement.RazorWeb.Pages
             public ScheduleViewModel? Schedule { get; set; }
             public int AdultCount { get; set; }
             public int ChildCount { get; set; }
+            public int InfantCount { get; set; }
             public decimal TotalPrice { get; set; }
+            public decimal FinalPrice { get; set; }
             public string Status { get; set; } = string.Empty;
             public DateTime BookingDate { get; set; }
         }

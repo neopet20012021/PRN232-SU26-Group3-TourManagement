@@ -8,18 +8,22 @@ using Microsoft.AspNetCore.Mvc;
 using TourManagement.Business.DTOs;
 using TourManagement.Business.Services;
 using TourManagement.Web.Models;
+using Microsoft.AspNetCore.SignalR;
+using TourManagement.Web.Hubs;
 
 namespace TourManagement.Web.Controllers
 {
-    [AllowAnonymous]
+    [Authorize(Roles = "Customer")]
     public class BookingsController : Controller
     {
         private readonly IBookingService _bookingService;
+        private readonly IHubContext<BookingHub> _hubContext;
         private const string WizardSessionKey = "BookingWizardSession";
 
-        public BookingsController(IBookingService bookingService)
+        public BookingsController(IBookingService bookingService, IHubContext<BookingHub> hubContext)
         {
             _bookingService = bookingService;
+            _hubContext = hubContext;
         }
 
         // --- Helper Methods for Session ---
@@ -209,6 +213,16 @@ namespace TourManagement.Web.Controllers
 
             if (response.Success)
             {
+                try
+                {
+                    await _hubContext.Clients.All.SendAsync("ReceiveNewBooking", response.Data);
+                }
+                catch (Exception ex)
+                {
+                    // Log or handle SignalR error gracefully to not break booking success flow
+                    Console.WriteLine($"SignalR Error: {ex.Message}");
+                }
+
                 ClearWizardSession();
                 return RedirectToAction("Success", new { bookingCode = response.Data?.BookingCode });
             }

@@ -31,6 +31,7 @@ static IEdmModel GetEdmModel()
     builder.EntitySet<Tour>("Tours");
     builder.EntitySet<TourSchedule>("TourSchedules");
     builder.EntitySet<User>("Users");
+    builder.EntitySet<PromoCode>("PromoCodes");
     return builder.GetEdmModel();
 }
 
@@ -54,6 +55,7 @@ builder.Services.AddScoped<ITourRepository, TourRepository>();
 builder.Services.AddScoped<ITourScheduleRepository, TourScheduleRepository>();
 builder.Services.AddScoped<IBookingRepository, BookingRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IPromoCodeRepository, PromoCodeRepository>();
 
 // Register Services
 builder.Services.AddScoped<IBookingService, BookingService>();
@@ -90,7 +92,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 
 app.UseCors("AllowWebClient");
 

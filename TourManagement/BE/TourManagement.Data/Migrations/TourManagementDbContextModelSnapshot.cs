@@ -132,9 +132,9 @@ namespace TourManagement.Data.Migrations
                             BookingId = 101,
                             AdultCount = 2,
                             BookingCode = "BK-20230601-101",
-                            BookingDate = new DateTime(2026, 6, 24, 0, 1, 41, 456, DateTimeKind.Local).AddTicks(8695),
+                            BookingDate = new DateTime(2026, 6, 27, 0, 47, 37, 225, DateTimeKind.Local).AddTicks(3330),
                             ChildCount = 0,
-                            CreatedDate = new DateTime(2026, 6, 29, 0, 1, 41, 456, DateTimeKind.Local).AddTicks(8691),
+                            CreatedDate = new DateTime(2026, 7, 2, 0, 47, 37, 225, DateTimeKind.Local).AddTicks(3326),
                             CustomerName = "Nguyễn Văn A",
                             DiscountAmount = 0m,
                             Email = "nguyenvan@gmail.com",
@@ -152,9 +152,9 @@ namespace TourManagement.Data.Migrations
                             BookingId = 102,
                             AdultCount = 2,
                             BookingCode = "BK-20230602-102",
-                            BookingDate = new DateTime(2026, 6, 27, 0, 1, 41, 456, DateTimeKind.Local).AddTicks(8702),
+                            BookingDate = new DateTime(2026, 6, 30, 0, 47, 37, 225, DateTimeKind.Local).AddTicks(3334),
                             ChildCount = 1,
-                            CreatedDate = new DateTime(2026, 6, 29, 0, 1, 41, 456, DateTimeKind.Local).AddTicks(8700),
+                            CreatedDate = new DateTime(2026, 7, 2, 0, 47, 37, 225, DateTimeKind.Local).AddTicks(3332),
                             CustomerName = "Lê Thị B",
                             DiscountAmount = 0m,
                             Email = "lethi@gmail.com",
@@ -172,9 +172,9 @@ namespace TourManagement.Data.Migrations
                             BookingId = 103,
                             AdultCount = 1,
                             BookingCode = "BK-20230603-103",
-                            BookingDate = new DateTime(2026, 6, 28, 0, 1, 41, 456, DateTimeKind.Local).AddTicks(8705),
+                            BookingDate = new DateTime(2026, 7, 1, 0, 47, 37, 225, DateTimeKind.Local).AddTicks(3338),
                             ChildCount = 0,
-                            CreatedDate = new DateTime(2026, 6, 29, 0, 1, 41, 456, DateTimeKind.Local).AddTicks(8703),
+                            CreatedDate = new DateTime(2026, 7, 2, 0, 47, 37, 225, DateTimeKind.Local).AddTicks(3336),
                             CustomerName = "Trần Trung C",
                             DiscountAmount = 0m,
                             Email = "tranc@yahoo.com",
@@ -186,6 +186,85 @@ namespace TourManagement.Data.Migrations
                             SpecialRequest = "",
                             Status = "Deposited",
                             TotalPrice = 2500000m
+                        });
+                });
+
+            modelBuilder.Entity("TourManagement.Data.Models.PromoCode", b =>
+                {
+                    b.Property<int>("PromoCodeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PromoCodeId"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<decimal>("DiscountPercent")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("DECIMAL(18, 2)");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("MaxUsage")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("MinBookingValue")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("DECIMAL(18, 2)");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UsageCount")
+                        .HasColumnType("int");
+
+                    b.HasKey("PromoCodeId");
+
+                    b.ToTable("PromoCodes");
+
+                    b.HasData(
+                        new
+                        {
+                            PromoCodeId = 1,
+                            Code = "TOUR2025",
+                            DiscountPercent = 0.10m,
+                            EndDate = new DateTime(2027, 7, 2, 0, 47, 37, 225, DateTimeKind.Local).AddTicks(3593),
+                            IsActive = true,
+                            MaxUsage = 100,
+                            MinBookingValue = 0m,
+                            StartDate = new DateTime(2026, 6, 22, 0, 47, 37, 225, DateTimeKind.Local).AddTicks(3591),
+                            UsageCount = 0
+                        },
+                        new
+                        {
+                            PromoCodeId = 2,
+                            Code = "VIP50",
+                            DiscountPercent = 0.50m,
+                            EndDate = new DateTime(2027, 7, 2, 0, 47, 37, 225, DateTimeKind.Local).AddTicks(3596),
+                            IsActive = true,
+                            MaxUsage = 10,
+                            MinBookingValue = 5000000m,
+                            StartDate = new DateTime(2026, 6, 22, 0, 47, 37, 225, DateTimeKind.Local).AddTicks(3596),
+                            UsageCount = 0
+                        },
+                        new
+                        {
+                            PromoCodeId = 3,
+                            Code = "SUMMER100",
+                            DiscountPercent = 0.15m,
+                            EndDate = new DateTime(2026, 9, 30, 0, 47, 37, 225, DateTimeKind.Local).AddTicks(3602),
+                            IsActive = true,
+                            MaxUsage = 200,
+                            MinBookingValue = 2000000m,
+                            StartDate = new DateTime(2026, 6, 22, 0, 47, 37, 225, DateTimeKind.Local).AddTicks(3601),
+                            UsageCount = 0
                         });
                 });
 
@@ -278,7 +357,7 @@ namespace TourManagement.Data.Migrations
                             TourId = 1,
                             Category = "mien-bac",
                             ChildPrice = 1750000m,
-                            CreatedDate = new DateTime(2026, 6, 29, 0, 1, 41, 456, DateTimeKind.Local).AddTicks(8621),
+                            CreatedDate = new DateTime(2026, 7, 2, 0, 47, 37, 225, DateTimeKind.Local).AddTicks(3254),
                             Days = 3,
                             Description = "Khám phá vẻ đẹp huyền ảo của sương mù Sa Pa và đỉnh Fansipan hùng vĩ.",
                             Destination = "Sa Pa",
@@ -298,7 +377,7 @@ namespace TourManagement.Data.Migrations
                             TourId = 2,
                             Category = "mien-bac",
                             ChildPrice = 2240000m,
-                            CreatedDate = new DateTime(2026, 6, 29, 0, 1, 41, 456, DateTimeKind.Local).AddTicks(8639),
+                            CreatedDate = new DateTime(2026, 7, 2, 0, 47, 37, 225, DateTimeKind.Local).AddTicks(3274),
                             Days = 2,
                             Description = "Trải nghiệm đẳng cấp 5 sao trên du thuyền khám phá Vịnh Hạ Long và Vịnh Lan Hạ.",
                             Destination = "Hạ Long",
@@ -318,7 +397,7 @@ namespace TourManagement.Data.Migrations
                             TourId = 3,
                             Category = "mien-trung",
                             ChildPrice = 3150000m,
-                            CreatedDate = new DateTime(2026, 6, 29, 0, 1, 41, 456, DateTimeKind.Local).AddTicks(8643),
+                            CreatedDate = new DateTime(2026, 7, 2, 0, 47, 37, 225, DateTimeKind.Local).AddTicks(3278),
                             Days = 4,
                             Description = "Tour miền Trung di sản: Đà Nẵng, Hội An, Bà Nà rực rỡ sắc màu.",
                             Destination = "Đà Nẵng",
@@ -389,10 +468,10 @@ namespace TourManagement.Data.Migrations
                             ActualAdultPrice = 2500000m,
                             ActualChildPrice = 1750000m,
                             AvailableSeats = 20,
-                            CreatedDate = new DateTime(2026, 6, 29, 0, 1, 41, 456, DateTimeKind.Local).AddTicks(8661),
-                            EndDate = new DateTime(2026, 7, 12, 0, 1, 41, 456, DateTimeKind.Local).AddTicks(8668),
+                            CreatedDate = new DateTime(2026, 7, 2, 0, 47, 37, 225, DateTimeKind.Local).AddTicks(3294),
+                            EndDate = new DateTime(2026, 7, 15, 0, 47, 37, 225, DateTimeKind.Local).AddTicks(3302),
                             MaxParticipants = 30,
-                            StartDate = new DateTime(2026, 7, 9, 0, 1, 41, 456, DateTimeKind.Local).AddTicks(8664),
+                            StartDate = new DateTime(2026, 7, 12, 0, 47, 37, 225, DateTimeKind.Local).AddTicks(3296),
                             Status = "Active",
                             TourId = 1
                         },
@@ -402,10 +481,10 @@ namespace TourManagement.Data.Migrations
                             ActualAdultPrice = 3200000m,
                             ActualChildPrice = 2240000m,
                             AvailableSeats = 15,
-                            CreatedDate = new DateTime(2026, 6, 29, 0, 1, 41, 456, DateTimeKind.Local).AddTicks(8670),
-                            EndDate = new DateTime(2026, 7, 6, 0, 1, 41, 456, DateTimeKind.Local).AddTicks(8672),
+                            CreatedDate = new DateTime(2026, 7, 2, 0, 47, 37, 225, DateTimeKind.Local).AddTicks(3306),
+                            EndDate = new DateTime(2026, 7, 9, 0, 47, 37, 225, DateTimeKind.Local).AddTicks(3307),
                             MaxParticipants = 20,
-                            StartDate = new DateTime(2026, 7, 4, 0, 1, 41, 456, DateTimeKind.Local).AddTicks(8671),
+                            StartDate = new DateTime(2026, 7, 7, 0, 47, 37, 225, DateTimeKind.Local).AddTicks(3307),
                             Status = "Active",
                             TourId = 2
                         },
@@ -415,10 +494,10 @@ namespace TourManagement.Data.Migrations
                             ActualAdultPrice = 4500000m,
                             ActualChildPrice = 3150000m,
                             AvailableSeats = 25,
-                            CreatedDate = new DateTime(2026, 6, 29, 0, 1, 41, 456, DateTimeKind.Local).AddTicks(8674),
-                            EndDate = new DateTime(2026, 7, 18, 0, 1, 41, 456, DateTimeKind.Local).AddTicks(8675),
+                            CreatedDate = new DateTime(2026, 7, 2, 0, 47, 37, 225, DateTimeKind.Local).AddTicks(3309),
+                            EndDate = new DateTime(2026, 7, 21, 0, 47, 37, 225, DateTimeKind.Local).AddTicks(3310),
                             MaxParticipants = 40,
-                            StartDate = new DateTime(2026, 7, 14, 0, 1, 41, 456, DateTimeKind.Local).AddTicks(8675),
+                            StartDate = new DateTime(2026, 7, 17, 0, 47, 37, 225, DateTimeKind.Local).AddTicks(3310),
                             Status = "Active",
                             TourId = 3
                         });

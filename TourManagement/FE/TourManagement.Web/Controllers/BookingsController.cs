@@ -61,12 +61,18 @@ namespace TourManagement.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult SelectTour(int tourId)
+        public async Task<IActionResult> SelectTour(int tourId)
         {
             if (tourId <= 0) return RedirectToAction("Create");
 
             var session = GetWizardSession();
             session.SelectedTourId = tourId;
+
+            // Lưu ScheduleId thực sự từ tour được chọn
+            var tours = await _bookingService.GetActiveToursAsync();
+            var selected = tours.FirstOrDefault(t => t.TourId == tourId);
+            session.SelectedScheduleId = selected?.ScheduleId ?? tourId;
+
             SaveWizardSession(session);
 
             return RedirectToAction("BookingDetails");
@@ -89,6 +95,7 @@ namespace TourManagement.Web.Controllers
             var model = new BookingDetailsViewModel
             {
                 TourId = tour.TourId,
+                ScheduleId = tour.ScheduleId,
                 TourName = tour.TourName,
                 DepartureDate = tour.StartDate,
                 PricePerAdult = tour.PricePerAdult,
@@ -160,7 +167,7 @@ namespace TourManagement.Web.Controllers
             var tours = await _bookingService.GetActiveToursAsync();
             var tour = tours.FirstOrDefault(t => t.TourId == session.SelectedTourId);
             
-            var priceCalc = await _bookingService.CalculatePriceAsync(session.SelectedTourId, session.AdultCount, session.ChildCount, session.PromoCode);
+            var priceCalc = await _bookingService.CalculatePriceAsync(session.SelectedScheduleId, session.AdultCount, session.ChildCount, session.PromoCode);
 
             var model = new BookingReviewViewModel
             {
@@ -192,7 +199,7 @@ namespace TourManagement.Web.Controllers
 
             var dto = new CreateBookingDTO
             {
-                ScheduleId = session.SelectedTourId,
+                ScheduleId = session.SelectedScheduleId,
                 CustomerName = session.CustomerName ?? "",
                 Email = session.Email ?? "",
                 PhoneNumber = session.Phone ?? "",

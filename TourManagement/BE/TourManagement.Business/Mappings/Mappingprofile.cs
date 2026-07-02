@@ -20,6 +20,21 @@ namespace TourManagement.Business.Mappings
             CreateMap<Tour, TourSelectDTO>()
                 .ReverseMap();
 
+            CreateMap<TourSchedule, TourSelectDTO>()
+                .ForMember(dest => dest.TourId, opt => opt.MapFrom(src => src.TourId))
+                .ForMember(dest => dest.TourName, opt => opt.MapFrom(src => src.Tour != null ? src.Tour.TourName : ""))
+                .ForMember(dest => dest.TourCode, opt => opt.MapFrom(src => src.Tour != null ? src.Tour.TourCode : ""))
+                .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Tour != null ? src.Tour.Category : ""))
+                .ForMember(dest => dest.Destination, opt => opt.MapFrom(src => src.Tour != null ? src.Tour.Destination : ""))
+                .ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.Tour != null ? src.Tour.Image : ""))
+                .ForMember(dest => dest.ScheduleId, opt => opt.MapFrom(src => src.ScheduleId))
+                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate))
+                .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndDate))
+                .ForMember(dest => dest.AvailableSeats, opt => opt.MapFrom(src => src.AvailableSeats))
+                .ForMember(dest => dest.PricePerAdult, opt => opt.MapFrom(src => src.ActualAdultPrice))
+                .ForMember(dest => dest.PricePerChild, opt => opt.MapFrom(src => src.ActualChildPrice))
+                .ReverseMap();
+
             CreateMap<Tour, TourDTO>()
                 .ReverseMap();
 

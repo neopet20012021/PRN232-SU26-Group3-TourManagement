@@ -14,6 +14,7 @@ namespace TourManagement.Data.Context
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<TourSchedule> TourSchedules { get; set; }
+        public DbSet<PromoCode> PromoCodes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -291,6 +292,55 @@ namespace TourManagement.Data.Context
                     PaymentMethod = "Cash",
                     SpecialRequest = "",
                     FinalPrice = 2500000
+                }
+            );
+
+            // Configure PromoCode entity
+            modelBuilder.Entity<PromoCode>(entity =>
+            {
+                entity.HasKey(e => e.PromoCodeId);
+                entity.Property(e => e.Code).IsRequired().HasMaxLength(50);
+                entity.Property(e => e.DiscountPercent).HasPrecision(18, 2);
+                entity.Property(e => e.MinBookingValue).HasPrecision(18, 2);
+            });
+
+            // Seed Data cho PromoCodes
+            modelBuilder.Entity<PromoCode>().HasData(
+                new PromoCode
+                {
+                    PromoCodeId = 1,
+                    Code = "TOUR2025",
+                    DiscountPercent = 0.10m,
+                    MinBookingValue = 0,
+                    StartDate = DateTime.Now.AddDays(-10),
+                    EndDate = DateTime.Now.AddDays(365),
+                    MaxUsage = 100,
+                    UsageCount = 0,
+                    IsActive = true
+                },
+                new PromoCode
+                {
+                    PromoCodeId = 2,
+                    Code = "VIP50",
+                    DiscountPercent = 0.50m,
+                    MinBookingValue = 5000000,
+                    StartDate = DateTime.Now.AddDays(-10),
+                    EndDate = DateTime.Now.AddDays(365),
+                    MaxUsage = 10,
+                    UsageCount = 0,
+                    IsActive = true
+                },
+                new PromoCode
+                {
+                    PromoCodeId = 3,
+                    Code = "SUMMER100",
+                    DiscountPercent = 0.15m,
+                    MinBookingValue = 2000000,
+                    StartDate = DateTime.Now.AddDays(-10),
+                    EndDate = DateTime.Now.AddDays(90),
+                    MaxUsage = 200,
+                    UsageCount = 0,
+                    IsActive = true
                 }
             );
         }

@@ -27,6 +27,8 @@ namespace TourManagement.RazorWeb.Pages.Tours
         public string ErrorMessage { get; set; } = string.Empty;
         public string SuccessMessage { get; set; } = string.Empty;
 
+        public bool ShowWelcomeAlert { get; set; }
+
         public async Task<IActionResult> OnGetAsync(int scheduleId)
         {
             var client = _clientFactory.CreateClient("API");
@@ -39,11 +41,38 @@ namespace TourManagement.RazorWeb.Pages.Tours
                 if (User.Identity != null && User.Identity.IsAuthenticated)
                 {
                     BookingInput.CustomerName = User.FindFirst("FullName")?.Value ?? User.Identity.Name ?? "";
+                    var email = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value 
+                                ?? User.FindFirst("Email")?.Value 
+                                ?? User.Identity.Name ?? "";
+                    BookingInput.Email = email;
+
+                    // Kiểm tra xem user này đã từng đặt tour nào chưa
+                    var userId = User.FindFirst("UserId")?.Value;
+                    var filterQuery = string.IsNullOrEmpty(userId) 
+                        ? $"Email eq '{email}'" 
+                        : $"(UserId eq {userId} or Email eq '{email}')";
+
+                    var bookingCheck = await client.GetAsync($"odata/Bookings?$filter={filterQuery}&$top=1");
+                    if (bookingCheck.IsSuccessStatusCode)
+                    {
+                        var checkContent = await bookingCheck.Content.ReadFromJsonAsync<ODataCheckResponse>();
+                        if (checkContent == null || checkContent.Value == null || checkContent.Value.Count == 0)
+                        {
+                            // Chưa từng đặt tour -> Tự động áp mã WELCOME và hiện thông báo
+                            BookingInput.PromoCode = "WELCOME";
+                            ShowWelcomeAlert = true;
+                        }
+                    }
                 }
                 
                 return Page();
             }
             return NotFound();
+        }
+
+        public class ODataCheckResponse
+        {
+            public System.Collections.Generic.List<object> Value { get; set; } = new();
         }
 
         public async Task<IActionResult> OnPostAsync()
@@ -108,13 +137,24 @@ namespace TourManagement.RazorWeb.Pages.Tours
         public async Task<IActionResult> OnPostCalculatePriceAsync([FromBody] PriceCalculationRequest request)
         {
             var client = _clientFactory.CreateClient("API");
+            
+            // Lấy UserId từ session đăng nhập hiện tại - không phụ thuộc vào email người dùng điền vào form
+            if (User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                var userIdClaim = User.FindFirst("UserId")?.Value;
+                if (int.TryParse(userIdClaim, out int uid))
+                {
+                    request.UserId = uid;
+                }
+            }
+
             var response = await client.PostAsJsonAsync("odata/Bookings/calculate-price", request);
+            var result = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
-                var result = await response.Content.ReadAsStringAsync();
                 return Content(result, "application/json");
             }
-            return BadRequest(new { success = false, message = "Failed to calculate price." });
+            return Content(result, "application/json"); // Trả về nội dung JSON chứa message lỗi để JS hiển thị
         }
     }
 
@@ -124,6 +164,8 @@ namespace TourManagement.RazorWeb.Pages.Tours
         public int AdultCount { get; set; }
         public int ChildCount { get; set; }
         public string? PromoCode { get; set; }
+        public string? UserEmail { get; set; }
+        public int? UserId { get; set; }
     }
 
     public class BookingInputModel

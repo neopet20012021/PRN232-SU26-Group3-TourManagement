@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using TourManagement.Business.DTOs;
+using TourManagement.Data.Context;
 using TourManagement.Data.Models;
 using TourManagement.Data.Repositories;
 
@@ -16,7 +18,7 @@ namespace TourManagement.Business.Services
         Task<BookingDTO> GetBookingByCodeAsync(string bookingCode);
         Task<IEnumerable<BookingDTO>> GetCustomerBookingsAsync(string email);
         Task<IEnumerable<BookingDTO>> GetScheduleBookingsAsync(int scheduleId);
-        Task<PriceCalculationDTO> CalculatePriceAsync(int scheduleId, int adultCount, int childCount, string promoCode = null);
+        Task<PriceCalculationDTO> CalculatePriceAsync(int scheduleId, int adultCount, int childCount, string promoCode = null, string userEmail = null, int? userId = null);
         Task<bool> UpdateBookingStatusAsync(int bookingId, string newStatus);
         Task<bool> CancelBookingAsync(int bookingId);
         Task<IEnumerable<TourSelectDTO>> GetActiveToursAsync(string? keyword = null, decimal? minPrice = null, decimal? maxPrice = null, DateTime? fromDate = null, DateTime? toDate = null);
@@ -29,18 +31,28 @@ namespace TourManagement.Business.Services
         private readonly ITourRepository _tourRepository;
         private readonly ITourScheduleRepository _scheduleRepository;
         private readonly IMapper _mapper;
+        private readonly IPromoCodeService _promoCodeService;
+        private readonly TourManagementDbContext _context;
 
-        public BookingService(IBookingRepository bookingRepository, ITourRepository tourRepository, ITourScheduleRepository scheduleRepository, IMapper mapper)
+        public BookingService(
+            IBookingRepository bookingRepository, 
+            ITourRepository tourRepository, 
+            ITourScheduleRepository scheduleRepository, 
+            IMapper mapper, 
+            IPromoCodeService promoCodeService,
+            TourManagementDbContext context)
         {
             _bookingRepository = bookingRepository;
             _tourRepository = tourRepository;
             _scheduleRepository = scheduleRepository;
             _mapper = mapper;
+            _promoCodeService = promoCodeService;
+            _context = context;
         }
 
         public async Task<BookingResponseDTO> CreateBookingAsync(CreateBookingDTO bookingDto)
         {
-            var priceCalc = await CalculatePriceAsync(bookingDto.ScheduleId, bookingDto.AdultCount, bookingDto.ChildCount, bookingDto.PromoCode);
+            var priceCalc = await CalculatePriceAsync(bookingDto.ScheduleId, bookingDto.AdultCount, bookingDto.ChildCount, bookingDto.PromoCode, bookingDto.Email, bookingDto.UserId);
             var booking = new Booking
             {
                 ScheduleId = bookingDto.ScheduleId,
@@ -56,13 +68,22 @@ namespace TourManagement.Business.Services
                 PromoCode = bookingDto.PromoCode,
                 PaymentMethod = bookingDto.PaymentMethod,
                 BookingDate = bookingDto.BookingDate,
-                TotalPrice = priceCalc.FinalPrice,
+                TotalPrice = priceCalc.OriginalPrice,
+                DiscountAmount = priceCalc.DiscountAmount,
+                FinalPrice = priceCalc.FinalPrice,
                 Status = "pending",
-                BookingCode = GenerateBookingCode()
+                BookingCode = GenerateBookingCode(),
+                UserId = bookingDto.UserId
             };
 
             await _bookingRepository.AddAsync(booking);
             await _bookingRepository.SaveChangesAsync();
+
+            if (priceCalc.DiscountAmount > 0 && !string.IsNullOrWhiteSpace(bookingDto.PromoCode))
+            {
+                await _promoCodeService.UsePromoCodeAsync(bookingDto.PromoCode);
+            }
+
             return new BookingResponseDTO { Success = true, Data = _mapper.Map<BookingDTO>(booking) };
         }
 
@@ -90,7 +111,7 @@ namespace TourManagement.Business.Services
             return _mapper.Map<IEnumerable<BookingDTO>>(bookings);
         }
 
-        public async Task<PriceCalculationDTO> CalculatePriceAsync(int scheduleId, int adultCount, int childCount, string promoCode = null)
+        public async Task<PriceCalculationDTO> CalculatePriceAsync(int scheduleId, int adultCount, int childCount, string promoCode = null, string userEmail = null, int? userId = null)
         {
             var schedule = await _scheduleRepository.GetByIdAsync(scheduleId);
             if (schedule == null)
@@ -101,9 +122,29 @@ namespace TourManagement.Business.Services
             decimal originalPrice = (schedule.ActualAdultPrice * adultCount) + (schedule.ActualChildPrice * childCount);
             decimal discount = 0;
             
-            if (!string.IsNullOrWhiteSpace(promoCode) && await ValidatePromoCodeAsync(promoCode))
+            if (!string.IsNullOrWhiteSpace(promoCode))
             {
-                discount = originalPrice * 0.1m; // 10% discount for demo
+                if (promoCode.Trim().ToUpper() == "WELCOME")
+                {
+                    if (userId.HasValue)
+                    {
+                        var hasPreviousBooking = await _context.Bookings.AnyAsync(b => b.UserId == userId.Value);
+                        if (hasPreviousBooking)
+                        {
+                            throw new Exception("Mã WELCOME chỉ áp dụng cho lần đặt tour đầu tiên của tài khoản này.");
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception("Mã WELCOME chỉ áp dụng cho tài khoản đăng nhập đặt tour lần đầu.");
+                    }
+                }
+
+                if (await _promoCodeService.IsValidAsync(promoCode, originalPrice))
+                {
+                    decimal discountPercent = await _promoCodeService.GetDiscountPercentAsync(promoCode);
+                    discount = originalPrice * discountPercent;
+                }
             }
 
             return new PriceCalculationDTO
@@ -132,26 +173,31 @@ namespace TourManagement.Business.Services
 
         public async Task<IEnumerable<TourSelectDTO>> GetActiveToursAsync(string? keyword = null, decimal? minPrice = null, decimal? maxPrice = null, DateTime? fromDate = null, DateTime? toDate = null)
         {
-            var tours = await _tourRepository.GetAllAsync();
-            var query = tours.Where(t => t.IsActive).AsQueryable();
+            var query = _context.TourSchedules
+                .Include(s => s.Tour)
+                .Where(s => s.Tour.IsActive && s.Status == "Active")
+                .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(keyword))
             {
                 var lowerKeyword = keyword.ToLower();
-                query = query.Where(t => t.TourName.ToLower().Contains(lowerKeyword) || 
-                                         t.TourCode.ToLower().Contains(lowerKeyword) || 
-                                         t.Destination.ToLower().Contains(lowerKeyword));
+                query = query.Where(s => s.Tour.TourName.ToLower().Contains(lowerKeyword) || 
+                                         s.Tour.TourCode.ToLower().Contains(lowerKeyword) || 
+                                         s.Tour.Destination.ToLower().Contains(lowerKeyword));
             }
 
-            if (minPrice.HasValue) query = query.Where(t => t.PricePerAdult >= minPrice.Value);
-            if (maxPrice.HasValue) query = query.Where(t => t.PricePerAdult <= maxPrice.Value);
+            if (minPrice.HasValue) query = query.Where(s => s.ActualAdultPrice >= minPrice.Value);
+            if (maxPrice.HasValue) query = query.Where(s => s.ActualAdultPrice <= maxPrice.Value);
+            if (fromDate.HasValue) query = query.Where(s => s.StartDate >= fromDate.Value);
+            if (toDate.HasValue) query = query.Where(s => s.StartDate <= toDate.Value);
 
-            return _mapper.Map<IEnumerable<TourSelectDTO>>(query.ToList());
+            var schedules = await query.ToListAsync();
+            return _mapper.Map<IEnumerable<TourSelectDTO>>(schedules);
         }
 
         public async Task<bool> ValidatePromoCodeAsync(string promoCode)
         {
-            return !string.IsNullOrWhiteSpace(promoCode);
+            return !string.IsNullOrWhiteSpace(promoCode) && await _promoCodeService.IsValidAsync(promoCode);
         }
 
         private string GenerateBookingCode()

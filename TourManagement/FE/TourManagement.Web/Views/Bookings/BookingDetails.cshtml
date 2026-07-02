@@ -51,6 +51,7 @@
 
                 <form asp-action="BookingDetails" method="post" id="bookingForm">
                     <input type="hidden" asp-for="TourId" />
+                    <input type="hidden" asp-for="ScheduleId" id="ScheduleId" />
                     <input type="hidden" asp-for="TourName" />
                     <input type="hidden" asp-for="DepartureDate" />
                     <input type="hidden" asp-for="PricePerAdult" id="pricePerAdult" />
@@ -151,7 +152,7 @@
 
                 <hr>
                 
-                <div class="d-flex justify-content-between align-items-center mb-2" id="discountRow" style="display: none !important;">
+                <div class="d-flex justify-content-between align-items-center mb-2" id="discountRow" style="display:none !important">
                     <span class="text-success">Giảm giá:</span>
                     <span class="fw-bold text-success" id="summaryDiscount"></span>
                 </div>
@@ -186,6 +187,21 @@
             return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
         };
 
+        const updateSummaryLocal = () => {
+            const adultCount = parseInt(document.getElementById('AdultCount').value) || 0;
+            const childCount = parseInt(document.getElementById('ChildCount').value) || 0;
+            const adultPriceVal = parseFloat(document.getElementById('pricePerAdult').value) || 0;
+            const childPriceVal = parseFloat(document.getElementById('pricePerChild').value) || 0;
+
+            document.getElementById('summaryAdultPrice').innerText = adultCount + ' x ' + formatCurrency(adultPriceVal);
+            document.getElementById('summaryChildPrice').innerText = childCount > 0 ? childCount + ' x ' + formatCurrency(childPriceVal) : 'Không có';
+
+            const total = (adultCount * adultPriceVal) + (childCount * childPriceVal);
+            document.getElementById('summaryTotal').innerText = formatCurrency(total);
+
+            document.getElementById('discountRow').style.display = 'none';
+        };
+
         const updateCount = (fieldId, change) => {
             const input = document.getElementById(fieldId);
             let val = parseInt(input.value) || 0;
@@ -204,61 +220,76 @@
         };
 
         const calculatePrice = async () => {
-            const tourId = document.getElementById('TourId').value;
-            const adultCount = document.getElementById('AdultCount').value;
-            const childCount = document.getElementById('ChildCount').value;
+            const scheduleId = document.getElementById('ScheduleId').value;
+            const adultCount = parseInt(document.getElementById('AdultCount').value) || 1;
+            const childCount = parseInt(document.getElementById('ChildCount').value) || 0;
             const promoCode = document.getElementById('PromoCode').value;
+            const adultPriceVal = parseFloat(document.getElementById('pricePerAdult').value) || 0;
+            const childPriceVal = parseFloat(document.getElementById('pricePerChild').value) || 0;
+
+            // Cập nhật ngay không chờ API
+            document.getElementById('summaryAdultPrice').innerText = adultCount + ' x ' + formatCurrency(adultPriceVal);
+            document.getElementById('summaryChildPrice').innerText = childCount + ' x ' + formatCurrency(childPriceVal);
+
+            if (!scheduleId || scheduleId === '0') {
+                const total = (adultCount * adultPriceVal) + (childCount * childPriceVal);
+                document.getElementById('summaryTotal').innerText = formatCurrency(total);
+                return;
+            }
 
             try {
-                // Đã đổi URL để gọi thẳng tới project API mới tạo (cổng 7055)
-                const response = await fetch('https://localhost:7055/odata/Bookings/calculate-price', {
+                const response = await fetch('http://localhost:5023/odata/Bookings/calculate-price', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        tourId: parseInt(tourId),
-                        adultCount: parseInt(adultCount),
-                        childCount: parseInt(childCount),
-                        promoCode: promoCode
+                        scheduleId: parseInt(scheduleId),
+                        adultCount: adultCount,
+                        childCount: childCount,
+                        promoCode: promoCode || null
                     })
                 });
 
                 if (response.ok) {
-                    const result = await response.json();
-                    if (result.success) {
-                        const data = result.data;
-                        
-                        document.getElementById('summaryAdultPrice').innerText = formatCurrency(data.adultSubtotal || (document.getElementById('pricePerAdult').value * adultCount));
-                        document.getElementById('summaryChildPrice').innerText = formatCurrency(data.childSubtotal || (document.getElementById('pricePerChild').value * childCount));
-                        
-                        if (data.discountAmount > 0) {
-                            document.getElementById('discountRow').style.setProperty('display', 'flex', 'important');
-                            document.getElementById('summaryDiscount').innerText = '- ' + formatCurrency(data.discountAmount);
-                        } else {
-                            document.getElementById('discountRow').style.setProperty('display', 'none', 'important');
-                        }
-                        
-                        document.getElementById('summaryTotal').innerText = formatCurrency(data.finalPrice);
-
-                        const msgEl = document.getElementById('promoMessage');
-                        if (promoCode) {
-                            if (data.discountAmount > 0) {
-                                msgEl.innerText = "Áp dụng mã giảm giá thành công!";
-                                msgEl.className = "text-success mt-1 d-block small fw-bold";
-                            } else {
-                                msgEl.innerText = "Mã giảm giá không hợp lệ hoặc đã hết hạn.";
-                                msgEl.className = "text-danger mt-1 d-block small fw-bold";
-                            }
-                        } else {
-                            msgEl.innerText = "";
-                        }
+                    const json = await response.json();
+                    // API trả về: { success: true, data: { originalPrice, discountAmount, finalPrice, appliedPromoCode } }
+                    const data = json.data || json;
+                    
+                    if (data.discountAmount > 0) {
+                        document.getElementById('discountRow').style.removeProperty('display');
+                        document.getElementById('discountRow').style.display = 'flex';
+                        document.getElementById('summaryDiscount').innerText = '- ' + formatCurrency(data.discountAmount);
+                    } else {
+                        document.getElementById('discountRow').style.display = 'none';
                     }
+                    
+                    document.getElementById('summaryTotal').innerText = formatCurrency(data.finalPrice);
+
+                    const msgEl = document.getElementById('promoMessage');
+                    if (promoCode) {
+                        if (data.discountAmount > 0 || data.appliedPromoCode) {
+                            msgEl.innerText = "Áp dụng mã giảm giá thành công!";
+                            msgEl.className = "text-success mt-1 d-block small fw-bold";
+                        } else {
+                            msgEl.innerText = "Mã giảm giá không hợp lệ hoặc không đủ điều kiện.";
+                            msgEl.className = "text-danger mt-1 d-block small fw-bold";
+                        }
+                    } else {
+                        msgEl.innerText = "";
+                    }
+                } else {
+                    // Nếu API lỗi, tính giá local
+                    const total = (adultCount * adultPriceVal) + (childCount * childPriceVal);
+                    document.getElementById('summaryTotal').innerText = formatCurrency(total);
                 }
             } catch (error) {
                 console.error("Error calculating price:", error);
+                // Fallback: tính giá local khi API không khả dụng
+                const total = (adultCount * adultPriceVal) + (childCount * childPriceVal);
+                document.getElementById('summaryTotal').innerText = formatCurrency(total);
             }
         };
 
-        // Initialize price calculation on load
+        // Khởi tạo hiển thị giá ngay khi load trang
         document.addEventListener('DOMContentLoaded', calculatePrice);
     </script>
 }

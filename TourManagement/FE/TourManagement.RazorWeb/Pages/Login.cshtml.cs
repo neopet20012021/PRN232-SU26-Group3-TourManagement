@@ -70,6 +70,14 @@ namespace TourManagement.RazorWeb.Pages
                         CookieAuthenticationDefaults.AuthenticationScheme,
                         new ClaimsPrincipal(claimsIdentity));
 
+                    if (user.Role == "Admin")
+                    {
+                        return RedirectToPage("/Admin/Dashboard/Index");
+                    }
+                    else if (user.Role == "Staff")
+                    {
+                        return RedirectToPage("/Staff/Schedules/Index");
+                    }
                     return RedirectToPage("/Index");
                 }
             }

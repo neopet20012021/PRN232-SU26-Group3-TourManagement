@@ -41,6 +41,20 @@ namespace TourManagement.RazorWeb.Pages.Admin.Dashboard
             public int TotalBookings { get; set; }
             public int PendingBookings { get; set; }
             public decimal TotalRevenue { get; set; }
+            public System.Collections.Generic.List<MonthlyRevenueItem> MonthlyRevenue { get; set; } = new();
+            public System.Collections.Generic.List<StatusCountItem> StatusCounts { get; set; } = new();
+        }
+
+        public class MonthlyRevenueItem
+        {
+            public string MonthName { get; set; } = string.Empty;
+            public decimal Revenue { get; set; }
+        }
+
+        public class StatusCountItem
+        {
+            public string Status { get; set; } = string.Empty;
+            public int Count { get; set; }
         }
     }
 }
