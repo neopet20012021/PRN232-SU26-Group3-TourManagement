@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\buildMultiTargeting\TourManagement.RazorWeb.props" />
-</Project>
