@@ -15,12 +15,12 @@ namespace TourManagement.Data.Models
         public string Code { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Phần trăm giảm giá là bắt buộc")]
-        [Range(0.0, 1.0, ErrorMessage = "Phần trăm giảm giá phải từ 0 đến 1 (ví dụ 0.1 cho 10%)")]
+        [Range(typeof(decimal), "0.0", "1.0", ErrorMessage = "Phần trăm giảm giá phải từ 0 đến 1 (ví dụ 0.1 cho 10%)")]
         [Column(TypeName = "DECIMAL(18, 2)")]
         public decimal DiscountPercent { get; set; }
 
         [Required]
-        [Range(0, 1000000000, ErrorMessage = "Giá trị đơn hàng tối thiểu không hợp lệ")]
+        [Range(typeof(decimal), "0", "1000000000", ErrorMessage = "Giá trị đơn hàng tối thiểu không hợp lệ")]
         [Column(TypeName = "DECIMAL(18, 2)")]
         public decimal MinBookingValue { get; set; } = 0;
 

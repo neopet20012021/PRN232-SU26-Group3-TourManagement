@@ -78,9 +78,12 @@ else
                 </div>
                 <div class="card-body">
                     <div class="row g-3 align-items-center">
-                        <div class="col-md-6">
-                            <label class="text-muted small mb-1">Phương Thức Thanh Toán</label>
-                            <p class="fw-semibold mb-0">@Model.Booking.PaymentMethod</p>
+                        <div class="col-sm-6 mb-3">
+                            <span class="text-muted d-block small mb-1">Phương thức thanh toán</span>
+                            @{
+                                var paymentMethod = Model.Booking.Payments?.FirstOrDefault()?.PaymentMethod ?? "N/A";
+                            }
+                            <p class="fw-semibold mb-0">@paymentMethod</p>
                         </div>
                         <div class="col-md-6 text-md-end">
                             <label class="text-muted small mb-1">Tổng Số Tiền</label>

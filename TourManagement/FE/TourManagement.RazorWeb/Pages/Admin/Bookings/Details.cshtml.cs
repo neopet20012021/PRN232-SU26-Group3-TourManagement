@@ -36,7 +36,7 @@ namespace TourManagement.RazorWeb.Pages.Admin.Bookings
         public async Task<IActionResult> OnGetAsync(int id)
         {
             var client = _clientFactory.CreateClient("API");
-            var response = await client.GetAsync($"odata/Bookings/{id}?$expand=Schedule($expand=Tour)");
+            var response = await client.GetAsync($"odata/Bookings/{id}?$expand=Schedule($expand=Tour),Payments");
             
             if (response.IsSuccessStatusCode)
             {
@@ -61,7 +61,7 @@ namespace TourManagement.RazorWeb.Pages.Admin.Bookings
             var client = _clientFactory.CreateClient("API");
             
             // Re-fetch booking first
-            var response = await client.GetAsync($"odata/Bookings/{BookingId}?$expand=Schedule($expand=Tour)");
+            var response = await client.GetAsync($"odata/Bookings/{BookingId}?$expand=Schedule($expand=Tour),Payments");
             if (response.IsSuccessStatusCode)
             {
                 Booking = await response.Content.ReadFromJsonAsync<BookingAdminDetailViewModel>();
@@ -117,13 +117,22 @@ namespace TourManagement.RazorWeb.Pages.Admin.Bookings
             public int AdultCount { get; set; }
             public int ChildCount { get; set; }
             public int InfantCount { get; set; }
-            public string PaymentMethod { get; set; } = string.Empty;
+            public string PaymentMethod { get; set; } = string.Empty; // NotMapped
             public decimal TotalPrice { get; set; }
             public string Status { get; set; } = string.Empty;
             public System.DateTime BookingDate { get; set; }
             public System.DateTime CreatedDate { get; set; }
             public int? UserId { get; set; }
             public string? CreatedBy { get; set; }
+            public System.Collections.Generic.List<PaymentViewModel> Payments { get; set; } = new();
+        }
+
+        public class PaymentViewModel
+        {
+            public decimal Amount { get; set; }
+            public string PaymentMethod { get; set; } = string.Empty;
+            public string Status { get; set; } = string.Empty;
+            public System.DateTime PaymentDate { get; set; }
         }
 
         public class TourScheduleViewModel

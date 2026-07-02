@@ -56,8 +56,16 @@ namespace TourManagement.Data.Models
         [StringLength(500)]
         public string? SpecialRequest { get; set; }
 
-        [StringLength(20)]
+        public int? PromoCodeId { get; set; }
+
+        [ForeignKey(nameof(PromoCodeId))]
+        public virtual PromoCode? AppliedPromoCode { get; set; }
+
+        [NotMapped]
         public string? PromoCode { get; set; }
+
+        [NotMapped]
+        public string PaymentMethod { get; set; } = string.Empty;
 
         [Column(TypeName = "DECIMAL(18, 2)")]
         public decimal TotalPrice { get; set; }
@@ -68,8 +76,7 @@ namespace TourManagement.Data.Models
         [Column(TypeName = "DECIMAL(18, 2)")]
         public decimal FinalPrice { get; set; }
 
-        [StringLength(50)]
-        public string PaymentMethod { get; set; } = string.Empty;
+        public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 
         [StringLength(20)]
         [Column(TypeName = "VARCHAR(20)")]

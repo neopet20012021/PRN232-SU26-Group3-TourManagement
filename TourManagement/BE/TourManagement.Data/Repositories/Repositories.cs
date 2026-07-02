@@ -138,11 +138,28 @@ namespace TourManagement.Data.Repositories
 
     public interface IPromoCodeRepository : IRepository<Models.PromoCode>
     {
+        Task<Models.PromoCode> GetByCodeAsync(string code);
     }
 
     public class PromoCodeRepository : Repository<Models.PromoCode>, IPromoCodeRepository
     {
         public PromoCodeRepository(TourManagementDbContext context) : base(context)
+        {
+        }
+
+        public async Task<Models.PromoCode> GetByCodeAsync(string code)
+        {
+            return await _context.PromoCodes.FirstOrDefaultAsync(p => p.Code == code && p.IsActive);
+        }
+    }
+
+    public interface IPaymentRepository : IRepository<Models.Payment>
+    {
+    }
+
+    public class PaymentRepository : Repository<Models.Payment>, IPaymentRepository
+    {
+        public PaymentRepository(TourManagementDbContext context) : base(context)
         {
         }
     }

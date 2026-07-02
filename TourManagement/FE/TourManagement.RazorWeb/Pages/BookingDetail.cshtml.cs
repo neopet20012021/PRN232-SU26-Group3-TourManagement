@@ -35,7 +35,7 @@ namespace TourManagement.RazorWeb.Pages
                 : $"BookingCode eq '{bookingCode}' and (UserId eq {userId} or CreatedBy eq '{userName}')";
 
             var response = await client.GetAsync(
-                $"odata/Bookings?$expand=Schedule($expand=Tour)&$filter={filterQuery}&$top=1");
+                $"odata/Bookings?$expand=Schedule($expand=Tour),Payments&$filter={filterQuery}&$top=1");
 
             if (response.IsSuccessStatusCode)
             {
@@ -78,6 +78,15 @@ namespace TourManagement.RazorWeb.Pages
             public DateTime BookingDate { get; set; }
             public DateTime CreatedDate { get; set; }
             public string? Notes { get; set; }
+            public System.Collections.Generic.List<PaymentViewModel> Payments { get; set; } = new();
+        }
+
+        public class PaymentViewModel
+        {
+            public decimal Amount { get; set; }
+            public string PaymentMethod { get; set; } = string.Empty;
+            public string Status { get; set; } = string.Empty;
+            public DateTime PaymentDate { get; set; }
         }
 
         public class ScheduleViewModel

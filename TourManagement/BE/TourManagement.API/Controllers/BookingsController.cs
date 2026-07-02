@@ -105,6 +105,24 @@ namespace TourManagement.API.Controllers
             booking.BookingDate = DateTime.Now;
             booking.Status = "Pending";
 
+            if (!string.IsNullOrWhiteSpace(booking.PromoCode))
+            {
+                var promoCodeEntity = await _context.PromoCodes.FirstOrDefaultAsync(p => p.Code == booking.PromoCode);
+                if (promoCodeEntity != null)
+                {
+                    booking.PromoCodeId = promoCodeEntity.PromoCodeId;
+                }
+            }
+
+            var payment = new TourManagement.Data.Models.Payment
+            {
+                Amount = booking.FinalPrice,
+                PaymentMethod = string.IsNullOrEmpty(booking.PaymentMethod) ? "cash" : booking.PaymentMethod,
+                Status = "Pending",
+                PaymentDate = DateTime.Now
+            };
+            booking.Payments.Add(payment);
+
             _context.Bookings.Add(booking);
             await _context.SaveChangesAsync();
 
@@ -112,6 +130,7 @@ namespace TourManagement.API.Controllers
             {
                 await promoCodeService.UsePromoCodeAsync(booking.PromoCode);
             }
+
 
             return Created(booking);
         }

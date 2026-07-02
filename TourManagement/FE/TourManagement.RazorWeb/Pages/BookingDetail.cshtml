@@ -213,13 +213,15 @@ else
                     <span class="price-highlight">@b.FinalPrice.ToString("N0") ₫</span>
                 </div>
                 <div class="info-row">
-                    <span class="info-label">Phương thức TT</span>
+                    <span class="info-label"><i class="bi bi-wallet2 me-1"></i>Thanh toán</span>
+                    @{
+                        var paymentMethod = b.Payments?.FirstOrDefault()?.PaymentMethod ?? "cash";
+                    }
                     <span class="info-value">
-                        @(b.PaymentMethod switch {
-                            "Cash" => "💵 Tiền mặt",
-                            "BankTransfer" => "🏦 Chuyển khoản",
-                            "CreditCard" => "💳 Thẻ tín dụng",
-                            _ => b.PaymentMethod
+                        @(paymentMethod switch {
+                            "cash" => Html.Raw("<span class='badge bg-warning text-dark'><i class='bi bi-cash-coin me-1'></i>Tiền mặt</span>"),
+                            "transfer" => Html.Raw("<span class='badge bg-info text-dark'><i class='bi bi-bank me-1'></i>Chuyển khoản</span>"),
+                            _ => paymentMethod
                         })
                     </span>
                 </div>

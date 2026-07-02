@@ -76,8 +76,8 @@ namespace TourManagement.RazorWeb.Pages.Admin.PromoCodes
                 Code = Input.Code.ToUpper().Trim(),
                 DiscountPercent = Input.DiscountPercent / 100m, // Convert percentage to decimal
                 MinBookingValue = Input.MinBookingValue,
-                StartDate = Input.StartDate,
-                EndDate = Input.EndDate,
+                StartDate = DateTime.SpecifyKind(Input.StartDate, DateTimeKind.Utc),
+                EndDate = DateTime.SpecifyKind(Input.EndDate, DateTimeKind.Utc),
                 MaxUsage = Input.MaxUsage,
                 UsageCount = Input.UsageCount,
                 IsActive = Input.IsActive

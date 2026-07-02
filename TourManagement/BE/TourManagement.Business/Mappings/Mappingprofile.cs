@@ -11,6 +11,8 @@ namespace TourManagement.Business.Mappings
             // Booking mappings
             CreateMap<Booking, BookingDTO>()
                 .ForMember(dest => dest.TourName, opt => opt.MapFrom(src => src.Schedule != null && src.Schedule.Tour != null ? src.Schedule.Tour.TourName : ""))
+                .ForMember(dest => dest.PromoCode, opt => opt.MapFrom(src => src.AppliedPromoCode != null ? src.AppliedPromoCode.Code : src.PromoCode))
+                .ForMember(dest => dest.PaymentMethod, opt => opt.MapFrom(src => src.Payments.FirstOrDefault() != null ? src.Payments.FirstOrDefault().PaymentMethod : "cash"))
                 .ReverseMap();
 
             CreateMap<CreateBookingDTO, Booking>()

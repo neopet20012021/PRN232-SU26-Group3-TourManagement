@@ -53,6 +53,14 @@ namespace TourManagement.Business.Services
         public async Task<BookingResponseDTO> CreateBookingAsync(CreateBookingDTO bookingDto)
         {
             var priceCalc = await CalculatePriceAsync(bookingDto.ScheduleId, bookingDto.AdultCount, bookingDto.ChildCount, bookingDto.PromoCode, bookingDto.Email, bookingDto.UserId);
+            
+            int? promoCodeId = null;
+            if (!string.IsNullOrWhiteSpace(bookingDto.PromoCode))
+            {
+                var promoCodeEntity = await _context.PromoCodes.FirstOrDefaultAsync(p => p.Code == bookingDto.PromoCode);
+                promoCodeId = promoCodeEntity?.PromoCodeId;
+            }
+
             var booking = new Booking
             {
                 ScheduleId = bookingDto.ScheduleId,
@@ -65,7 +73,6 @@ namespace TourManagement.Business.Services
                 InfantCount = bookingDto.InfantCount,
                 RoomType = bookingDto.RoomType,
                 SpecialRequest = bookingDto.SpecialRequest,
-                PromoCode = bookingDto.PromoCode,
                 PaymentMethod = bookingDto.PaymentMethod,
                 BookingDate = bookingDto.BookingDate,
                 TotalPrice = priceCalc.OriginalPrice,
@@ -73,8 +80,20 @@ namespace TourManagement.Business.Services
                 FinalPrice = priceCalc.FinalPrice,
                 Status = "pending",
                 BookingCode = GenerateBookingCode(),
-                UserId = bookingDto.UserId
+                UserId = bookingDto.UserId,
+                PromoCodeId = promoCodeId,
+                PromoCode = bookingDto.PromoCode
             };
+
+            var payment = new Payment
+            {
+                Amount = priceCalc.FinalPrice,
+                PaymentMethod = bookingDto.PaymentMethod,
+                Status = "Pending",
+                PaymentDate = DateTime.Now
+            };
+
+            booking.Payments.Add(payment);
 
             await _bookingRepository.AddAsync(booking);
             await _bookingRepository.SaveChangesAsync();
