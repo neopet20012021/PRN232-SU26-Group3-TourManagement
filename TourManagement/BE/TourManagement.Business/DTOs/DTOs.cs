@@ -20,8 +20,6 @@ namespace TourManagement.Business.DTOs
         [EmailAddress(ErrorMessage = "Email không hợp lệ")]
         public string Email { get; set; } = string.Empty;
 
-        [StringLength(50)]
-        public string? CCCD { get; set; }
 
         [StringLength(200)]
         public string? Address { get; set; }
@@ -38,7 +36,7 @@ namespace TourManagement.Business.DTOs
         [Range(0, 100, ErrorMessage = "Số trẻ sơ sinh phải từ 0 đến 100")]
         public int InfantCount { get; set; } = 0;
 
-        public string? RoomType { get; set; }
+
         public string? SpecialRequest { get; set; }
         public string? PromoCode { get; set; }
         public string PaymentMethod { get; set; } = "cash";
@@ -55,12 +53,12 @@ namespace TourManagement.Business.DTOs
         public string CustomerName { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
-        public string? CCCD { get; set; }
+
         public string? Address { get; set; }
         public int AdultCount { get; set; }
         public int ChildCount { get; set; }
         public int InfantCount { get; set; }
-        public string? RoomType { get; set; }
+
         public string? SpecialRequest { get; set; }
         public string? PromoCode { get; set; }
         public decimal TotalPrice { get; set; }

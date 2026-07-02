@@ -63,11 +63,11 @@ namespace TourManagement.RazorWeb.Pages
             public string CustomerName { get; set; } = string.Empty;
             public string PhoneNumber { get; set; } = string.Empty;
             public string Email { get; set; } = string.Empty;
-            public string? CCCD { get; set; }
+
             public int AdultCount { get; set; }
             public int ChildCount { get; set; }
             public int InfantCount { get; set; }
-            public string? RoomType { get; set; }
+
             public string? SpecialRequest { get; set; }
             public string? PromoCode { get; set; }
             public decimal TotalPrice { get; set; }

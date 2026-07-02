@@ -13,7 +13,7 @@ namespace TourManagement.Web.Models
         public string? Address { get; set; }
         public int AdultCount { get; set; } = 1;
         public int ChildCount { get; set; } = 0;
-        public string? RoomType { get; set; }
+
         public string? PromoCode { get; set; }
         public DateTime BookingDate { get; set; }
         public string? SpecialRequest { get; set; }
@@ -45,8 +45,7 @@ namespace TourManagement.Web.Models
         [EmailAddress(ErrorMessage = "Email không hợp lệ.")]
         public string Email { get; set; } = string.Empty;
 
-        [StringLength(50, ErrorMessage = "Số CCCD không được quá 50 ký tự.")]
-        public string? CCCD { get; set; }
+
 
         [StringLength(200, ErrorMessage = "Địa chỉ không được quá 200 ký tự.")]
         public string? Address { get; set; }
@@ -63,8 +62,6 @@ namespace TourManagement.Web.Models
         [Range(0, 100, ErrorMessage = "Số trẻ nhỏ phải từ 0 đến 100.")]
         public int InfantCount { get; set; } = 0;
 
-        [StringLength(50)]
-        public string RoomType { get; set; } = "Phòng đôi";
 
         [StringLength(500, ErrorMessage = "Yêu cầu đặc biệt không được quá 500 ký tự.")]
         public string? SpecialRequest { get; set; }

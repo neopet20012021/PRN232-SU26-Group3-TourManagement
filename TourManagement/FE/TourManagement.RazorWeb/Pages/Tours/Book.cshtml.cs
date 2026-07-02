@@ -108,7 +108,7 @@ namespace TourManagement.RazorWeb.Pages.Tours
                 AdultCount = BookingInput.AdultCount,
                 ChildCount = BookingInput.ChildCount,
                 InfantCount = BookingInput.InfantCount,
-                RoomType = BookingInput.RoomType,
+
                 SpecialRequest = BookingInput.SpecialRequest,
                 PaymentMethod = BookingInput.PaymentMethod,
                 PromoCode = BookingInput.PromoCode,
@@ -197,7 +197,7 @@ namespace TourManagement.RazorWeb.Pages.Tours
         [Range(0, 100)]
         public int InfantCount { get; set; } = 0;
 
-        public string? RoomType { get; set; }
+
         public string? SpecialRequest { get; set; }
 
         [Required(ErrorMessage = "Please select a payment method")]

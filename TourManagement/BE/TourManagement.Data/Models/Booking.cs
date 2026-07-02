@@ -35,8 +35,6 @@ namespace TourManagement.Data.Models
         [EmailAddress(ErrorMessage = "Email không hợp lệ")]
         public string Email { get; set; } = string.Empty;
 
-        [StringLength(50)]
-        public string? CCCD { get; set; }
 
         [Required]
         [Range(0, int.MaxValue, ErrorMessage = "Số lượng người lớn không được nhỏ hơn 0")]
@@ -50,8 +48,6 @@ namespace TourManagement.Data.Models
         [Range(0, int.MaxValue, ErrorMessage = "Số lượng trẻ sơ sinh không được nhỏ hơn 0")]
         public int InfantCount { get; set; } = 0;
 
-        [StringLength(50)]
-        public string? RoomType { get; set; }
 
         [StringLength(500)]
         public string? SpecialRequest { get; set; }
@@ -88,11 +84,6 @@ namespace TourManagement.Data.Models
         [Required]
         public DateTime BookingDate { get; set; }
 
-        [StringLength(200)]
-        public string? Notes { get; set; }
-
-        [StringLength(50)]
-        public string? CreatedBy { get; set; }
 
         public int? UserId { get; set; }
 
