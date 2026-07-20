@@ -163,4 +163,24 @@ namespace TourManagement.Data.Repositories
         {
         }
     }
+
+    public interface IReviewRepository : IRepository<Models.Review>
+    {
+        Task<IEnumerable<Models.Review>> GetReviewsByTourIdAsync(int tourId);
+    }
+
+    public class ReviewRepository : Repository<Models.Review>, IReviewRepository
+    {
+        public ReviewRepository(TourManagementDbContext context) : base(context)
+        {
+        }
+
+        public async Task<IEnumerable<Models.Review>> GetReviewsByTourIdAsync(int tourId)
+        {
+            return await _dbSet
+                .Where(r => r.TourId == tourId)
+                .OrderByDescending(r => r.CreatedDate)
+                .ToListAsync();
+        }
+    }
 }

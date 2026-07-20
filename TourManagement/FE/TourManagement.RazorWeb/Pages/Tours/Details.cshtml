@@ -199,6 +199,38 @@
         object-fit: cover;
     }
 
+
+    .badge-criteria {
+        font-size: 0.825rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        padding: 0.4em 0.75em;
+    }
+    .badge-cleanliness {
+        background-color: #e0f2fe !important;
+        color: #0284c7 !important;
+        border: 1px solid #bae6fd;
+    }
+    .badge-comfort {
+        background-color: #ffe4e6 !important;
+        color: #e11d48 !important;
+        border: 1px solid #fecdd3;
+    }
+    .badge-amenities {
+        background-color: #fef3c7 !important;
+        color: #d97706 !important;
+        border: 1px solid #fde68a;
+    }
+    .badge-value {
+        background-color: #dcfce7 !important;
+        color: #16a34a !important;
+        border: 1px solid #bbf7d0;
+    }
+    .cursor-pointer {
+        cursor: pointer;
+    }
+
     /* CTA Section */
     .cta-section {
         background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
@@ -228,7 +260,7 @@ else
         <!-- TOUR HEADER (BELOW IMAGE) -->
         <div class="tour-header">
             <div class="d-flex gap-2 mb-3 flex-wrap">
-                <span class="badge badge-premium px-3 py-2 rounded-pill"><i class="bi bi-star-fill text-warning"></i> 4.8 (120 Đánh giá)</span>
+                <span class="badge badge-premium px-3 py-2 rounded-pill"><i class="bi bi-star-fill text-warning"></i> @(Model.ReviewSummary?.TotalReviews > 0 ? Model.ReviewSummary.AverageRating.ToString("0.0") : "5.0") (@(Model.ReviewSummary?.TotalReviews ?? 0) Đánh giá)</span>
                 <span class="badge badge-premium px-3 py-2 rounded-pill"><i class="bi bi-shield-check text-success"></i> Hủy miễn phí</span>
                 <span class="badge badge-premium px-3 py-2 rounded-pill"><i class="bi bi-lightning-charge-fill text-warning"></i> Xác nhận ngay</span>
                 <span class="badge bg-danger px-3 py-2 rounded-pill fw-bold"><i class="bi bi-fire"></i> Bán Chạy Nhất</span>
@@ -323,59 +355,227 @@ else
                     </div>
                 </div>
 
-                <!-- CUSTOMER REVIEWS (MOCK) -->
-                <div class="card border-0 shadow-sm rounded-4 mb-4">
+                <!-- DYNAMIC CUSTOMER REVIEWS & RATING FORM -->
+                <div class="card border-0 shadow-sm rounded-4 mb-4" id="reviews-section">
                     <div class="card-body p-4 p-md-5">
-                        <h4 class="section-title"><i class="bi bi-star-half text-warning"></i> Đánh Giá Từ Khách Hàng</h4>
+                        <h4 class="section-title mb-4"><i class="bi bi-star-half text-warning"></i> Đánh Giá Chi Tiết Từ Khách Hàng</h4>
                         
-                        <div class="d-flex align-items-center gap-4 mb-5 p-4 bg-light rounded-4">
-                            <div class="text-center">
-                                <h1 class="display-3 fw-bold text-dark mb-0">4.8</h1>
-                                <div class="text-warning fs-4">★★★★★</div>
-                                <span class="text-muted">120 Đánh giá</span>
+                        @{
+                            var totalReviews = Model.ReviewSummary?.TotalReviews ?? 0;
+                            var avgRating = Model.ReviewSummary?.AverageRating ?? 0;
+                            var avgCleanliness = Model.ReviewSummary?.AvgCleanliness ?? 0;
+                            var avgComfort = Model.ReviewSummary?.AvgComfort ?? 0;
+                            var avgAmenities = Model.ReviewSummary?.AvgAmenities ?? 0;
+                            var avgValue = Model.ReviewSummary?.AvgValue ?? 0;
+                        }
+
+                        <div class="row g-4 mb-5 p-4 bg-light rounded-4 align-items-center">
+                            <!-- Overall Rating Box -->
+                            <div class="col-md-4 text-center border-end-md">
+                                <h1 class="display-3 fw-bold text-dark mb-0">@(totalReviews > 0 ? avgRating.ToString("0.0") : "0.0")</h1>
+                                <div class="text-warning fs-4 mb-1">
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        if (i <= Math.Round(avgRating))
+                                        {
+                                            <i class="bi bi-star-fill"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="bi bi-star text-muted"></i>
+                                        }
+                                    }
+                                </div>
+                                <span class="text-muted">Dựa trên @totalReviews Đánh giá</span>
                             </div>
-                            <div class="flex-grow-1">
-                                <!-- Progress bars mock -->
-                                <div class="d-flex align-items-center gap-2 mb-1"><span class="text-muted" style="width: 25px;">5★</span><div class="progress flex-grow-1" style="height: 8px;"><div class="progress-bar bg-warning" style="width: 85%"></div></div></div>
-                                <div class="d-flex align-items-center gap-2 mb-1"><span class="text-muted" style="width: 25px;">4★</span><div class="progress flex-grow-1" style="height: 8px;"><div class="progress-bar bg-warning" style="width: 10%"></div></div></div>
-                                <div class="d-flex align-items-center gap-2 mb-1"><span class="text-muted" style="width: 25px;">3★</span><div class="progress flex-grow-1" style="height: 8px;"><div class="progress-bar bg-warning" style="width: 3%"></div></div></div>
-                                <div class="d-flex align-items-center gap-2 mb-1"><span class="text-muted" style="width: 25px;">2★</span><div class="progress flex-grow-1" style="height: 8px;"><div class="progress-bar bg-warning" style="width: 1%"></div></div></div>
-                                <div class="d-flex align-items-center gap-2 mb-1"><span class="text-muted" style="width: 25px;">1★</span><div class="progress flex-grow-1" style="height: 8px;"><div class="progress-bar bg-warning" style="width: 1%"></div></div></div>
+
+                            <!-- Detailed Criteria Breakdown Bars -->
+                            <div class="col-md-8">
+                                <div class="row g-3">
+                                    <div class="col-6">
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <small class="fw-bold text-dark"><i class="bi bi-stars text-info me-1"></i> Sạch sẽ</small>
+                                            <small class="fw-bold text-primary">@avgCleanliness / 5.0</small>
+                                        </div>
+                                        <div class="progress" style="height: 8px;">
+                                            <div class="progress-bar bg-info" style="width: @(avgCleanliness * 20)%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <small class="fw-bold text-dark"><i class="bi bi-heart-fill text-danger me-1"></i> Thoải mái</small>
+                                            <small class="fw-bold text-primary">@avgComfort / 5.0</small>
+                                        </div>
+                                        <div class="progress" style="height: 8px;">
+                                            <div class="progress-bar bg-danger" style="width: @(avgComfort * 20)%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <small class="fw-bold text-dark"><i class="bi bi-cup-hot-fill text-warning me-1"></i> Tiện ích & Dịch vụ</small>
+                                            <small class="fw-bold text-primary">@avgAmenities / 5.0</small>
+                                        </div>
+                                        <div class="progress" style="height: 8px;">
+                                            <div class="progress-bar bg-warning" style="width: @(avgAmenities * 20)%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <small class="fw-bold text-dark"><i class="bi bi-tag-fill text-success me-1"></i> Phù hợp / Đáng giá</small>
+                                            <small class="fw-bold text-primary">@avgValue / 5.0</small>
+                                        </div>
+                                        <div class="progress" style="height: 8px;">
+                                            <div class="progress-bar bg-success" style="width: @(avgValue * 20)%"></div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="row g-4">
-                            <div class="col-md-6">
-                                <div class="review-card shadow-sm">
-                                    <div class="d-flex gap-3 mb-3">
-                                        <img src="https://i.pravatar.cc/150?img=1" class="avatar">
-                                        <div>
-                                            <h6 class="fw-bold mb-0">Trần Minh Tuấn</h6>
-                                            <small class="text-muted">12/05/2026</small>
-                                        </div>
-                                        <div class="ms-auto text-warning">★★★★★</div>
-                                    </div>
-                                    <p class="text-muted mb-0">Tour tuyệt vời! Hướng dẫn viên rất nhiệt tình và chuyên nghiệp. Đồ ăn trên du thuyền cực kỳ ngon. Sẽ ủng hộ lần sau!</p>
+                        <!-- SUBMIT DETAILED REVIEW FORM -->
+                        <div class="card bg-light border-0 rounded-4 p-4 mb-5 shadow-sm">
+                            <h5 class="fw-bold mb-3 text-primary"><i class="bi bi-pencil-square me-2"></i> Gửi Đánh Giá Chi Tiết Của Bạn</h5>
+                            
+                            @if (!string.IsNullOrEmpty(Model.ReviewSuccessMessage))
+                            {
+                                <div class="alert alert-success rounded-3"><i class="bi bi-check-circle-fill me-2"></i> @Model.ReviewSuccessMessage</div>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.ReviewErrorMessage))
+                            {
+                                <div class="alert alert-danger rounded-3"><i class="bi bi-exclamation-triangle-fill me-2"></i> @Model.ReviewErrorMessage</div>
+                            }
+
+                            <form method="post" asp-page-handler="Review" asp-route-scheduleId="@Model.Schedule.ScheduleId">
+                                <input type="hidden" asp-for="NewReview.Rating" id="ratingInput" value="5" />
+                                <input type="hidden" asp-for="NewReview.CleanlinessRating" id="cleanlinessInput" value="5" />
+                                <input type="hidden" asp-for="NewReview.ComfortRating" id="comfortInput" value="5" />
+                                <input type="hidden" asp-for="NewReview.AmenitiesRating" id="amenitiesInput" value="5" />
+                                <input type="hidden" asp-for="NewReview.ValueRating" id="valueInput" value="5" />
+
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold text-dark">Họ và Tên:</label>
+                                    <input type="text" asp-for="NewReview.CustomerName" class="form-control rounded-3 border bg-white" placeholder="Nhập tên của bạn..." required />
                                 </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="review-card shadow-sm">
-                                    <div class="d-flex gap-3 mb-3">
-                                        <img src="https://i.pravatar.cc/150?img=5" class="avatar">
-                                        <div>
-                                            <h6 class="fw-bold mb-0">Nguyễn Ngọc Ánh</h6>
-                                            <small class="text-muted">05/04/2026</small>
+
+                                <!-- Multi-Criteria Star Pickers -->
+                                <div class="mb-4 bg-white p-4 rounded-3 border">
+                                    <div class="row g-4">
+                                        <div class="col-md-12">
+                                            <label class="form-label fw-bold text-primary mb-1">Đánh giá tổng quan:</label>
+                                            <div class="star-picker fs-3 text-warning cursor-pointer" data-target="ratingInput">
+                                                <i class="bi bi-star-fill star-item" data-val="1"></i>
+                                                <i class="bi bi-star-fill star-item" data-val="2"></i>
+                                                <i class="bi bi-star-fill star-item" data-val="3"></i>
+                                                <i class="bi bi-star-fill star-item" data-val="4"></i>
+                                                <i class="bi bi-star-fill star-item" data-val="5"></i>
+                                            </div>
                                         </div>
-                                        <div class="ms-auto text-warning">★★★★★</div>
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-bold text-dark mb-1"><i class="bi bi-stars text-info me-1"></i> Sạch sẽ:</label>
+                                            <div class="star-picker fs-4 text-warning cursor-pointer" data-target="cleanlinessInput">
+                                                <i class="bi bi-star-fill star-item" data-val="1"></i>
+                                                <i class="bi bi-star-fill star-item" data-val="2"></i>
+                                                <i class="bi bi-star-fill star-item" data-val="3"></i>
+                                                <i class="bi bi-star-fill star-item" data-val="4"></i>
+                                                <i class="bi bi-star-fill star-item" data-val="5"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-bold text-dark mb-1"><i class="bi bi-heart-fill text-danger me-1"></i> Thoải mái:</label>
+                                            <div class="star-picker fs-4 text-warning cursor-pointer" data-target="comfortInput">
+                                                <i class="bi bi-star-fill star-item" data-val="1"></i>
+                                                <i class="bi bi-star-fill star-item" data-val="2"></i>
+                                                <i class="bi bi-star-fill star-item" data-val="3"></i>
+                                                <i class="bi bi-star-fill star-item" data-val="4"></i>
+                                                <i class="bi bi-star-fill star-item" data-val="5"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-bold text-dark mb-1"><i class="bi bi-cup-hot-fill text-warning me-1"></i> Tiện ích & Dịch vụ:</label>
+                                            <div class="star-picker fs-4 text-warning cursor-pointer" data-target="amenitiesInput">
+                                                <i class="bi bi-star-fill star-item" data-val="1"></i>
+                                                <i class="bi bi-star-fill star-item" data-val="2"></i>
+                                                <i class="bi bi-star-fill star-item" data-val="3"></i>
+                                                <i class="bi bi-star-fill star-item" data-val="4"></i>
+                                                <i class="bi bi-star-fill star-item" data-val="5"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-bold text-dark mb-1"><i class="bi bi-tag-fill text-success me-1"></i> Phù hợp / Đáng giá:</label>
+                                            <div class="star-picker fs-4 text-warning cursor-pointer" data-target="valueInput">
+                                                <i class="bi bi-star-fill star-item" data-val="1"></i>
+                                                <i class="bi bi-star-fill star-item" data-val="2"></i>
+                                                <i class="bi bi-star-fill star-item" data-val="3"></i>
+                                                <i class="bi bi-star-fill star-item" data-val="4"></i>
+                                                <i class="bi bi-star-fill star-item" data-val="5"></i>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <p class="text-muted mb-0">Lịch trình hợp lý, không quá mệt mỏi. Phòng ốc sạch sẽ chuẩn 5 sao. Gia đình mình đã có một kỳ nghỉ thật tuyệt vời.</p>
                                 </div>
-                            </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold text-dark">Nội dung nhận xét:</label>
+                                    <textarea asp-for="NewReview.Comment" class="form-control rounded-3 border bg-white" rows="3" placeholder="Chia sẻ chi tiết cảm nhận của bạn về chuyến đi..." required></textarea>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary px-4 py-2.5 rounded-pill fw-bold shadow-sm">
+                                    <i class="bi bi-send-fill me-2"></i> Gửi Đánh Giá Chi Tiết
+                                </button>
+                            </form>
                         </div>
+
+                        <!-- REVIEW LIST -->
+                        <h5 class="fw-bold mb-4">Các nhận xét gần đây</h5>
+                        @if (Model.ReviewSummary?.Reviews != null && Model.ReviewSummary.Reviews.Any())
+                        {
+                            <div class="row g-4">
+                                @foreach (var review in Model.ReviewSummary.Reviews)
+                                {
+                                    <div class="col-md-6">
+                                        <div class="review-card shadow-sm h-100">
+                                            <div class="d-flex gap-3 mb-3 align-items-center">
+                                                <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold fs-5" style="width: 48px; height: 48px;">
+                                                    @(string.IsNullOrEmpty(review.CustomerName) ? "K" : review.CustomerName.Substring(0, 1).ToUpper())
+                                                </div>
+                                                <div>
+                                                    <h6 class="fw-bold mb-0">@review.CustomerName</h6>
+                                                    <small class="text-muted">@review.CreatedDate.ToString("dd/MM/yyyy HH:mm")</small>
+                                                </div>
+                                                <div class="ms-auto text-warning fs-6">
+                                                    @for (int s = 1; s <= 5; s++)
+                                                    {
+                                                        if (s <= review.Rating)
+                                                        {
+                                                            <i class="bi bi-star-fill"></i>
+                                                        }
+                                                        else
+                                                        {
+                                                            <i class="bi bi-star text-muted"></i>
+                                                        }
+                                                    }
+                                                </div>
+                                            </div>
+
+                                            <!-- High Contrast Criteria Badges -->
+                                            <div class="d-flex flex-wrap gap-2 mb-3">
+                                                <span class="badge badge-criteria badge-cleanliness rounded-pill"><i class="bi bi-stars me-1"></i> Sạch sẽ: @review.CleanlinessRating★</span>
+                                                <span class="badge badge-criteria badge-comfort rounded-pill"><i class="bi bi-heart-fill me-1"></i> Thoải mái: @review.ComfortRating★</span>
+                                                <span class="badge badge-criteria badge-amenities rounded-pill"><i class="bi bi-cup-hot-fill me-1"></i> Tiện ích: @review.AmenitiesRating★</span>
+                                                <span class="badge badge-criteria badge-value rounded-pill"><i class="bi bi-tag-fill me-1"></i> Phù hợp: @review.ValueRating★</span>
+                                            </div>
+
+                                            <p class="text-muted mb-0">@review.Comment</p>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="text-muted text-center py-4">Chưa có nhận xét nào cho tour này. Hãy là người đầu tiên gửi đánh giá!</div>
+                        }
                     </div>
                 </div>
-
-            </div>
 
             <!-- SIDEBAR (RIGHT) -->
             <div class="col-lg-4">
@@ -403,7 +603,8 @@ else
                             <strong class="text-danger">Còn @Model.Schedule.AvailableSeats chỗ</strong>
                         </div>
                     </div>
-                    <a href="/Tours/Book?scheduleId=@Model.Schedule.ScheduleId" class="btn btn-primary btn-lg w-100 rounded-pill fw-bold shadow py-3 mb-3 fs-5">
+
+                    <a href="/Tours/Book?scheduleId=@Model.Schedule.ScheduleId" class="btn btn-primary btn-lg w-100 rounded-pill fw-bold shadow py-3 mb-3 fs-5">
                         Đặt Ngay <i class="bi bi-arrow-right ms-2"></i>
                     </a>
 
@@ -530,6 +731,35 @@ else
 
                 container.innerHTML = html;
             }
+
+            // Interactive Star Pickers
+            document.querySelectorAll('.star-picker').forEach(function(picker) {
+                let targetId = picker.getAttribute('data-target');
+                let targetInput = document.getElementById(targetId);
+                let stars = picker.querySelectorAll('.star-item');
+
+                function setStars(val) {
+                    stars.forEach(function(star) {
+                        let starVal = parseInt(star.getAttribute('data-val'));
+                        if (starVal <= val) {
+                            star.classList.remove('bi-star', 'text-muted');
+                            star.classList.add('bi-star-fill', 'text-warning');
+                        } else {
+                            star.classList.remove('bi-star-fill', 'text-warning');
+                            star.classList.add('bi-star', 'text-muted');
+                        }
+                    });
+                }
+
+                stars.forEach(function(star) {
+                    star.addEventListener('click', function() {
+                        let val = parseInt(this.getAttribute('data-val'));
+                        if (targetInput) targetInput.value = val;
+                        setStars(val);
+                    });
+                });
+            });
+
         });
     </script>
 }
