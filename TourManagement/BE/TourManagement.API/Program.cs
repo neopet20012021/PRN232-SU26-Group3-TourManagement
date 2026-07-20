@@ -32,6 +32,7 @@ static IEdmModel GetEdmModel()
     builder.EntitySet<TourSchedule>("TourSchedules");
     builder.EntitySet<User>("Users");
     builder.EntitySet<PromoCode>("PromoCodes");
+    builder.EntitySet<Review>("Reviews");
     return builder.GetEdmModel();
 }
 
@@ -56,10 +57,12 @@ builder.Services.AddScoped<ITourScheduleRepository, TourScheduleRepository>();
 builder.Services.AddScoped<IBookingRepository, BookingRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IPromoCodeRepository, PromoCodeRepository>();
+builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 
 // Register Services
 builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IReviewService, ReviewService>();
 
 // Yêu cầu Singleton Pattern: Đổi PromoCodeService thành Singleton
 builder.Services.AddSingleton<IPromoCodeService, PromoCodeService>();

@@ -43,6 +43,11 @@ namespace TourManagement.Business.Mappings
             // User mappings
             CreateMap<User, UserDTO>()
                 .ReverseMap();
+
+            // Review mappings
+            CreateMap<Review, ReviewDTO>()
+                .ReverseMap();
+            CreateMap<CreateReviewDTO, Review>();
         }
     }
 

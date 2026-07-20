@@ -72,5 +72,6 @@ namespace TourManagement.Data.Models
         public DateTime? UpdatedDate { get; set; }
 
         public virtual ICollection<TourSchedule> Schedules { get; set; } = new List<TourSchedule>();
+        public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
     }
 }

@@ -16,6 +16,7 @@ namespace TourManagement.Data.Context
         public DbSet<TourSchedule> TourSchedules { get; set; }
         public DbSet<PromoCode> PromoCodes { get; set; }
         public DbSet<Payment> Payments { get; set; }
+        public DbSet<Review> Reviews { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -342,6 +343,93 @@ namespace TourManagement.Data.Context
                     MaxUsage = 200,
                     UsageCount = 0,
                     IsActive = true
+                }
+            );
+
+            // Configure Review entity
+            modelBuilder.Entity<Review>(entity =>
+            {
+                entity.HasKey(e => e.ReviewId);
+                entity.Property(e => e.CustomerName).IsRequired().HasMaxLength(100);
+                entity.Property(e => e.Comment).IsRequired().HasMaxLength(1000);
+
+                entity.HasOne(d => d.Tour)
+                    .WithMany(p => p.Reviews)
+                    .HasForeignKey(d => d.TourId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(d => d.User)
+                    .WithMany()
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.SetNull);
+            });
+
+            // Seed Data cho Reviews
+            modelBuilder.Entity<Review>().HasData(
+                new Review
+                {
+                    ReviewId = 1,
+                    TourId = 1,
+                    CustomerName = "Trần Minh Tuấn",
+                    Rating = 5,
+                    CleanlinessRating = 5,
+                    ComfortRating = 5,
+                    AmenitiesRating = 5,
+                    ValueRating = 5,
+                    Comment = "Tour Sa Pa rất tuyệt vời! Hướng dẫn viên nhiệt tình, phòng sạch sẽ, tiện nghi đầy đủ.",
+                    CreatedDate = DateTime.Now.AddDays(-5)
+                },
+                new Review
+                {
+                    ReviewId = 2,
+                    TourId = 1,
+                    CustomerName = "Nguyễn Thị Hoa",
+                    Rating = 4,
+                    CleanlinessRating = 4,
+                    ComfortRating = 4,
+                    AmenitiesRating = 4,
+                    ValueRating = 4,
+                    Comment = "Lịch trình vừa phải, khách sạn 3 sao sạch sẽ. Bữa ăn tạm ổn.",
+                    CreatedDate = DateTime.Now.AddDays(-3)
+                },
+                new Review
+                {
+                    ReviewId = 3,
+                    TourId = 2,
+                    CustomerName = "Lê Hoàng Nam",
+                    Rating = 5,
+                    CleanlinessRating = 5,
+                    ComfortRating = 5,
+                    AmenitiesRating = 5,
+                    ValueRating = 5,
+                    Comment = "Du thuyền 5 sao Vịnh Hạ Long đẳng cấp, tiện ích tuyệt vời và đồ ăn buffet hải sản rất phong phú.",
+                    CreatedDate = DateTime.Now.AddDays(-7)
+                },
+                new Review
+                {
+                    ReviewId = 4,
+                    TourId = 2,
+                    CustomerName = "Đặng Văn Hùng",
+                    Rating = 5,
+                    CleanlinessRating = 5,
+                    ComfortRating = 4,
+                    AmenitiesRating = 5,
+                    ValueRating = 5,
+                    Comment = "Trải nghiệm chèo thuyền Kayak ở Vịnh Lan Hạ vô cùng đáng nhớ. Phòng ốc thoải mái.",
+                    CreatedDate = DateTime.Now.AddDays(-2)
+                },
+                new Review
+                {
+                    ReviewId = 5,
+                    TourId = 3,
+                    CustomerName = "Phạm Thu Trang",
+                    Rating = 5,
+                    CleanlinessRating = 5,
+                    ComfortRating = 5,
+                    AmenitiesRating = 5,
+                    ValueRating = 5,
+                    Comment = "Bà Nà Hills đẹp mê hồn, cầu Vàng rực rỡ. Tour sắp xếp rất chu đáo!",
+                    CreatedDate = DateTime.Now.AddDays(-4)
                 }
             );
         }
