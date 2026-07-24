@@ -221,6 +221,46 @@ namespace TourManagement.API.Controllers
             return NoContent();
         }
 
+        [HttpPost("{key}/mark-transferred")]
+        [AllowAnonymous] // Assuming users can mark their own booking as transferred. In a real scenario, this might need auth.
+        public async Task<IActionResult> MarkTransferred(string key)
+        {
+            // The key can be BookingCode (string) or BookingId (int). Let's support both or just BookingCode since frontend uses it.
+            Booking? booking;
+            if (int.TryParse(key, out int id))
+            {
+                booking = await _context.Bookings.Include(b => b.Payments).FirstOrDefaultAsync(b => b.BookingId == id);
+            }
+            else
+            {
+                booking = await _context.Bookings.Include(b => b.Payments).FirstOrDefaultAsync(b => b.BookingCode == key);
+            }
+
+            if (booking == null)
+            {
+                return NotFound(new { success = false, message = "Booking not found" });
+            }
+
+            if (booking.Status.ToLower() != "pending")
+            {
+                return BadRequest(new { success = false, message = "Booking is not in pending state" });
+            }
+
+            booking.Status = "Verifying";
+            
+            // Also update the payment record if exists
+            var payment = booking.Payments.FirstOrDefault(p => p.Status.ToLower() == "pending" && p.PaymentMethod.ToLower() == "transfer");
+            if (payment != null)
+            {
+                payment.Notes = "User marked as transferred on " + DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+            }
+
+            _context.Entry(booking).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            return Ok(new { success = true, message = "Successfully marked as transferred. Awaiting admin verification." });
+        }
+
         [HttpPost("calculate-price")]
         [AllowAnonymous]
         public async Task<IActionResult> CalculatePrice([FromBody] PriceCalculationRequest request, [FromServices] TourManagement.Business.Services.IBookingService bookingService)

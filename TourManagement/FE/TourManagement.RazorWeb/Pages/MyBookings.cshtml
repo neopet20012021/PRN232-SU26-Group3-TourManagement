@@ -90,6 +90,7 @@
     {
         var statusInfo = booking.Status.ToLower() switch {
             "pending"   => ("bg-warning text-dark", "⏳ Chờ xác nhận"),
+            "verifying" => ("bg-info text-white", "🔎 Đang chờ kiểm tra"),
             "confirmed" => ("bg-success text-white", "✅ Đã xác nhận"),
             "paid"      => ("bg-primary text-white", "💳 Đã thanh toán"),
             "deposited" => ("bg-info text-white", "🏦 Đặt cọc"),

@@ -101,6 +101,10 @@ namespace TourManagement.RazorWeb.Pages.Tours
 
             var bookingPayload = new
             {
+                BookingId = 0,
+                BookingCode = "TEMP", 
+                CreatedDate = DateTime.UtcNow,
+                BookingDate = DateTime.UtcNow,
                 ScheduleId = BookingInput.ScheduleId,
                 CustomerName = BookingInput.CustomerName,
                 PhoneNumber = BookingInput.PhoneNumber,
@@ -109,11 +113,15 @@ namespace TourManagement.RazorWeb.Pages.Tours
                 ChildCount = BookingInput.ChildCount,
                 InfantCount = BookingInput.InfantCount,
 
-                SpecialRequest = BookingInput.SpecialRequest,
-                PaymentMethod = BookingInput.PaymentMethod,
-                PromoCode = BookingInput.PromoCode,
+                SpecialRequest = BookingInput.SpecialRequest ?? "",
+                PaymentMethod = BookingInput.PaymentMethod ?? "Cash",
+                PromoCode = BookingInput.PromoCode ?? "",
                 UserId = userId,
-                CreatedBy = User.Identity?.Name 
+
+                Status = "Pending",
+                TotalPrice = 0m,
+                DiscountAmount = 0m,
+                FinalPrice = 0m
             };
 
             var content = new StringContent(JsonSerializer.Serialize(bookingPayload), Encoding.UTF8, "application/json");
@@ -121,10 +129,11 @@ namespace TourManagement.RazorWeb.Pages.Tours
 
             if (response.IsSuccessStatusCode)
             {
-                SuccessMessage = "Booking successful! Your order is Pending.";
-                ModelState.Clear();
-                // To prevent resubmission or hide the form, we keep it as is since SuccessMessage handles it.
-                return Page();
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var createdBooking = JsonSerializer.Deserialize<JsonElement>(responseContent);
+                string bookingCode = createdBooking.GetProperty("BookingCode").GetString() ?? "";
+
+                return RedirectToPage("/BookingDetail", new { bookingCode = bookingCode });
             }
             else
             {

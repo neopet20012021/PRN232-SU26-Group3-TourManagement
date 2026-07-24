@@ -182,7 +182,6 @@
     
     .btn-continue:hover {
         background: var(--color-primary-hover, #0369a1);
-        transform: translateY(-2px);
         box-shadow: 0 10px 15px -3px rgba(2, 132, 199, 0.3);
         color: white;
     }
@@ -420,8 +419,8 @@ else
                                             <select asp-for="BookingInput.PaymentMethod" class="form-select form-select-lg mb-2 shadow-sm border-0" required>
                                                 <option value="">-- Chọn phương thức --</option>
                                                 <option value="Cash">Tiền mặt tại văn phòng</option>
-                                                <option value="BankTransfer">Chuyển khoản ngân hàng</option>
-                                                <option value="CreditCard">Thẻ Tín dụng / Ghi nợ</option>
+                                                <option value="Transfer">Chuyển khoản (QR / Ngân hàng)</option>
+                                                <option value="CreditCard">Thẻ Tín dụng / Thẻ Ghi nợ</option>
                                             </select>
                                             <div class="invalid-feedback">Vui lòng chọn phương thức thanh toán.</div>
                                             <span asp-validation-for="BookingInput.PaymentMethod" class="text-danger small"></span>

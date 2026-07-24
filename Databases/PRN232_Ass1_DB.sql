@@ -2,17 +2,17 @@
 USE master;
 GO
 
-IF EXISTS (SELECT * FROM sys.databases WHERE name = N'PRN232_TourManagement')
+IF EXISTS (SELECT * FROM sys.databases WHERE name = N'TourManagementDB')
 BEGIN
-    ALTER DATABASE PRN232_TourManagement SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
-    DROP DATABASE PRN232_TourManagement;
+    ALTER DATABASE TourManagementDB SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+    DROP DATABASE TourManagementDB;
 END
 GO
 
-CREATE DATABASE PRN232_TourManagement;
+CREATE DATABASE TourManagementDB;
 GO
 
-USE PRN232_TourManagement;
+USE TourManagementDB;
 GO
 
 -- 2. TẠO BẢNG TÀI KHOẢN (Phục vụ chức năng Phân quyền Authentication/Role-based)

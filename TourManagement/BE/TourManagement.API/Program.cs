@@ -27,7 +27,10 @@ builder.Services.AddCors(options =>
 static IEdmModel GetEdmModel()
 {
     var builder = new ODataConventionModelBuilder();
-    builder.EntitySet<Booking>("Bookings");
+    var bookingConfig = builder.EntitySet<Booking>("Bookings");
+    bookingConfig.EntityType.Property(b => b.PaymentMethod);
+    bookingConfig.EntityType.Property(b => b.PromoCode);
+    
     builder.EntitySet<Tour>("Tours");
     builder.EntitySet<TourSchedule>("TourSchedules");
     builder.EntitySet<User>("Users");

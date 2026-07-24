@@ -43,6 +43,7 @@ builder.Services.AddScoped<IBookingRepository, BookingRepository>();
 
 // Register Services
 builder.Services.AddScoped<IBookingService, BookingService>();
+builder.Services.AddScoped<IVnPayService, VnPayService>();
 
 // Yêu cầu Singleton Pattern: Đổi PromoCodeService thành Singleton
 builder.Services.AddSingleton<IPromoCodeService, PromoCodeService>();

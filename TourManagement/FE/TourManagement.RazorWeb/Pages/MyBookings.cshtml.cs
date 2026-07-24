@@ -26,8 +26,8 @@ namespace TourManagement.RazorWeb.Pages
             
             var userId = User.FindFirst("UserId")?.Value;
             var filterQuery = string.IsNullOrEmpty(userId) 
-                ? $"CreatedBy eq '{User.Identity?.Name}'" 
-                : $"(UserId eq {userId} or CreatedBy eq '{User.Identity?.Name}')";
+                ? $"UserId eq null" // Or some safe fallback if userId is empty but they shouldn't be empty if authorized
+                : $"UserId eq {userId}";
 
             var response = await client.GetAsync($"odata/Bookings?$expand=Schedule($expand=Tour)&$filter={filterQuery}&$orderby=BookingDate desc");
             

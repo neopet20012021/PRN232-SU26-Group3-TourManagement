@@ -1,5 +1,6 @@
 @page "{bookingCode}"
 @model TourManagement.RazorWeb.Pages.BookingDetailModel
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
 @{
     ViewData["Title"] = "Chi Tiết Booking - " + Model.Booking?.BookingCode;
 }
@@ -90,12 +91,28 @@ else
     var b = Model.Booking;
     var statusColor = b.Status.ToLower() switch {
         "pending"   => ("bg-warning text-dark", "⏳ Chờ xác nhận"),
+        "verifying" => ("bg-info text-white", "🔎 Đang chờ kiểm tra"),
         "confirmed" => ("bg-success text-white", "✅ Đã xác nhận"),
         "paid"      => ("bg-primary text-white", "💳 Đã thanh toán"),
         "deposited" => ("bg-info text-white", "🏦 Đặt cọc"),
         "cancelled" => ("bg-danger text-white", "❌ Đã hủy"),
         _           => ("bg-secondary text-white", b.Status)
     };
+
+    if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show shadow-sm rounded-3" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm rounded-3" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
 
     <!-- Hero Header -->
     <div class="detail-hero">
@@ -186,6 +203,42 @@ else
 
         <!-- Right Column -->
         <div class="col-lg-5">
+            @{
+                var paymentMethod = b.Payments?.FirstOrDefault()?.PaymentMethod ?? "cash";
+            }
+            @if (b.Status.ToLower() == "pending" && paymentMethod.ToLower() == "transfer")
+            {
+                var bankId = Configuration["VietQR:BankId"] ?? "Vietcombank"; // Example Bank
+                var accountNo = Configuration["VietQR:AccountNo"] ?? "123456789"; // Example Account Number
+                var accountName = Configuration["VietQR:AccountName"] ?? "CONG TY DU LICH";
+                var amount = b.FinalPrice;
+                var addInfo = $"Thanh toan {b.BookingCode}";
+                var qrUrl = $"https://img.vietqr.io/image/{bankId}-{accountNo}-compact2.png?amount={amount}&addInfo={addInfo}&accountName={accountName}";
+
+                <div class="info-card border-primary" style="border-width: 2px;">
+                    <div class="card-title text-primary"><i class="bi bi-qr-code-scan me-2"></i>Thanh Toán QR Code</div>
+                    <div class="text-center mb-3">
+                        <img src="@qrUrl" alt="QR Code" class="img-fluid rounded" style="max-width: 250px;" />
+                    </div>
+                    <div class="alert alert-light border small text-center mb-3">
+                        Vui lòng dùng ứng dụng Ngân hàng hoặc ví điện tử (Momo...) quét mã trên để thanh toán.
+                    </div>
+                    <div class="d-grid gap-2">
+                        <form method="post" asp-page-handler="MarkTransferred">
+                            <input type="hidden" name="bookingCode" value="@b.BookingCode" />
+                            <button type="submit" class="btn btn-outline-primary w-100 rounded-pill fw-bold py-2 shadow-sm">
+                                <i class="bi bi-check2-circle me-1"></i> Tôi đã chuyển khoản
+                            </button>
+                        </form>
+                        <form method="post" asp-page-handler="CreateVnPayUrl">
+                            <input type="hidden" name="bookingCode" value="@b.BookingCode" />
+                            <button type="submit" class="btn btn-primary w-100 rounded-pill fw-bold py-2 shadow-sm" style="background: linear-gradient(135deg, #00509E, #0072C6); border: none;">
+                                <img src="https://vnpay.vn/s1/statics.vnpay.vn/2023/6/0oxhzjmxbksr1686814746087.png" alt="VNPay" style="height: 20px; margin-right: 5px; filter: brightness(0) invert(1);" /> Thanh toán qua VNPAY
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            }
 
             <!-- Price Summary -->
             <div class="info-card">
@@ -207,9 +260,6 @@ else
                 </div>
                 <div class="info-row">
                     <span class="info-label"><i class="bi bi-wallet2 me-1"></i>Thanh toán</span>
-                    @{
-                        var paymentMethod = b.Payments?.FirstOrDefault()?.PaymentMethod ?? "cash";
-                    }
                     <span class="info-value">
                         @(paymentMethod switch {
                             "cash" => Html.Raw("<span class='badge bg-warning text-dark'><i class='bi bi-cash-coin me-1'></i>Tiền mặt</span>"),
