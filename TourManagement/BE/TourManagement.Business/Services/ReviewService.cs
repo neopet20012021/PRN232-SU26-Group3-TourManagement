@@ -69,6 +69,7 @@ namespace TourManagement.Business.Services
 
             var review = _mapper.Map<Review>(dto);
             review.CreatedDate = DateTime.Now;
+            review.Rating = (int)Math.Round((review.CleanlinessRating + review.ComfortRating + review.AmenitiesRating + review.ValueRating) / 4.0, MidpointRounding.AwayFromZero);
 
             await _reviewRepository.AddAsync(review);
             await _reviewRepository.SaveChangesAsync();
