@@ -189,6 +189,103 @@
         box-shadow: 0 4px 15px rgba(2, 132, 199, 0.3);
         color: white;
     }
+
+    /* Slideshow Container */
+    .testimonial-slideshow-container {
+        position: relative;
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        min-height: 420px;
+    }
+
+    .testimonial-slide {
+        display: none;
+        width: 100%;
+    }
+
+    .testimonial-slide.active {
+        display: block;
+        animation: slideFadeIn 0.6s ease-out forwards;
+    }
+
+    /* Vertical Card style matching the tour cards */
+    .review-card-vertical {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        background: #ffffff;
+        border: 1px solid rgba(0,0,0,0.06);
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+        overflow: hidden;
+        height: 100%;
+        transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .review-card-vertical:hover {
+        transform: translateY(-5px);
+        border-color: rgba(59, 130, 246, 0.2);
+        box-shadow: 0 15px 35px rgba(59, 130, 246, 0.08);
+    }
+
+    @@keyframes slideFadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(15px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .tour-image-header {
+        position: relative;
+        width: 100%;
+        height: 180px;
+        overflow: hidden;
+    }
+
+    .tour-image-header img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .review-body-content {
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        flex-grow: 1;
+    }
+
+    .avatar-circle {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+        color: white;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.95rem;
+        box-shadow: 0 3px 8px rgba(59, 130, 246, 0.2);
+    }
+
+    @@media (max-width: 991.98px) {
+        .testimonial-slideshow-container {
+            min-height: 820px;
+        }
+    }
+
+    @@media (max-width: 767.98px) {
+        .testimonial-slideshow-container {
+            min-height: 1220px;
+        }
+    }
 </style>
 
 <!-- Hero Banner -->
@@ -340,3 +437,136 @@
         }
     </div>
 </div>
+
+@if (Model.RecentReviews != null && Model.RecentReviews.Any())
+{
+    <div class="mt-5 pt-4 border-top">
+        <div class="text-center mb-5">
+            <h2 class="section-title">Khách Hàng Nói Gì Về Chúng Tôi</h2>
+            <p class="text-muted">Nhận xét thực tế từ những hành khách đã trải nghiệm dịch vụ cùng chúng tôi</p>
+        </div>
+
+        <div class="testimonial-slideshow-container">
+            @for (int i = 0; i < Model.RecentReviews.Count; i += 3)
+            {
+                var activeClass = i == 0 ? "active" : "";
+
+                <div class="testimonial-slide @activeClass">
+                    <div class="row g-4 w-100 m-0">
+                        @for (int k = 0; k < 3; k++)
+                        {
+                            var idx = i + k;
+                            if (idx < Model.RecentReviews.Count)
+                            {
+                                var review = Model.RecentReviews[idx];
+                                var firstChar = !string.IsNullOrEmpty(review.CustomerName) ? review.CustomerName.Trim().Substring(0, 1).ToUpper() : "K";
+                                var scheduleId = Model.Schedules.FirstOrDefault(s => s.Tour?.TourId == review.TourId)?.ScheduleId;
+                                var tourImage = string.IsNullOrEmpty(review.Tour?.Image) 
+                                    ? "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=600&auto=format&fit=crop" 
+                                    : review.Tour.Image;
+
+                                <div class="col-lg-4 col-md-6 col-12 px-2">
+                                    <div class="review-card-vertical">
+                                        <!-- Tour Image Header -->
+                                        <div class="tour-image-header">
+                                            <img src="@tourImage" alt="@review.Tour?.TourName" />
+                                            <span class="position-absolute top-0 start-0 bg-primary text-white px-2 py-0.5 m-2 rounded-pill fw-bold text-uppercase shadow-sm" style="font-size: 0.6rem; z-index: 2; letter-spacing: 0.5px;">
+                                                Hình Ảnh Tour
+                                            </span>
+                                        </div>
+
+                                        <!-- Review Body Content -->
+                                        <div class="review-body-content">
+                                            <div>
+                                                <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-2">
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        <div class="avatar-circle">@firstChar</div>
+                                                        <div>
+                                                            <h6 class="fw-bold text-dark mb-0" style="font-size: 0.95rem;">@review.CustomerName</h6>
+                                                            <small class="text-muted" style="font-size: 0.7rem;">@review.CreatedDate.ToString("dd/MM/yyyy")</small>
+                                                        </div>
+                                                    </div>
+                                                    <div class="text-warning small">
+                                                        @for (int j = 1; j <= 5; j++)
+                                                        {
+                                                            if (j <= review.Rating)
+                                                            {
+                                                                <i class="bi bi-star-fill me-0.5"></i>
+                                                            }
+                                                            else
+                                                            {
+                                                                <i class="bi bi-star text-muted me-0.5"></i>
+                                                            }
+                                                        }
+                                                    </div>
+                                                </div>
+
+                                                <p class="text-muted fst-italic mb-3" style="line-height: 1.5; font-size: 0.88rem; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; height: 2.7rem;">
+                                                    "@review.Comment"
+                                                </p>
+                                            </div>
+
+                                            @if (review.Tour != null)
+                                            {
+                                                <div class="border-top pt-2 mt-auto d-flex align-items-center justify-content-between">
+                                                    <small class="text-muted" style="font-size: 0.75rem;"><i class="bi bi-compass-fill text-info me-1"></i> Tour:</small>
+                                                    @if (scheduleId.HasValue)
+                                                    {
+                                                        <a href="/Tours/Details?scheduleId=@scheduleId" class="btn btn-outline-primary btn-sm rounded-pill fw-bold py-0 px-2" style="font-size: 0.7rem; max-width: 75%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                                            @review.Tour.TourName
+                                                        </a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge bg-light text-secondary border py-1 px-2 text-start" style="font-size: 0.7rem; max-width: 75%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                                            @review.Tour.TourName
+                                                        </span>
+                                                    }
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let slides = document.querySelectorAll('.testimonial-slide');
+            let container = document.querySelector('.testimonial-slideshow-container');
+            if (slides.length > 1 && container) {
+                let currentIndex = 0;
+                let intervalId = null;
+
+                function showNextSlide() {
+                    slides[currentIndex].classList.remove('active');
+                    currentIndex = (currentIndex + 1) % slides.length;
+                    slides[currentIndex].classList.add('active');
+                }
+
+                function startSlideshow() {
+                    if (!intervalId) {
+                        intervalId = setInterval(showNextSlide, 4000); // Đổi mỗi 4 giây
+                    }
+                }
+
+                function stopSlideshow() {
+                    if (intervalId) {
+                        clearInterval(intervalId);
+                        intervalId = null;
+                    }
+                }
+
+                container.addEventListener('mouseenter', stopSlideshow);
+                container.addEventListener('mouseleave', startSlideshow);
+
+                startSlideshow();
+            }
+        });
+    </script>
+}

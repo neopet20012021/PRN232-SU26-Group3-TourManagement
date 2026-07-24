@@ -14,6 +14,7 @@ public class IndexModel : PageModel
     }
 
     public List<TourScheduleViewModel> Schedules { get; set; } = new List<TourScheduleViewModel>();
+    public List<ReviewViewModel> RecentReviews { get; set; } = new List<ReviewViewModel>();
 
     [BindProperty(SupportsGet = true)]
     public string? Keyword { get; set; }
@@ -66,6 +67,24 @@ public class IndexModel : PageModel
                 Schedules = result.Value;
             }
         }
+
+        // Fetch recent reviews
+        try
+        {
+            var reviewsResponse = await client.GetAsync("odata/Reviews?$expand=Tour&$orderby=CreatedDate desc&$top=10");
+            if (reviewsResponse.IsSuccessStatusCode)
+            {
+                var reviewsResult = await reviewsResponse.Content.ReadFromJsonAsync<ODataResponse<ReviewViewModel>>();
+                if (reviewsResult != null && reviewsResult.Value != null)
+                {
+                    RecentReviews = reviewsResult.Value;
+                }
+            }
+        }
+        catch
+        {
+            // Fail silently
+        }
     }
 
     public class ODataResponse<T>
@@ -90,5 +109,16 @@ public class IndexModel : PageModel
         public string Destination { get; set; } = string.Empty;
         public int Days { get; set; }
         public int Nights { get; set; }
+    }
+
+    public class ReviewViewModel
+    {
+        public int ReviewId { get; set; }
+        public string CustomerName { get; set; } = string.Empty;
+        public int Rating { get; set; }
+        public string Comment { get; set; } = string.Empty;
+        public DateTime CreatedDate { get; set; }
+        public int TourId { get; set; }
+        public TourViewModel? Tour { get; set; }
     }
 }

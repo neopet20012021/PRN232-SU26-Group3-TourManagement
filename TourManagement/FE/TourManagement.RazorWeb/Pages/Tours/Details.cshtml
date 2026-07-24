@@ -461,8 +461,8 @@ else
                                 <div class="mb-4 bg-white p-4 rounded-3 border">
                                     <div class="row g-4">
                                         <div class="col-md-12">
-                                            <label class="form-label fw-bold text-primary mb-1">Đánh giá tổng quan:</label>
-                                            <div class="star-picker fs-3 text-warning cursor-pointer" data-target="ratingInput">
+                                            <label class="form-label fw-bold text-primary mb-1">Đánh giá tổng quan (Tự động tính): <span id="overallRatingValue" class="text-secondary fw-normal">5.0 / 5.0</span></label>
+                                            <div class="star-picker fs-3 text-warning" data-target="ratingInput" style="pointer-events: none; opacity: 0.85;">
                                                 <i class="bi bi-star-fill star-item" data-val="1"></i>
                                                 <i class="bi bi-star-fill star-item" data-val="2"></i>
                                                 <i class="bi bi-star-fill star-item" data-val="3"></i>
@@ -576,6 +576,7 @@ else
                         }
                     </div>
                 </div>
+            </div>
 
             <!-- SIDEBAR (RIGHT) -->
             <div class="col-lg-4">
@@ -620,8 +621,6 @@ else
                 </div>
             </div>
         </div>
-    </div>
-}
 
         <!-- RELATED TOURS -->
         @if (Model.RelatedSchedules != null && Model.RelatedSchedules.Any())
@@ -732,6 +731,44 @@ else
                 container.innerHTML = html;
             }
 
+            // Function to update overall rating dynamically
+            function updateOverallRating() {
+                let cleanliness = parseInt(document.getElementById('cleanlinessInput')?.value) || 5;
+                let comfort = parseInt(document.getElementById('comfortInput')?.value) || 5;
+                let amenities = parseInt(document.getElementById('amenitiesInput')?.value) || 5;
+                let value = parseInt(document.getElementById('valueInput')?.value) || 5;
+                
+                let average = (cleanliness + comfort + amenities + value) / 4.0;
+                let rounded = Math.round(average);
+                
+                let ratingInput = document.getElementById('ratingInput');
+                if (ratingInput) {
+                    ratingInput.value = rounded;
+                }
+                
+                // Update star UI for overall rating
+                let ratingPicker = document.querySelector('.star-picker[data-target="ratingInput"]');
+                if (ratingPicker) {
+                    let stars = ratingPicker.querySelectorAll('.star-item');
+                    stars.forEach(function(star) {
+                        let starVal = parseInt(star.getAttribute('data-val'));
+                        if (starVal <= rounded) {
+                            star.classList.remove('bi-star', 'text-muted');
+                            star.classList.add('bi-star-fill', 'text-warning');
+                        } else {
+                            star.classList.remove('bi-star-fill', 'text-warning');
+                            star.classList.add('bi-star', 'text-muted');
+                        }
+                    });
+                }
+
+                // Update text display of average rating
+                let avgDisplay = document.getElementById('overallRatingValue');
+                if (avgDisplay) {
+                    avgDisplay.textContent = average.toFixed(1) + ' / 5.0';
+                }
+            }
+
             // Interactive Star Pickers
             document.querySelectorAll('.star-picker').forEach(function(picker) {
                 let targetId = picker.getAttribute('data-target');
@@ -751,11 +788,17 @@ else
                     });
                 }
 
+                // Skip click registration for overall rating
+                if (targetId === 'ratingInput') {
+                    return;
+                }
+
                 stars.forEach(function(star) {
                     star.addEventListener('click', function() {
                         let val = parseInt(this.getAttribute('data-val'));
                         if (targetInput) targetInput.value = val;
                         setStars(val);
+                        updateOverallRating();
                     });
                 });
             });
